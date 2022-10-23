@@ -1,0 +1,4 @@
+#Sun Oct 23 11:46:48 CEST 2022
+base.0=C\:\\Users\\bobge\\Documents\\DOCUMENTOS - FORMACION PROFESIONAL\\Proyectos\\TFG\\tree_timer_app\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
