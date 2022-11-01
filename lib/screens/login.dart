@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:tree_timer_app/common/widgets/custom_button.dart';
+import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key, required this.title});
@@ -10,8 +12,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController email = new TextEditingController();
-  TextEditingController password = new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,32 +27,16 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextField(
-                controller: email,
-                decoration: InputDecoration(
-                  hintText: "Email"
-                ),
-              ),
+              CustomTextField(controller: _emailController, hintText: "Email"),
               SizedBox(height: 15),
-              TextField(
-                controller: password,
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Contraseña"
-                )
-              ),
+              CustomTextField(controller: _passwordController, hintText: "Contraseña"),
               SizedBox(height: 35),
               Container(
                 width: 200,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: ElevatedButton(
-                  child: const Text("Login", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                  onPressed: (){
-                    Navigator.pushNamed(context, "/home");
-                  },
-                )
+                child: CustomButton(text: "Login", textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), route: "/home"),
               ),
               SizedBox(height: 35),
               GestureDetector(

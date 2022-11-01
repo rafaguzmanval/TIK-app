@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../common/widgets/custom_button.dart';
+
 class Register extends StatefulWidget{
   const Register({super.key, required this.title});
 
@@ -63,10 +65,7 @@ class _RegisterState extends State<Register>
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: ElevatedButton(
-                    child: const Text("Crear cuenta", style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                    onPressed: (){},
-                  )
+                child: CustomButton(text: "Crear cuenta", textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), route: "/home"),
               ),
             ],
           )
