@@ -30,7 +30,6 @@ const userSchema = mongoose.Schema({
 
 userSchema.pre("save", function(next) {
     let user = this;
-
     // Only hash the password if it has been modified
     if (!user.isModified('password')) return next();
 

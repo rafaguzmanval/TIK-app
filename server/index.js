@@ -1,8 +1,7 @@
 import express from 'express';
 import cookieParser from "cookie-parser";
 import dotenv from 'dotenv';
-import authTokenRouter from "./routes/auth_token.js";
-import accountRouter from "./routes/accounts.js";
+import authUserRouter from './routes/auth_users.js';
 import mongoose from 'mongoose';
 
 // Cargamos valores de .env en process
@@ -19,8 +18,8 @@ expressApp.use(cookieParser());
 expressApp.use(express.json());
 expressApp.use(express.text());
 
-expressApp.use("/auth-token", authTokenRouter);
-expressApp.use("/accounts", accountRouter)
+// expressApp.use("/auth-token", authTokenRouter);
+expressApp.use("/accounts", authUserRouter)
 
 // Esta funcion e spara arrancar la app ya que connect es async
 const bootstrap = async () =>{
@@ -31,10 +30,6 @@ const bootstrap = async () =>{
         console.log(`Bienvenido desde el puerto ${PORT}`);
     });
 
-    expressApp.post("/users", (req, res) =>{
-        res.send("Has solicitado ver usuarios");
-        console.log(req.body);
-    });
 }
 
 bootstrap();
