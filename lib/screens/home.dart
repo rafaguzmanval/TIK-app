@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget{
   const Home({super.key, required this.title});
+  static const String route = '/home';
 
   final String title;
 

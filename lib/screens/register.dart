@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-
+import 'package:tree_timer_app/constants/utils.dart';
+import 'package:tree_timer_app/features/auth_service.dart';
 import '../common/widgets/custom_button.dart';
+import '../common/widgets/custom_textformfield.dart';
 
 class Register extends StatefulWidget{
   const Register({super.key, required this.title});
+  static const String route = '/register';
 
   final String title;
 
@@ -13,10 +16,32 @@ class Register extends StatefulWidget{
 
 class _RegisterState extends State<Register>
 {
-  TextEditingController email = new TextEditingController();
-  TextEditingController confirmEmail = new TextEditingController();
-  TextEditingController password = new TextEditingController();
-  TextEditingController confirmPassword = new TextEditingController();
+  final AuthService authService = AuthService();
+  // Use for fields validators
+  final _registrationFormKey = GlobalKey<FormState>();
+
+  final TextEditingController _nameController = new TextEditingController();
+  final TextEditingController _emailController = new TextEditingController();
+  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _confirmPasswordController = new TextEditingController();
+
+  // Create function that send textfields values to server
+  void registerUser(){
+    authService.registerUser(
+      context: context,
+      name: _nameController.text,
+      email: _emailController.text,
+      password: _passwordController.text
+    );
+  }
+
+  @override void dispose(){
+    super.dispose();
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,48 +52,38 @@ class _RegisterState extends State<Register>
       body: Container(
         margin: EdgeInsets.all(50),
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                controller: email,
-                decoration: InputDecoration(
-                  hintText: "Email"
-                ),
-              ),
-              SizedBox(height: 15),
-              TextField(
-                controller: confirmEmail,
-                decoration: InputDecoration(
-                  hintText: "Confirmar email"
-                ),
-              ),
-              SizedBox(height: 15),
-              TextField(
-                controller: password,
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: "Contraseña"
-                ),
-              ),
-              SizedBox(height: 15),
-              TextField(
-                controller: confirmPassword,
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: "Confirmar contraseña"
-                ),
-              ),
-              SizedBox(height: 35),
-              Container(
-                  width: 200,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+          child: Form(
+            key: _registrationFormKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomTextField(controller: _nameController, hintText: "Nombre"),
+                SizedBox(height: 15),
+                CustomTextField(controller: _emailController, hintText: "Email"),
+                SizedBox(height: 15),
+                CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
+                SizedBox(height: 15),
+                CustomTextField(controller: _confirmPasswordController, hintText: "Confirmar contraseña", isPassword: true,),
+                SizedBox(height: 35),
+                Container(
+                    width: 200,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  // ignore: prefer_const_constructors
+                  child: CustomButton(
+                    text: "Crear cuenta",
+                    textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    onTap: (){
+                      if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
+                        registerUser();
+                      } 
+                    }
                   ),
-                child: CustomButton(text: "Crear cuenta", textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), route: "/home"),
-              ),
-            ],
-          )
+                ),
+              ],
+            )
+          ),
         )
       ),
     );
