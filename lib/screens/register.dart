@@ -54,8 +54,7 @@ class _RegisterState extends State<Register>
         child: Center(
           child: Form(
             key: _registrationFormKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: ListView(
               children: [
                 CustomTextField(controller: _nameController, hintText: "Nombre"),
                 SizedBox(height: 15),
