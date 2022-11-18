@@ -7,10 +7,9 @@ import 'package:tree_timer_app/providers/user_provider.dart';
 
 
 class Login extends StatefulWidget {
-  const Login({super.key, required this.title});
+  const Login({super.key});
   static const String route = '/';
-
-  final String title;
+  static const String title = "Login";
 
   @override
   State<Login> createState() => _LoginState();
@@ -35,7 +34,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(Login.title),
       ),
       body: Container(
         margin: EdgeInsets.all(50),

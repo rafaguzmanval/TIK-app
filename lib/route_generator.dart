@@ -9,7 +9,7 @@ class RouteGenerator {
 
     switch(settings.name) {
       case Login.route:
-        return MaterialPageRoute(builder: (context) => Login(title: 'Login'));
+        return MaterialPageRoute(builder: (context) => Login());
       case Home.route:
         return MaterialPageRoute(builder: (context) => Home(title: 'Tree Timer App'));
       case Register.route:
