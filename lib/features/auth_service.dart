@@ -97,6 +97,25 @@ class AuthService{
     }
   }
 
+  void logoutUser(BuildContext context)
+  async {
+    try{
+      if(context == null) return showSnackBar(context, "Erro al cerrar sesión");
+
+      // We need to delete the token in order to close session
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      await preferences.remove('auth-token');
+
+      Navigator.pushAndRemoveUntil(
+        context, 
+        MaterialPageRoute(builder: (context) => const Login()),
+        (route) => false
+      );
+    }catch(err){
+      showSnackBar(context, err.toString());
+    }
+  }
+
 // Get user data, for init state
   void getUserData(
     BuildContext context,
