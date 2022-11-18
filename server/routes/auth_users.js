@@ -104,7 +104,7 @@ authUserRouter.post("/login", async (req, res) => {
       const token = await jwtConstructor
       .setProtectedHeader({alg: 'HS256', typ: 'JWT'})
       .setIssuedAt()
-      .setExpirationTime('30s').sign(encoder.encode(process.env.JWT_PRIVATE));
+      .setExpirationTime('1h').sign(encoder.encode(process.env.JWT_PRIVATE));
 
       res.json({token, ...user._doc});
       // This return a JSON following the next patter
