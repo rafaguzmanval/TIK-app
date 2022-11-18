@@ -36,19 +36,24 @@ class _Home extends State<Home>{
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.green,
+            SizedBox(
+              height: 125,
+              child: DrawerHeader(
+                decoration: const BoxDecoration(
+                  color: Colors.green,
+                ),
+                child: Text('¡Bienvenido $userName!'),
               ),
-              child: Text('Hola $userName'),
             ),
+            const SizedBox(height: 15),
             Center(
               child: GestureDetector(
                 onTap: () => userLogOut(),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
-                    Icon(Icons.logout),
+                    Icon(Icons.logout_rounded, color: Colors.red,),
+                    SizedBox(width: 5),
                     Text("Cerrar sesión"),
                   ],
                 ),
