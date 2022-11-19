@@ -1,16 +1,41 @@
-# tree_timer_app
+# Tree Timer App
+## Introduction
 
-A new Flutter project.
+Tree Timer App is a flutter application, that can be used either for Android phones and IOS phones, which allows users to interact with an IoT equiptment.
 
-## Getting Started
+The IoT equipment aims is to collect data from trees in order to study the quality of the wood.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- Account management to save projects
+- More funcionalities in coming...
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Tech
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Tree Timer App uses a variaty of technologies to provide the desired servies, such as:
+
+- [Flutter] - Open source framework for multi-platform applications.
+- [NodeJS]  - Open source cross-platform JavaScript runtime environment     used for server-side programming.
+- [Express] - Fast node.js network app framework.
+- [MongoDB] - Backend database used to store users data and projects.
+- [Render]  - Cloud application hosting for Mongo database.
+
+## Screens
+
+#### Login screen
+<img src="img/LoginScreenV1.PNG" alt="drawing" width="300"/>
+
+#### Register screen
+<img src="img/RegisterScreenV1.PNG" alt="drawing" width="300"/>
+
+#### Home screen
+<img src="img/HomeScreenV1_1.PNG" alt="drawing" width="300"/>
+<img src="img/HomeScreenV1_2.PNG" alt="drawing" width="300"/>
+
+[//]: # 
+   
+   [Flutter]: <https://flutter.dev>
+   [NodeJS]: <https://nodejs.org/en/>
+   [Express]: <http://expressjs.com>
+   [MongoDB]: <https://www.mongodb.com>
+   [Render]: <https://render.com>
