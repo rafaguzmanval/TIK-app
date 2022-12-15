@@ -11,10 +11,17 @@ import 'features/auth_service.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
+
+    MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => UserProvider(),
+          ),
+        ],
       child: const TreeTimerApp(),
     ),
+
+
   );
 }
 

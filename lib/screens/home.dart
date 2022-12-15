@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import '../common/widgets/bluetooth_simpledialog.dart';
 import '../features/auth_service.dart';
 import '../providers/user_provider.dart';
 
@@ -25,6 +25,15 @@ class _Home extends State<Home>{
     authService.logoutUser(context);
   }
 
+  Future<void> _showBluetoothDialog(BuildContext context){
+    return showDialog(
+      context: context,
+      builder: (context){
+        return BluetoothSimpleDialog();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -46,6 +55,19 @@ class _Home extends State<Home>{
               ),
             ),
             const SizedBox(height: 15),
+            Center(
+              child: GestureDetector(
+                onTap: () => _showBluetoothDialog(context),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    SizedBox(width: 5),
+                    Text("Buscar dispositivos Bluetooth"),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 60),
             Center(
               child: GestureDetector(
                 onTap: () => userLogOut(),
