@@ -92,8 +92,18 @@ class _BluetoothSimpleDialogState extends State<BluetoothSimpleDialog> {
               },
             ),
         ),
-        ElevatedButton(onPressed: (){}, child: Text("Refrescar")),
-        ElevatedButton(onPressed: (){}, child: Text("Salir"))
+        ElevatedButton(
+          onPressed: (){
+
+          },
+          child: Text("Refrescar")
+        ),
+        ElevatedButton(
+          onPressed: (){
+            Navigator.pop(context);
+          },
+          child: Text("Salir")
+        )
       ],
     );
   }
