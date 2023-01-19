@@ -13,23 +13,23 @@
 13         to allow setting breakpoints, to provide hot reload, etc.
 14    -->
 15    <uses-permission android:name="android.permission.INTERNET" />
-15-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:5-67
-15-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:22-64
+15-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:5-67
+15-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:22-64
 16    <uses-permission
-16-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:5-68
+16-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:5-68
 17        android:name="android.permission.BLUETOOTH"
-17-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:22-65
+17-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:22-65
 18        android:maxSdkVersion="30" />
-18-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:25:9-35
+18-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:25:9-35
 19    <uses-permission
-19-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:5-74
+19-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:5-74
 20        android:name="android.permission.BLUETOOTH_ADMIN"
-20-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:22-71
+20-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:22-71
 21        android:maxSdkVersion="30" />
-21-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-35
+21-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:28:9-35
 22    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-22-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:5-80
-22-->C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:22-78
+22-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:5-80
+22-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:22-78
 23    <!--
 24         New Bluetooth permissions in Android 12
 25           https://developer.android.com/about/versions/12/features/bluetooth-permissions
@@ -39,17 +39,17 @@
 29           your app never derives physical location from Bluetooth scan results.
 30    -->
 31    <uses-permission
-31-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:17:5-19:58
+31-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:17:5-19:58
 32        android:name="android.permission.BLUETOOTH_SCAN"
-32-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-57
+32-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-57
 33        android:usesPermissionFlags="neverForLocation" />
-33-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:19:9-55
+33-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:19:9-55
 34    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-34-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:5-76
-34-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:22-73
+34-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:5-76
+34-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:22-73
 35    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-35-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:5-79
-35-->[:flutter_blue_plus] C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\tree_timer_app - copia\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:22-76
+35-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:5-79
+35-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:22-76
 36
 37    <application
 38        android:name="android.app.Application"
