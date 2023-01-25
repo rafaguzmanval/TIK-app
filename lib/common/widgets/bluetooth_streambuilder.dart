@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+// import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:flutter_reactive_ble/src/device_scanner.dart';
 
 class BluetoothStreamBuilder extends StatefulWidget{
   const BluetoothStreamBuilder({super.key});
@@ -13,57 +15,72 @@ class BluetoothStreamBuilder extends StatefulWidget{
 
 class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
-  StreamController bluetoothStreamController = StreamController();
-  List<ScanResult> devicesList = [];
+  StreamController bluetoothStreamController = StreamController.broadcast();
+  final devicesList = <DiscoveredDevice>[];
+  final List<Uuid> uuids = [];
   bool isScanning = false;
-  FlutterBluePlus flutterBluePlus = FlutterBluePlus.instance;
+  final flutterReactiveBle = FlutterReactiveBle();
 
   void refreshDeviceList() async{
-  
     // We should check if a scan it's already running
     if (isScanning){
-      // Clear device list and stop scanning
-      await stopScan();
+      stopScan();
       devicesList.clear();
     }else{
-      await startScan();
+      startScan(uuids);
+    }
+  }
+
+  void startScan(List<Uuid> serviceIds){
+
+    if(!isScanning)
+    {
+      isScanning = true;
+      bluetoothStreamController.addStream(flutterReactiveBle.scanForDevices(withServices: uuids));
     }
   }
 
   Future stopScan() async{
-    isScanning = false;
-    flutterBluePlus.stopScan();
-  }
 
-  Future startScan() async {
-    isScanning = true;
-    flutterBluePlus.startScan(timeout: Duration(seconds: 5));
-  }
-
-  String getMacIfLocalNameIsEmpty(ScanResult _scanResult){
-    if(_scanResult.device.name.isEmpty)
+    if(isScanning)
     {
-      return _scanResult.device.id.toString();
+      isScanning = false;
+    }
+  }
+
+  String getMacIfLocalNameIsEmpty(DiscoveredDevice _discoveredDevice){
+    if(_discoveredDevice.name.isEmpty)
+    {
+      return _discoveredDevice.id.toString();
     }
     else{
-      return _scanResult.device.name.toString();
+      return _discoveredDevice.name.toString();
     }
   }
 
   @override
   void initState(){
     super.initState();
-    flutterBluePlus.startScan(timeout: Duration(seconds: 5));
-    isScanning = true;
-    bluetoothStreamController.addStream(flutterBluePlus.scanResults);
+    isScanning = false;
+    startScan(uuids);
   }
 
   @override
   void dispose() {
-    stopScan();
-    // We must close stream controller to void refresh info when widget has been removed
-    bluetoothStreamController.close();
+    devicesList.clear();
     super.dispose();
+  }
+
+  void handleDevicesList(StreamController _bluetoothStreamController){
+    _bluetoothStreamController.stream.listen((device) {
+      final knownDeviceIndex = devicesList.indexWhere((d) => d.id == device.id);
+
+      if (knownDeviceIndex >= 0) {
+        devicesList[knownDeviceIndex] = device;
+      } else {
+        devicesList.add(device);
+      }
+    }, onError: (Object e) => print('Device scan fails with error: $e'));
   }
 
   @override
@@ -76,14 +93,14 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
           return CircularProgressIndicator();
         }
 
+        handleDevicesList(bluetoothStreamController);
+
         // DEBUG
-        devicesList = snapshot.data;
         for(var device in devicesList)
         {
           print('${devicesList.length} ${device.rssi} mac ${getMacIfLocalNameIsEmpty(device)}');
         }
-
-
+        //
         return Column(
           children: [
             Container(
@@ -123,5 +140,4 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
       }
     );
   }
-
 }
