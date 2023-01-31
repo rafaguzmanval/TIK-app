@@ -65,4 +65,28 @@ class BluetoohScanner{
       return _discoveredDevice.name.toString();
     }
   }
+
+  void connectToDevice( _foundDeviceId){
+    Stream<ConnectionStateUpdate> _currentConnectionStream = flutterReactiveBle.connectToAdvertisingDevice(
+      id: _foundDeviceId,
+      withServices: [],
+      prescanDuration: const Duration(seconds: 5),
+      connectionTimeout: const Duration(seconds:  2),
+    );
+    _currentConnectionStream.listen((event) {
+        // Handle connection state updates
+        switch(event.connectionState){
+          case DeviceConnectionState.connected:
+          {
+            print("ME HE CONECTADO A DISPOSITIVO ${_foundDeviceId}");
+            break;
+          }
+        } 
+        
+      }, onError: (dynamic error) {
+      // Handle a possible error
+      }
+    );
+
+  }
 }

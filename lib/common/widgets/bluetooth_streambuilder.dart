@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import '../../features/bluetooth_scanner.dart';
 
 class BluetoothStreamBuilder extends StatefulWidget{
@@ -13,6 +14,7 @@ class BluetoothStreamBuilder extends StatefulWidget{
 class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
   BluetoohScanner bluetoohScanner = new BluetoohScanner();
+  late DiscoveredDevice connectedDevice;
 
   @override
   void initState(){
@@ -40,7 +42,7 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
         // DEBUG
         for(var device in bluetoohScanner.devicesList)
         {
-          print('${bluetoohScanner.devicesList.length} ${device.rssi} mac ${bluetoohScanner.getMacIfLocalNameIsEmpty(device)}');
+          print('${bluetoohScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoohScanner.getMacIfLocalNameIsEmpty(device)}');
         }
         //
         return Column(
@@ -59,6 +61,8 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
                     subtitle: Text('RSSI: ${bluetoohScanner.devicesList[index].rssi.toString()}'),
                     onTap: () {
                       // Código para conectarse al dispositivo Bluetooth seleccionado
+                      connectedDevice = bluetoohScanner.devicesList[index];
+                      bluetoohScanner.connectToDevice(connectedDevice.id);
                     },
                   );
                 },
