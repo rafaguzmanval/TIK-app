@@ -1,0 +1,21 @@
+name: Creation of OS installers
+env:
+  INNO_VERSION: 6.2.1
+
+run-name: Testing github action
+on: [push, pull_request]
+jobs:
+  Create-Windows-Installer:
+    runs-on: windows-latest
+    steps:
+      - run: echo "The branch where this action it is running is ${{ github.ref }}."
+      - name: Check out repository code
+        uses: actions/checkout@V3
+      - run: echo "The ${{ github.repository }} repository has been cloned to the runner"
+      - name: Downloading Inno Setup installer
+        run: curl -L -o inno_installer.exe http://files.jrsoftware.org/is/6/innosetup-${{ env.INNO_VERSION }}.exe
+      - name: Running Inno Setup installer
+        run: ./inno_installer.exe /verysilent /norestart /allusers /dir=installaters
+      - name: Checking if Inno Setup Compiler it is installed
+        run: iscc
+    
