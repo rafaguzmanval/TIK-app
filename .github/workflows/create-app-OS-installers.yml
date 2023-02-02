@@ -8,12 +8,12 @@ jobs:
   Create-Windows-Installer:
     runs-on: windows-latest
     steps:
-      - name: The branch where this action it is running is ${{ github.ref }}.
+      - run: echo "The branch where this action it is running is ${{ github.ref }}."
       
       - name: Check out repository code
         uses: actions/checkout@v3.3.0
         
-      - name: The ${{ github.repository }} repository has been cloned to the runner
+      - run: echo "The branch where this action it is running is ${{ github.ref }}."
       
       - name: Downloading Inno Setup installer
         run: curl -L -o inno_installer.exe http://files.jrsoftware.org/is/6/innosetup-${{ env.INNO_VERSION }}.exe
