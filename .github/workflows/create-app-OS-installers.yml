@@ -26,5 +26,13 @@ jobs:
         
       - name: Checking if Flutter it is installed
         run: flutter --version
+        
+      - name: List directory
+        run: dir
+        
+      - name: Build windows app with flutter
+        run: flutter build windows
+        
+      
 
     
