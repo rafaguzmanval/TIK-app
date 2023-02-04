@@ -42,6 +42,15 @@ jobs:
       - name: Create Windows Installer
         run: iscc installers_scripts/windowsScript.iss
         
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "LuisSS20"
+          git config --global user.email "luissoriano@correo.ugr.es"
+
+          git add -A
+          git commit -m "Add new windows installer"
+          git push
+        
       - name:  Upload a Build Artifact with the windows installer compiled
         uses: actions/upload-artifact@v3.1.2
         with:
