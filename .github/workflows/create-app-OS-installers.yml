@@ -42,6 +42,8 @@ jobs:
       - name: Create Windows Installer
         run: iscc installers_scripts/windowsScript.iss
         
-      
-
-    
+      - name: Store in repo the windows installer compiled
+        uses: actions/upload-artifacts@v3
+        with:
+          name: Installers
+          path: installers/
