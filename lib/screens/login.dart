@@ -68,7 +68,7 @@ class _LoginState extends State<Login> {
                   onTap:(){
                     Navigator.pushNamed(context, '/register');
                   },
-                  child: const Text("¿Nuevo usuario? Cree una cuenta")
+                  child: const Text("¿Nuevo usuario? Cree una cuenta PRUEBA TESTING")
                 ),
               ],
             ),

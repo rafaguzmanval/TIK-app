@@ -47,7 +47,7 @@ jobs:
           git config --global user.name "LuisSS20"
           git config --global user.email "luissoriano@correo.ugr.es"
 
-          git add -A
+          git add installers/*
           git commit -m "Add new windows installer"
           git push
         
