@@ -2,7 +2,7 @@ name: Creation of OS installers
 env:
   INNO_VERSION: 6.2.1
 
-run-name: Testing github action
+run-name: Creation of OS installers
 on: [push]
 jobs:
   Create-Windows-Installer:
