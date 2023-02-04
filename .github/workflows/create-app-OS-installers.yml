@@ -29,6 +29,10 @@ jobs:
         
       - name: List directory
         run: dir
+      #Debug  
+      - name: Rename directory to establish a correct one without "-"
+        run: cd .. && ren tree-timer-app tree_timer_app && cd tree_timer_app
+      # End debug
         
       - name: Adding Windows support to flutter project.
         run: flutter config --enable-windows-desktop
