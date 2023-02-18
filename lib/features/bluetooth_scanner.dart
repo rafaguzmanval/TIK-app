@@ -1,57 +1,73 @@
 import 'dart:async';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 // Bluetooth scanner class that allows to update a device list and 
 // listen to bluetooth devices
-class BluetoohScanner{
-  StreamController bluetoothStreamController = StreamController.broadcast();
+class BluetoothScanner{
+
   final devicesList = <DiscoveredDevice>[];
-  final List<Uuid> uuids = [];
-  bool isScanning = false;
-  final flutterReactiveBle = FlutterReactiveBle();
+  final List<Uuid> _uuids = [];
+  final _flutterReactiveBle = FlutterReactiveBle();
+
+  // StreamController y StreamSubscription
+  StreamController<List<DiscoveredDevice>> _devicesStreamController = StreamController<List<DiscoveredDevice>>.broadcast();
+  StreamSubscription<DiscoveredDevice>? _devicesSubscription;
+
+  // Stream getter
+  Stream<List<DiscoveredDevice>> get devicesStream => _devicesStreamController.stream;
+
+  Future<void> requestLocationPermission() async {
+  if (await Permission.location.request().isGranted) {
+    // Location permission has been granted
+      return;
+    }
+    
+    // If permission are not granted, they are requested
+    final result = await Permission.location.request();
+    if (result.isGranted) {
+      // If permissions are granted
+    } else {
+      // If permissions are not granted
+    }
+  }
 
   // Refresh the device list, this makes the scanner stop scanning, clean the device
   // list an start scanning again 
   void refreshDeviceList() async{
-    // We should check if a scan it's already running
-    if (isScanning){
       stopScan();
       devicesList.clear();
-    }else{
       startScan();
-    }
   }
 
-  // Starts scanning but checking if it is not scanning already
-  void startScan() {
-    if(!isScanning)
-    {
-      isScanning = true;
-      bluetoothStreamController.addStream(flutterReactiveBle.scanForDevices(withServices: uuids));
-    }
-  }
-
-  // change the value of boolean
   void stopScan() {
-
-    if(isScanning)
-    {
-      isScanning = false;
-    }
+    // Cancel stream subscription
+    _devicesSubscription?.cancel();
   }
 
-  // Using the stream of a controller [_bluetoothController] it will listen and
-  // add or update the listened devices to the devices list
-  void updateDevicesList(){
-    bluetoothStreamController.stream.listen((device) {
-      final knownDeviceIndex = devicesList.indexWhere((d) => d.id == device.id);
+  // Method to start scanning
+  void startScan() {
+    // If a previous stream subscription exist we must cancel it
+    _devicesSubscription?.cancel();
 
-      if (knownDeviceIndex >= 0) {
-        devicesList[knownDeviceIndex] = device;
-      } else {
-        devicesList.add(device);
-      }
-    }, onError: (Object e) => print('Device scan fails with error: $e'));
+    _devicesSubscription = _flutterReactiveBle.scanForDevices(withServices: _uuids).listen(
+      (device) {
+        // Add or update devices inside list
+        final knownDeviceIndex = devicesList.indexWhere((d) => d.id == device.id);
+
+        if (knownDeviceIndex >= 0) {
+          devicesList[knownDeviceIndex] = device;
+        } else {
+          devicesList.add(device);
+        }
+        // Add to the updated list to the StreamController
+        _devicesStreamController.add(devicesList);
+      },
+      onError: (error) {
+        print('Device scan fails with error: $error');
+      },
+    );
   }
 
   // Takes the discoverd device [_discoveredDevice] and returns his name or MAC if it is
@@ -67,7 +83,7 @@ class BluetoohScanner{
   }
 
   void connectToDevice( _foundDeviceId){
-    Stream<ConnectionStateUpdate> _currentConnectionStream = flutterReactiveBle.connectToAdvertisingDevice(
+    Stream<ConnectionStateUpdate> _currentConnectionStream = _flutterReactiveBle.connectToAdvertisingDevice(
       id: _foundDeviceId,
       withServices: [],
       prescanDuration: const Duration(seconds: 5),

@@ -13,13 +13,13 @@ class BluetoothStreamBuilder extends StatefulWidget{
 
 class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
-  BluetoohScanner bluetoohScanner = new BluetoohScanner();
+  BluetoothScanner bluetoothScanner = new BluetoothScanner();
   late DiscoveredDevice connectedDevice;
 
   @override
   void initState(){
     super.initState();
-    bluetoohScanner.startScan();
+    bluetoothScanner.startScan();
   }
 
   @override
@@ -30,19 +30,22 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: bluetoohScanner.bluetoothStreamController.stream,
+      stream: bluetoothScanner.devicesStream,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
 
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return Text('Error: ${snapshot.error}');
+        }
+        
         if(!snapshot.hasData){
           return CircularProgressIndicator();
         }
 
-        bluetoohScanner.updateDevicesList();
-
         // DEBUG
-        for(var device in bluetoohScanner.devicesList)
+        for(var device in bluetoothScanner.devicesList)
         {
-          print('${bluetoohScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoohScanner.getMacIfLocalNameIsEmpty(device)}');
+          print('${bluetoothScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoothScanner.getMacIfLocalNameIsEmpty(device)}');
         }
         //
         return Column(
@@ -53,16 +56,16 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
               width: 200,
               height: 300,
               child: ListView.builder(
-                itemCount: bluetoohScanner.devicesList.length,
+                itemCount: bluetoothScanner.devicesList.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: Icon(Icons.bluetooth),
-                    title: Text(bluetoohScanner.getMacIfLocalNameIsEmpty(bluetoohScanner.devicesList[index])),
-                    subtitle: Text('RSSI: ${bluetoohScanner.devicesList[index].rssi.toString()}'),
+                    title: Text(bluetoothScanner.getMacIfLocalNameIsEmpty(bluetoothScanner.devicesList[index])),
+                    subtitle: Text('RSSI: ${bluetoothScanner.devicesList[index].rssi.toString()}'),
                     onTap: () {
                       // Código para conectarse al dispositivo Bluetooth seleccionado
-                      connectedDevice = bluetoohScanner.devicesList[index];
-                      bluetoohScanner.connectToDevice(connectedDevice.id);
+                      connectedDevice = bluetoothScanner.devicesList[index];
+                      bluetoothScanner.connectToDevice(connectedDevice.id);
                     },
                   );
                 },
@@ -70,13 +73,12 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
             ),
             ElevatedButton(
               onPressed: (){
-                bluetoohScanner.refreshDeviceList();
+                bluetoothScanner.refreshDeviceList();
               },
               child: Text("Refrescar")
             ),
             ElevatedButton(
               onPressed: (){
-                dispose();
                 Navigator.pop(context);
               },
               child: Text("Salir")

@@ -13,103 +13,95 @@
 13         to allow setting breakpoints, to provide hot reload, etc.
 14    -->
 15    <uses-permission android:name="android.permission.INTERNET" />
-15-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:5-67
-15-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:3:22-64
+15-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:3:5-67
+15-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:3:22-64
 16    <uses-permission
-16-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:5-68
+16-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:4:5-68
 17        android:name="android.permission.BLUETOOTH"
-17-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:4:22-65
+17-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:4:22-65
 18        android:maxSdkVersion="30" />
-18-->[:reactive_ble_mobile] C:\Users\bobge\Documents\TFG\tree-timer-app\build\reactive_ble_mobile\intermediates\merged_manifest\debug\AndroidManifest.xml:12:9-35
+18-->[:reactive_ble_mobile] C:\Users\bobge\Documents\TFG\tree_timer_app\build\reactive_ble_mobile\intermediates\merged_manifest\debug\AndroidManifest.xml:12:9-35
 19    <uses-permission
-19-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:5-74
+19-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:5:5-74
 20        android:name="android.permission.BLUETOOTH_ADMIN"
-20-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:5:22-71
+20-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:5:22-71
 21        android:maxSdkVersion="30" />
-21-->[:reactive_ble_mobile] C:\Users\bobge\Documents\TFG\tree-timer-app\build\reactive_ble_mobile\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-35
-22    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-22-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:5-80
-22-->C:\Users\bobge\Documents\TFG\tree-timer-app\android\app\src\main\AndroidManifest.xml:6:22-78
-23    <!--
-24         New Bluetooth permissions in Android 12
-25           https://developer.android.com/about/versions/12/features/bluetooth-permissions
-26    -->
-27    <!--
-28         Include "neverForLocation" only if you can strongly assert that
-29           your app never derives physical location from Bluetooth scan results.
-30    -->
-31    <uses-permission
-31-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:17:5-19:58
-32        android:name="android.permission.BLUETOOTH_SCAN"
-32-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-57
-33        android:usesPermissionFlags="neverForLocation" />
-33-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:19:9-55
-34    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-34-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:5-76
-34-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:20:22-73
-35    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- required for API 23 - 30, no android:maxSdkVersion because of a potential breaking change -->
-35-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:5-79
-35-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree-timer-app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:29:22-76
-36    <!-- TODO: add android:maxSdkVersion on 2.0.0 -->
-37    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
-37-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:18:5-88
-37-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:18:29-85
-38    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
-38-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:19:5-86
-38-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:19:29-83
-39
-40    <application
-41        android:name="android.app.Application"
-42        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-42-->[androidx.core:core:1.6.0] C:\Users\bobge\.gradle\caches\transforms-3\acbce933e4b464a5224ed377a62db1f5\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
-43        android:debuggable="true"
-44        android:icon="@mipmap/ic_launcher"
-45        android:label="tree_timer_app" >
-46        <activity
-47            android:name="com.example.tree_timer_app.MainActivity"
-48            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-49            android:exported="true"
-50            android:hardwareAccelerated="true"
-51            android:launchMode="singleTop"
-52            android:theme="@style/LaunchTheme"
-53            android:windowSoftInputMode="adjustResize" >
-54
-55            <!--
-56                 Specifies an Android theme to apply to this Activity as soon as
-57                 the Android process has started. This theme is visible to the user
-58                 while the Flutter UI initializes. After that, this theme continues
-59                 to determine the Window background behind the Flutter UI.
-60            -->
-61            <meta-data
-62                android:name="io.flutter.embedding.android.NormalTheme"
-63                android:resource="@style/NormalTheme" />
-64
-65            <intent-filter>
-66                <action android:name="android.intent.action.MAIN" />
-67
-68                <category android:name="android.intent.category.LAUNCHER" />
-69            </intent-filter>
-70        </activity>
-71        <!--
-72             Don't delete the meta-data below.
-73             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
-74        -->
-75        <meta-data
-76            android:name="flutterEmbedding"
-77            android:value="2" />
+21-->[:reactive_ble_mobile] C:\Users\bobge\Documents\TFG\tree_timer_app\build\reactive_ble_mobile\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-35
+22    <uses-permission
+22-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:6:5-73
+23        android:name="android.permission.BLUETOOTH_SCAN"
+23-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:6:22-70
+24        android:usesPermissionFlags="neverForLocation" />
+24-->[:flutter_blue_plus] C:\Users\bobge\Documents\TFG\tree_timer_app\build\flutter_blue_plus\intermediates\merged_manifest\debug\AndroidManifest.xml:19:9-55
+25    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+25-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:7:5-76
+25-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:7:22-73
+26    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+26-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:8:5-79
+26-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:8:22-76
+27    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- required for API 23 - 30, no android:maxSdkVersion because of a potential breaking change -->
+27-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:9:5-81
+27-->C:\Users\bobge\Documents\TFG\tree_timer_app\android\app\src\main\AndroidManifest.xml:9:22-78
+28    <!-- TODO: add android:maxSdkVersion on 2.0.0 -->
+29    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+29-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:18:5-88
+29-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:18:29-85
+30    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+30-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:19:5-86
+30-->[com.polidea.rxandroidble2:rxandroidble:1.16.0] C:\Users\bobge\.gradle\caches\transforms-3\70a3e02e80319a553b4a671349ad01d8\transformed\jetified-rxandroidble-1.16.0\AndroidManifest.xml:19:29-83
+31
+32    <application
+33        android:name="android.app.Application"
+34        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+34-->[androidx.core:core:1.6.0] C:\Users\bobge\.gradle\caches\transforms-3\acbce933e4b464a5224ed377a62db1f5\transformed\core-1.6.0\AndroidManifest.xml:24:18-86
+35        android:debuggable="true"
+36        android:icon="@mipmap/ic_launcher"
+37        android:label="tree_timer_app" >
+38        <activity
+39            android:name="com.example.tree_timer_app.MainActivity"
+40            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+41            android:exported="true"
+42            android:hardwareAccelerated="true"
+43            android:launchMode="singleTop"
+44            android:theme="@style/LaunchTheme"
+45            android:windowSoftInputMode="adjustResize" >
+46
+47            <!--
+48                 Specifies an Android theme to apply to this Activity as soon as
+49                 the Android process has started. This theme is visible to the user
+50                 while the Flutter UI initializes. After that, this theme continues
+51                 to determine the Window background behind the Flutter UI.
+52            -->
+53            <meta-data
+54                android:name="io.flutter.embedding.android.NormalTheme"
+55                android:resource="@style/NormalTheme" />
+56
+57            <intent-filter>
+58                <action android:name="android.intent.action.MAIN" />
+59
+60                <category android:name="android.intent.category.LAUNCHER" />
+61            </intent-filter>
+62        </activity>
+63        <!--
+64             Don't delete the meta-data below.
+65             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+66        -->
+67        <meta-data
+68            android:name="flutterEmbedding"
+69            android:value="2" />
+70
+71        <uses-library
+71-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
+72            android:name="androidx.window.extensions"
+72-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
+73            android:required="false" />
+73-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
+74        <uses-library
+74-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
+75            android:name="androidx.window.sidecar"
+75-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
+76            android:required="false" />
+76-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
+77    </application>
 78
-79        <uses-library
-79-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:25:9-27:40
-80            android:name="androidx.window.extensions"
-80-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:26:13-54
-81            android:required="false" />
-81-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:27:13-37
-82        <uses-library
-82-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:28:9-30:40
-83            android:name="androidx.window.sidecar"
-83-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:29:13-51
-84            android:required="false" />
-84-->[androidx.window:window:1.0.0-beta04] C:\Users\bobge\.gradle\caches\transforms-3\49bc944d29f70d45aa5add8e43e3247e\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:30:13-37
-85    </application>
-86
-87</manifest>
+79</manifest>
