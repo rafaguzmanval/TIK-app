@@ -48,6 +48,10 @@ class BluetoothScanner{
 
   // Method to start scanning
   void startScan() {
+
+    // Request permissions
+    requestLocationPermission();
+    
     // If a previous stream subscription exist we must cancel it
     _devicesSubscription?.cancel();
 
