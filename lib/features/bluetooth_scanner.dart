@@ -86,7 +86,7 @@ class BluetoothScanner{
     Stream<ConnectionStateUpdate> _currentConnectionStream = _flutterReactiveBle.connectToAdvertisingDevice(
       id: _foundDeviceId,
       withServices: [],
-      prescanDuration: const Duration(seconds: 5),
+      prescanDuration: const Duration(seconds: 10),
       connectionTimeout: const Duration(seconds:  2),
     );
     _currentConnectionStream.listen((event) {
@@ -97,11 +97,21 @@ class BluetoothScanner{
             print("ME HE CONECTADO A DISPOSITIVO ${_foundDeviceId}");
             break;
           }
+          case DeviceConnectionState.connecting:
+          {
+            print("ME ESTOY CONECTANDO A DISPOSITIVO ${_foundDeviceId}");
+            break;
+          }
+          case DeviceConnectionState.disconnecting:
+            // TODO: Handle this case.
+            break;
+          case DeviceConnectionState.disconnected:
+            // TODO: Handle this case.
+            break;
         } 
         
       }, onError: (dynamic error) {
-      // Handle a possible error
-      }
+        print('Error connecting to device $_foundDeviceId: $error');      }
     );
 
   }
