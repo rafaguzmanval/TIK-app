@@ -4,12 +4,23 @@ import { treeSpeciesModel } from "../models/tree_species_schema.js";
 
 const treeSpeciesRouter = Router();
 
+treeSpeciesRouter.get("/getall",
+    async (req, res) => {
+        const { _id } = req.params;
+
+        const resultados = await treeSpeciesModel.find({})
+        if(!resultados) return res.status(404).send("No se han podido recuperar las especies de árboles");
+
+        return res.send(resultados);
+    }
+);
+
 treeSpeciesRouter.get("/:id",
     async (req, res) => {
         const { _id } = req.params;
 
         const treeSpecie = await treeSpeciesModel.findById(_id).exec();
-        if(!treeSpecie) return res.status(404).send("La especio de árbol no existe");
+        if(!treeSpecie) return res.status(404).send("La especie de árbol no existe");
 
         return res.send(treeSpecie);
     }
