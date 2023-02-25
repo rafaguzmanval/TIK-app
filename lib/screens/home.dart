@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../common/widgets/custom_alertdialog.dart';
 
 import '../features/auth_service.dart';
 import '../providers/user_provider.dart';
+
 
 class Home extends StatefulWidget{
   const Home({super.key, required this.title});
@@ -77,7 +79,14 @@ class _Home extends State<Home>{
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                  onPressed: (){},
+                  onPressed: () async {
+                    String? name = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CustomAlertDialog(title: 'Crear nuevo proyecto', hintText: 'Nombre del proyecto');
+                      },
+                    );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -147,7 +156,6 @@ class _Home extends State<Home>{
                     ],
                   )
               ),
-
             ],
           ),
         ),
