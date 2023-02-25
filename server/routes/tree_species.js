@@ -5,7 +5,7 @@ const treeSpeciesRouter = Router();
 
 treeSpeciesRouter.get("/:id",
     async (req, res) => {
-        const { _id } = req._id;
+        const { _id } = req.params;
 
         const treeSpecie = await treeSpeciesModel.findById(_id).exec();
         if(!treeSpecie) return res.status(404).send("La especio de árbol no existe");
