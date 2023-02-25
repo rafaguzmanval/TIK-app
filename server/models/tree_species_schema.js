@@ -17,5 +17,5 @@ const treeSpeciesSchema = mongoose.Schema(
     }
 );
 
-export const treeSpeciesModel = mongoose.model(TreeSpecies, treeSpeciesSchema);
+export const treeSpeciesModel = mongoose.model("TreeSpecies", treeSpeciesSchema);
 export default treeSpeciesModel;

@@ -13,3 +13,5 @@ treeSpeciesRouter.get("/:id",
         return res.send(treeSpecie);
     }
 );
+
+export default treeSpeciesRouter;
