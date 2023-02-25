@@ -4,6 +4,7 @@ const treeSpeciesSchema = mongoose.Schema(
     {
        name: {
         required: true,
+        unique: true,
         type: String,
         trim: true
        },
