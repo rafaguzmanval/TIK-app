@@ -22,7 +22,7 @@ class _TreeSpecies extends State<TreeSpecies>{
       ),
       body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.all(70),
+          margin: const EdgeInsets.all(30),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -39,7 +39,7 @@ class _TreeSpecies extends State<TreeSpecies>{
                             // We must to set height and width in order to prevent errors
                             // with listView dimensions
                             width: 400,
-                            height: 400,
+                            height: 450,
                             child: ListView.builder(
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
