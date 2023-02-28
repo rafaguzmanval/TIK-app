@@ -163,10 +163,9 @@ class _Home extends State<Home>{
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: (){
-                  Navigator.pushAndRemoveUntil(
+                  Navigator.push(
                     context, 
-                    MaterialPageRoute(builder: (context) => TreeSpecies()),
-                    (route) => false
+                    MaterialPageRoute(builder: (context) => TreeSpecies())
                   );
                 },
                 child: Row(
