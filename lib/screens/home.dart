@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tree_timer_app/screens/tree_species.dart';
 import '../common/widgets/custom_alertdialog.dart';
 
 import '../features/auth_service.dart';
+import '../features/tree_specie_service.dart';
 import '../providers/user_provider.dart';
+import '../providers/tree_specie_provider.dart';
 
 
 class Home extends StatefulWidget{
@@ -22,6 +25,7 @@ class _Home extends State<Home>{
   // Create key to interact with drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthService authService = AuthService();
+  final TreeSpecieService treeSpecieService = TreeSpecieService();
 
   void userLogOut(){
     authService.logoutUser(context);
@@ -155,6 +159,30 @@ class _Home extends State<Home>{
                       )
                     ],
                   )
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton(
+                onPressed: (){
+                  Navigator.pushAndRemoveUntil(
+                    context, 
+                    MaterialPageRoute(builder: (context) => TreeSpecies()),
+                    (route) => false
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    new Expanded(
+                      flex: 3,
+                      child: const Icon(Icons.book),
+                    ),
+                    //SizedBox(width: 15,),
+                    new Expanded(
+                        flex: 7,
+                        child: const Text("Obtener especies de arboles")
+                    )
+                  ],
+                )
               ),
             ],
           ),
