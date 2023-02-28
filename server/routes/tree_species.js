@@ -29,6 +29,7 @@ treeSpeciesRouter.get("/:id",
 treeSpeciesRouter.post("/new",
     async (req, res) => {
         const { name, description, image} = req.body;
+        
         try{
     
             if (!name) return res.status(400).json({ msg: "Error falta el campo nombre"});
@@ -45,7 +46,7 @@ treeSpeciesRouter.post("/new",
             // Mongoose lo hace en su implementacion
             const treeSpecie = await treeSpeciesModel.findOne({name: name}).exec();
         
-            if (treeSpecie) return res.status(409).json({ msg: "La especia de árbol ya se encuentra registrada"});
+            if (treeSpecie) return res.status(409).json({ msg: "La especie de árbol ya se encuentra registrada"});
         
             // Rellenamos los campos requeridos en el esquema
             const newTreeSpecie = new treeSpeciesModel({name, description, image});
@@ -60,6 +61,41 @@ treeSpeciesRouter.post("/new",
           }
     }
 
+);
+
+treeSpeciesRouter.post("/newlist",
+    async (req, res) => {
+
+        let speciesAdded = 0;
+        const listJSON = req.body;
+        for (const specie of listJSON) {
+            try{
+                const { name, description, image} = specie;
+
+                if (!name) return console.log("Error falta el campo nombre");
+            
+                // Se pone exec para convertirlo en promesa aunque si no lo pones
+                // Mongoose lo hace en su implementacion
+                const treeSpecie = await treeSpeciesModel.findOne({name: name}).exec();
+            
+                if(treeSpecie)
+                {
+                    console.log("La especie de árbol ya se encuentra registrada: ", name);
+                }
+                else{
+                    // Rellenamos los campos requeridos en el esquema
+                    const newTreeSpecie = new treeSpeciesModel({name, description, image});
+                    // Es una promesa
+                    await newTreeSpecie.save();
+                    speciesAdded++;
+                }
+            
+              } catch(err){
+                return res.status(500).json({error: err.message});
+              }
+        }
+        return res.json({ msg: `${speciesAdded} nuevas especies de árboles registradas correctamente`});
+    }
 );
 
 export default treeSpeciesRouter;
