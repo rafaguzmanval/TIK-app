@@ -3,7 +3,9 @@ import cookieParser from "cookie-parser";
 import dotenv from 'dotenv';
 import authUserRouter from './routes/auth_users.js';
 import treeSpeciesRouter from './routes/tree_species.js';
+import treeSpeciesRouter from './routes/tree_data_sheets';
 import mongoose from 'mongoose';
+import treeDataSheetRouter from './routes/tree_data_sheets';
 
 // Cargamos valores de .env en process
 dotenv.config();
@@ -22,6 +24,7 @@ expressApp.use(express.text());
 // expressApp.use("/auth-token", authTokenRouter);
 expressApp.use("/accounts", authUserRouter);
 expressApp.use("/treespecies", treeSpeciesRouter);
+expressApp.use("/treedatasheets", treeDataSheetRouter);
 
 // Esta funcion e spara arrancar la app ya que connect es async
 const bootstrap = async () =>{
