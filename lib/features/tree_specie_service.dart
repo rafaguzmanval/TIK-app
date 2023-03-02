@@ -48,7 +48,7 @@ class TreeSpecieService{
 
 // Get user data, for init state
   // Future<List<TreeSpecie>> obtenerEspecies() async {
-  Future<dynamic> obtenerEspecies() async {
+  Future<dynamic> getSpecies() async {
     String v = url;
     final response = await http.get(
         Uri.parse('$url/treespecies/getall'),
