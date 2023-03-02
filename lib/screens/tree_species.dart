@@ -28,7 +28,7 @@ class _TreeSpecies extends State<TreeSpecies>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FutureBuilder(
-                  future: treeSpecieService.obtenerEspecies(),
+                  future: treeSpecieService.getSpecies(),
                   builder: (context, snapshot) {
                     // If we have data from tree species
                     if(snapshot.hasData)
