@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CustomAlertDialog extends StatefulWidget
 {
   final String title;
-  String? hintText = "";
+  String? hintText = DateFormat('yyyy_MM_dd').format(DateTime.now()).toString();
 
   CustomAlertDialog({
     Key? key,
     required this.title,
-    this.hintText
   }) : super(key:key);
 
   @override
@@ -43,7 +43,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: const Text('Approve'),
+          child: const Text('Crear'),
           onPressed: () {
             Navigator.of(context).pop();
           },
