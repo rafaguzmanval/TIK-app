@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+import 'package:tree_timer_app/features/new_project_service.dart';
 
 class CustomAlertDialog extends StatefulWidget
 {
@@ -17,7 +17,8 @@ class CustomAlertDialog extends StatefulWidget
 }
 
 class _CustomAlertDialogState extends State<CustomAlertDialog> {
-
+  
+  final ProjectService projectService = ProjectService();
   final _textController = TextEditingController();
 
   @override
@@ -45,6 +46,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         TextButton(
           child: const Text('Crear'),
           onPressed: () {
+            projectService.newProject(context: context, name: _textController.text);
             Navigator.of(context).pop();
           },
         ),
