@@ -87,7 +87,7 @@ class _Home extends State<Home>{
                     String? name = await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return CustomAlertDialog(title: 'Crear nuevo proyecto', hintText: 'Nombre del proyecto');
+                        return CustomAlertDialog(title: 'Crear nuevo proyecto');
                       },
                     );
                   },
