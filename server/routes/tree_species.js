@@ -6,8 +6,6 @@ const treeSpeciesRouter = Router();
 
 treeSpeciesRouter.get("/getall",
     async (req, res) => {
-        const { _id } = req.params;
-
         const resultados = await treeSpeciesModel.find({})
         if(!resultados) return res.status(404).send("No se han podido recuperar las especies de árboles");
 
@@ -17,9 +15,9 @@ treeSpeciesRouter.get("/getall",
 
 treeSpeciesRouter.get("/:id",
     async (req, res) => {
-        const { _id } = req.params;
+        const { id } = req.params;
 
-        const treeSpecie = await treeSpeciesModel.findById(_id).exec();
+        const treeSpecie = await treeSpeciesModel.findById(id).exec();
         if(!treeSpecie) return res.status(404).send("La especie de árbol no existe");
 
         return res.send(treeSpecie);
