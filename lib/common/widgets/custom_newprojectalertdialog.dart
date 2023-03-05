@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tree_timer_app/features/new_project_service.dart';
 
-class CustomAlertDialog extends StatefulWidget
+class NewProjectCustomAlertDialog extends StatefulWidget
 {
   final String title;
   String? hintText = DateFormat('yyyy_MM_dd').format(DateTime.now()).toString();
 
-  CustomAlertDialog({
+  NewProjectCustomAlertDialog({
     Key? key,
     required this.title,
   }) : super(key:key);
 
   @override
-  State<CustomAlertDialog> createState() => _CustomAlertDialogState();
+  State<NewProjectCustomAlertDialog> createState() => _NewProjectCustomAlertDialogState();
 }
 
-class _CustomAlertDialogState extends State<CustomAlertDialog> {
+class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialog> {
   
   final ProjectService projectService = ProjectService();
   final _textController = TextEditingController();
