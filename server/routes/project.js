@@ -3,12 +3,23 @@ import { projectSchemaModel } from "../models/project_schema.js";
 
 const projectRouter = Router();
 
+
+projectRouter.get("/getall",
+    async (req, res) => {
+
+        const resultados = await projectSchemaModel.find({})
+        if(!resultados) return res.status(404).send("No se han podido recuperar las especies de árboles");
+
+        return res.send(resultados);
+    }
+);
+
 projectRouter.get("/:id",
     async (req, res) => {
-        const { _id } = req.params;
-
-        const project = await projectSchemaModel.findById(_id).exec();
-        if(!project) return res.status(404).send("La ficha de datos no existe");
+        const { id } = req.params;
+        console.log(req.params)
+        const project = await projectSchemaModel.findById(id).exec();
+        if(!project) return res.status(404).send("El proyecto no existe");
 
         return res.send(project);
     }
