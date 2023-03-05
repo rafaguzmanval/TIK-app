@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/features/project_service.dart';
-import 'package:tree_timer_app/screens/project_screen.dart';
+import 'package:tree_timer_app/models/project.dart';
+  import 'package:tree_timer_app/screens/project_screen.dart';
 import '../../constants/utils.dart';
 
 class OpenProjectCustomAlertDialog extends StatefulWidget
@@ -61,12 +62,18 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                   leading: Icon(Icons.book, color: Colors.green,),
                                   title: Text(snapshot.data[index]["name"]),
                                   onTap: () {
-                                     Navigator.push(
+                                    Project project = Project(
+                                        id: snapshot.data[index]["_id"],
+                                        name: snapshot.data[index]["name"],
+                                        description: snapshot.data[index]["description"] ?? '',
+                                        listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
+                                    );
+                                    Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) => ProjectScreen( projectName: "Prueba"),
+                                        MaterialPageRoute(              
+                                          builder: (context) => ProjectScreen(project: project),
                                         ),
-                                      );
+                                    );
                                   },
                                 );
                               },
