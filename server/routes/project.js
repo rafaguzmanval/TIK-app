@@ -27,7 +27,7 @@ projectRouter.get("/:id",
 
 projectRouter.post("/new", 
     async (req, res) => {
-        const { name } = req.body;
+        const { name, description } = req.body;
 
         try{
             
@@ -38,7 +38,7 @@ projectRouter.post("/new",
             if (project) return res.status(409).json({ msg: "El proyecto con ese mismo nombre ya se encuentra registrado"});
 
             // Rellenamos los campos requeridos en el esquema
-            const newProject = new projectSchemaModel({name});
+            const newProject = new projectSchemaModel({name, description});
 
             // Es una promesa
             await newProject.save();
