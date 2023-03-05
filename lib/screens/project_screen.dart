@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
+import 'package:tree_timer_app/models/project.dart';
 
 
 class ProjectScreen extends StatefulWidget {
 
-  final String projectName;
+  final Project project;
 
   ProjectScreen({
     Key? key,
-    required this.projectName,
+    required this.project,
   }) : super(key:key);
 
   @override
@@ -24,59 +25,89 @@ class _ProjectScreenState extends State<ProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.projectName),
+        title: Text(widget.project.name),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Text("Fichas disponibles:"),
-            SingleChildScrollView(
-              child: Container(
-                margin: const EdgeInsets.all(30),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                        future: projectService.getProjects(),
-                        builder: (context, snapshot) {
-                          // If we have data from tree species
-                          if(snapshot.hasData)
-                          {
-                            return Column(
-                              children: [
-                                Container(
-                                  // We must to set height and width in order to prevent errors
-                                  // with listView dimensions
-                                  width: 400,
-                                  height: 450,
-                                  child: ListView.builder(
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        leading: Icon(Icons.book, color: Colors.green,),
-                                        title: Text(snapshot.data[index]["name"]),
-                                        onTap: () {
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ]
-                            );
-                          }
-                          else if(snapshot.hasError){
-                            showSnackBar(context, snapshot.error.toString());
-                          }
-                          return CircularProgressIndicator();
-                        }
+      body: SingleChildScrollView(
+        child: Container(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 30.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Descripción",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      )
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(top: 15.0, left: 25.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(widget.project.description.toString())
                       ),
-                    ],
+                    ),
+                  ] 
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 30.0),
+                child: const Text(
+                  "Fichas disponibles",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold
+                  )
+                ),
+              ),      
+              SingleChildScrollView(
+                child: Container(
+                  margin: const EdgeInsets.all(30),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FutureBuilder(
+                          future: projectService.getProjects(),
+                          builder: (context, snapshot) {
+                            // If we have data from tree species
+                            if(snapshot.hasData)
+                            {
+                              return Column(
+                                children: [
+                                  Container(
+                                    // We must to set height and width in order to prevent errors
+                                    // with listView dimensions
+                                    width: 400,
+                                    height: 450,
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          leading: Icon(Icons.book, color: Colors.green,),
+                                          title: Text(snapshot.data[index]["name"]),
+                                          onTap: () {
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ]
+                              );
+                            }
+                            else if(snapshot.hasError){
+                              showSnackBar(context, snapshot.error.toString());
+                            }
+                            return CircularProgressIndicator();
+                          }
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
