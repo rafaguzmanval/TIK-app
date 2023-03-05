@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/screens/tree_species.dart';
-import '../common/widgets/custom_alertdialog.dart';
+import '../common/widgets/custom_newprojectalertdialog.dart';
 
+import '../common/widgets/custom_openprojectalertdialog.dart';
 import '../features/auth_service.dart';
 import '../features/tree_specie_service.dart';
 import '../providers/user_provider.dart';
@@ -87,7 +88,7 @@ class _Home extends State<Home>{
                     String? name = await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return CustomAlertDialog(title: 'Crear nuevo proyecto');
+                        return NewProjectCustomAlertDialog(title: 'Crear nuevo proyecto');
                       },
                     );
                   },
@@ -108,7 +109,14 @@ class _Home extends State<Home>{
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-                  onPressed: (){},
+                  onPressed: () async {
+                    String? name = await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return OpenProjectCustomAlertDialog();
+                      },
+                    );
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

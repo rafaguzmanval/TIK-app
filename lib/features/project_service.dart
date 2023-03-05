@@ -42,19 +42,20 @@ class ProjectService{
     }
   }
 
-// // Get user data, for init state
-//   Future<dynamic> getProject() async {
-//     String v = url;
-//     final response = await http.get(
-//         Uri.parse('$url/projects/get'),
-//       );
+// Get user data, for init state
+  Future<dynamic> getProjects() async {
+    String v = url;
+    final response = await http.get(
+        Uri.parse('$url/projects/getall'),
+      );
 
-//     if (response.statusCode == 200) {
-//       List<dynamic> listJson = json.decode(response.body);
+    if (response.statusCode == 200) {
+      List<dynamic> listJson = json.decode(response.body);
 
-//     return listJson;
-//     } else {
-//       throw Exception('Error al obtener el proyecto');
-//     }
-//   }
+    return listJson;
+    } else {
+      throw Exception('Error al obtener la lista proyectos');
+    }
+  }
+  
 }

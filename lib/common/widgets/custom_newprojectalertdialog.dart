@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tree_timer_app/features/new_project_service.dart';
+import 'package:tree_timer_app/features/project_service.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
@@ -43,13 +43,13 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
         decoration: InputDecoration(hintText: widget.hintText),
       ),
       actions: <Widget>[
-        TextButton(
-          child: const Text('Crear'),
+        ElevatedButton(
           onPressed: () {
             projectService.newProject(context: context, name: _textController.text);
             Navigator.of(context).pop();
           },
-        ),
+          child: Text("Crear")
+        )
       ],
     );
   }
