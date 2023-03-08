@@ -1,6 +1,6 @@
 ## Lib Folder Structure
 
-As mention [here](../README.md), this folder contains all Dart code that is  responsible of flutter funcionality.
+As mention [here](../README.md), this folder contains all Dart code that is responsible of flutter funcionality.
 
 #### Common Folder
 
