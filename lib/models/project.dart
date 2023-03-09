@@ -31,7 +31,7 @@ class Project{
     );
   }
 
-  factory Project.parseTreeSpecies(String responseBody) {
+  factory Project.parseProjects(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
     return parsed.map<Project>((json) => Project.fromJson(json)).toList();
   }
