@@ -8,7 +8,6 @@ import 'package:tree_timer_app/constants/global_variables.dart';
 
 class ProjectService{
 
-  // Register user
   void newProject({
     required BuildContext context,
     required String name,
@@ -42,9 +41,7 @@ class ProjectService{
     }
   }
 
-// Get user data, for init state
   Future<dynamic> getProjects() async {
-    String v = url;
     final response = await http.get(
         Uri.parse('$url/projects/getall'),
       );

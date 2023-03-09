@@ -12,7 +12,6 @@ import 'package:tree_timer_app/screens/login.dart';
 
 class TreeSpecieService{
 
-  // Register user
   void registerSpecie({
     required BuildContext context,
     required String name,
@@ -46,10 +45,7 @@ class TreeSpecieService{
     }
   }
 
-// Get user data, for init state
-  // Future<List<TreeSpecie>> obtenerEspecies() async {
   Future<dynamic> getSpecies() async {
-    String v = url;
     final response = await http.get(
         Uri.parse('$url/treespecies/getall'),
       );
