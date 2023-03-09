@@ -40,16 +40,12 @@ treeSpeciesRouter.post("/new",
             // console.log(ima);
             // END OF WARNING
 
-            // Se pone exec para convertirlo en promesa aunque si no lo pones
-            // Mongoose lo hace en su implementacion
             const treeSpecie = await treeSpeciesModel.findOne({name: name}).exec();
         
             if (treeSpecie) return res.status(409).json({ msg: "La especie de árbol ya se encuentra registrada"});
         
-            // Rellenamos los campos requeridos en el esquema
             const newTreeSpecie = new treeSpeciesModel({name, description, image});
         
-            // Es una promesa
             await newTreeSpecie.save();
         
             return res.json({ msg: "Nueva especie de árbol registrada correctamente"});
