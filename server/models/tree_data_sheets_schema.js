@@ -4,7 +4,8 @@ const treeDataSheetSchema = mongoose.Schema(
     {
        project_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Projects"
+        ref: "Projects",
+        required: true
        },
        specific_tree_id: {
         unique: false,
