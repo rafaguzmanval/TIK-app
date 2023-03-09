@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/project_service.dart';
+import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 
 
@@ -19,7 +19,7 @@ class ProjectScreen extends StatefulWidget {
 
 class _ProjectScreenState extends State<ProjectScreen> {
 
-  ProjectService projectService = new ProjectService();
+  TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FutureBuilder(
-                          future: projectService.getProjects(),
+                          future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
                           builder: (context, snapshot) {
                             // If we have data from tree species
                             if(snapshot.hasData)
@@ -85,7 +85,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       itemBuilder: (context, index) {
                                         return ListTile(
                                           leading: Icon(Icons.book, color: Colors.green,),
-                                          title: Text(snapshot.data[index]["name"]),
+                                          title: Text(snapshot.data[index]["_id"].toString()),
                                           onTap: () {
                                           },
                                         );
