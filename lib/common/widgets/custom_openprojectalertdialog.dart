@@ -45,7 +45,6 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                 FutureBuilder(
                   future: projectService.getProjects(),
                   builder: (context, snapshot) {
-                    // If we have data from tree species
                     if(snapshot.hasData)
                     {
                       return Column(
