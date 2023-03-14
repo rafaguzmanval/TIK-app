@@ -24,7 +24,7 @@ class TreeSpecie{
     return TreeSpecie(
       id: parsedJson["_id"] ?? '',
       name: parsedJson["name"],
-      description: parsedJson["description"] ?? ''
+      description: parsedJson["description"] ?? '',
     );
   }
 
