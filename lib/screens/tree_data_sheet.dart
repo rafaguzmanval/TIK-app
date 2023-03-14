@@ -71,7 +71,7 @@ class _TreeDataSheetState extends State<TreeDataSheet>{
                       }
                     );
                     // We set the value of tree specie text form field
-                    treeSpecieController.value = TextEditingValue(text: _specie!.name);
+                    treeSpecieController.value = TextEditingValue(text: _specie?.name ?? '');
                   },
                   child: Text('Seleccionar especie de árbol')
                 ),
