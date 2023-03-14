@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/models/project.dart';
-
+import 'package:tree_timer_app/screens/tree_data_sheet.dart';
 
 class ProjectScreen extends StatefulWidget {
 
@@ -115,8 +115,14 @@ class _ProjectScreenState extends State<ProjectScreen> {
         child: Container(height: 50.0),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => setState(() {
-        }),
+        onPressed: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(              
+                builder: (context) => TreeDataSheet(project: widget.project),
+              ),
+          );
+        },
         tooltip: 'Crear nueva ficha de datos',
         child: const Icon(Icons.add),
       ),
