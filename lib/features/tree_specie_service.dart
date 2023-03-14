@@ -53,9 +53,23 @@ class TreeSpecieService{
     if (response.statusCode == 200) {
       List<dynamic> listJson = json.decode(response.body);
 
-    return listJson;
+      return listJson;
     } else {
       throw Exception('Error al obtener las especies de árboles');
+    }
+  }
+
+  Future<dynamic> findSpecie(TreeSpecie treeSpecie) async {
+    final response = await http.get(
+        Uri.parse('$url/treespecies/${treeSpecie.id}'),
+      );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> listJson = json.decode(response.body);
+
+      return listJson;
+    } else {
+      throw Exception('Error al obtener la especie de árbol seleccionada');
     }
   }
 }
