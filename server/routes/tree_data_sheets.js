@@ -6,15 +6,15 @@ const treeDataSheetRouter = Router();
 
 treeDataSheetRouter.post("/new",
     async (req, res) => {
-        const { project_id } = req.body;
+        const { project_id, specific_tree_id, tree_specie_id, description} = req.body;
 
         try{
             
-            if (!project_id) return res.status(400).json({ msg: "Error falta el campo de proyecto asociado por recibir"});
+            if (!project_id || !specific_tree_id) return res.status(400).json({ msg: "Error faltan uno o varios campos obligatorios"});
             
             const objectProjectId = mongoose.Types.ObjectId(project_id);
-
-            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId});
+            
+            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description});
 
             await newTreeDataSheet.save();
 
