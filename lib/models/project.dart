@@ -5,10 +5,10 @@ class Project{
   final String id;
   final String name;
   final String description;
-  final List<String> listTreeSheetsId;
+  // final List<String> listTreeSheetsId;
 
   Project(
-    {required this.name, required this.id, required this.description, required this.listTreeSheetsId}
+    {required this.name, required this.id, required this.description, /*required this.listTreeSheetsId*/}
   ); 
 
   // Create a object map
@@ -17,7 +17,7 @@ class Project{
       "_id": id,
       "name": name,
       "description": description,
-      "tree_data_sheets_id": listTreeSheetsId,
+      // "tree_data_sheets_id": listTreeSheetsId,
     };
   }
 
@@ -27,7 +27,7 @@ class Project{
       id: parsedJson["_id"] ?? '',
       name: parsedJson["name"],
       description: parsedJson["description"] ?? '',
-      listTreeSheetsId: parsedJson["tree_data_sheets_id"] ?? ''
+      // listTreeSheetsId: parsedJson["tree_data_sheets_id"] ?? ''
     );
   }
 
