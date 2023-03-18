@@ -70,7 +70,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                         FutureBuilder(
                           future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
                           builder: (context, snapshot) {
-                            // If we have data from tree species
+                            // If we have data from tree data sheets
                             if(snapshot.hasData)
                             {
                               return Column(
@@ -84,8 +84,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                       itemCount: snapshot.data.length,
                                       itemBuilder: (context, index) {
                                         return ListTile(
-                                          leading: Icon(Icons.book, color: Colors.green,),
-                                          title: Text(snapshot.data[index]["_id"].toString()),
+                                          leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
+                                          title: Text(snapshot.data[index]["specific_tree_id"].toString()),
                                           onTap: () {
                                           },
                                         );
