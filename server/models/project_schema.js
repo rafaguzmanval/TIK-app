@@ -13,10 +13,10 @@ const projectSchema = mongoose.Schema(
         type: String,
         trim: true
        },
-       tree_data_sheets_id: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "TreeDataSheets"
-       }]
+    //    tree_data_sheets_id: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "TreeDataSheets"
+    //    }]
     }
 );
 
