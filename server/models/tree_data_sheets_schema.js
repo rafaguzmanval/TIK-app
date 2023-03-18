@@ -10,7 +10,8 @@ const treeDataSheetSchema = mongoose.Schema(
        specific_tree_id: {
         unique: false,
         type: String,
-        trim: true
+        trim: true,
+        required: true
        },
        tree_specie_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +25,9 @@ const treeDataSheetSchema = mongoose.Schema(
        
     }
 );
+
+treeDataSheetSchema.index({ project_id: 1, specific_tree_id: 1 }, { unique: true });
+
 
 export const treeDataSheetSchemaModel = mongoose.model("TreeDataSheets", treeDataSheetSchema);
 export default treeDataSheetSchemaModel;
