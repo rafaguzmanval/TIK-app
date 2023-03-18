@@ -65,7 +65,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                         id: snapshot.data[index]["_id"],
                                         name: snapshot.data[index]["name"],
                                         description: snapshot.data[index]["description"] ?? '',
-                                        listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
+                                        // listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
                                     );
                                     Navigator.push(
                                         context,
