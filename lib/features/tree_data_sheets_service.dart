@@ -5,12 +5,16 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
+import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetService{
 
   void newTreeDataSheet({
     required BuildContext context,
-    required String project_id
+    required String project_id,
+    required TreeSpecie treeSpecie,
+    required String treeId,
+    String? description
   })
   async{
 
@@ -18,9 +22,9 @@ class TreeDataSheetService{
       TreeDataSheet treeDataSheet = TreeDataSheet(
         id: '',
         project_id: project_id,
-        specific_tree_id: '',
-        tree_specie_id: '',
-        description: '',
+        specific_tree_id: treeId,
+        tree_specie_id: treeSpecie.id,
+        description: description,
       );
 
 
