@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/screens/tree_species.dart';
 import '../common/widgets/custom_newprojectalertdialog.dart';
 
@@ -171,10 +172,16 @@ class _Home extends State<Home>{
               const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: (){
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (context) => TreeSpecies())
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomAlertDialogTreeSpecies();
+                    }
                   );
+                  // Navigator.push(
+                  //   context, 
+                  //   MaterialPageRoute(builder: (context) => TreeSpecies())
+                  // );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
