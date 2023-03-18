@@ -6,11 +6,11 @@ class TreeDataSheet{
   final String project_id;
   final String specific_tree_id;
   final String tree_specie_id;
-  final String description;
+  final String? description;
 
   TreeDataSheet(
     {required this.id, required this.project_id, required this.specific_tree_id,
-     required this.tree_specie_id, required this.description}
+     required this.tree_specie_id, this.description}
   ); 
 
   // Create a object map
