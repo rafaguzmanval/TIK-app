@@ -59,9 +59,9 @@ class TreeSpecieService{
     }
   }
 
-  Future<dynamic> findSpecie(TreeSpecie treeSpecie) async {
+  Future<dynamic> findSpecie(String _id) async {
     final response = await http.get(
-        Uri.parse('$url/treespecies/${treeSpecie.id}'),
+        Uri.parse('$url/treespecies/${_id}'),
       );
 
     if (response.statusCode == 200) {
