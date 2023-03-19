@@ -34,7 +34,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
   Future<dynamic> initSpecieValue() async {
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
-    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name ?? '');
+    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
 
   @override
