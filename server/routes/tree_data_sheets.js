@@ -21,7 +21,15 @@ treeDataSheetRouter.post("/new",
             return res.json({ msg: "Ficha de datos creada correctamente"});
 
         } catch(err){
-            return res.status(500).json({error: err.message});
+            // 11000 Error code of duplicated index
+            if(err.code == '11000')
+            {
+                return res.status(500).json({error: "Ya existe una ficha de datos con mismo ID de árbol y especie"}); 
+            }
+            else
+            {
+                return res.status(500).json({error: err.message});
+            }
         }
     }
 );
