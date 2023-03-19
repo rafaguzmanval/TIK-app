@@ -26,6 +26,49 @@ treeDataSheetRouter.post("/new",
     }
 );
 
+treeDataSheetRouter.put("/update/:id",
+    async (req, res) => {
+
+        const { id } = req.params;
+        const  { project_id, specific_tree_id, tree_specie_id, description } = req.body;
+
+        try {
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description }, { new: false });
+
+            if (!treeDataSheet) {
+                return res.status(404).json({ error: 'Ficha de datos no encontrada' });
+            }
+
+            res.send(treeDataSheet);
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({error: err.message});
+        }
+
+    }
+)
+
+treeDataSheetRouter.delete("/delete/:id",
+    async (req, res) => {
+
+        const { id } = req.params;
+
+        try {
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndDelete(id);
+            if (!treeDataSheet) {
+                return res.status(404).json({ error: 'Ficha de datos no encontrada' });
+            }
+
+            res.json({ mensaje: 'Ficha de datos eliminada correctamente' });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({error: err.message});
+        }
+    }
+)
+
 treeDataSheetRouter.get("/:id",
     async (req, res) => {
         const { _id } = req.params;
