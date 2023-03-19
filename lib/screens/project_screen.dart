@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
+import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_timer_app/models/tree_data_sheet.dart';
+import 'package:tree_timer_app/models/tree_specie.dart';
 import 'package:tree_timer_app/screens/tree_data_sheet.dart';
 
 class ProjectScreen extends StatefulWidget {
@@ -20,6 +23,7 @@ class ProjectScreen extends StatefulWidget {
 class _ProjectScreenState extends State<ProjectScreen> {
 
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
+  TreeSpecieService treeSpecieService = new TreeSpecieService();
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +90,16 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                         return ListTile(
                                           leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
                                           title: Text(snapshot.data[index]["specific_tree_id"].toString()),
-                                          onTap: () {
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(              
+                                                builder: (context) => TreeDataSheetScreen(
+                                                  treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
+                                                  project: widget.project,
+                                                ),
+                                              ),
+                                            );
                                           },
                                         );
                                       },
@@ -119,7 +132,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
           Navigator.push(
               context,
               MaterialPageRoute(              
-                builder: (context) => TreeDataSheet(project: widget.project),
+                builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
               ),
           );
         },
