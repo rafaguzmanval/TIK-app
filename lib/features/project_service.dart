@@ -54,5 +54,24 @@ class ProjectService{
       throw Exception('Error al obtener la lista proyectos');
     }
   }
+
+  void deleteProject({required BuildContext context, required String id}) async {
+    try
+    {
+      final response = await http.delete(
+        Uri.parse('$url/projects/delete/${id}'),
+      );
+
+      httpErrorHandler(res: response, context: context,
+        onSuccess: (){
+          showSnackBar(context, "¡Proyecto borrado correctamente!");
+        }
+      );
+      
+    }
+    catch(err){
+      showSnackBar(context, err.toString());
+    } 
+  }
   
 }
