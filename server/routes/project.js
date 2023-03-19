@@ -48,6 +48,26 @@ projectRouter.get("/:id",
     }
 );
 
+projectRouter.delete("/delete/:id",
+    async (req, res) => {
+
+        const { id } = req.params;
+
+        try {
+            const project = await projectSchemaModel.findByIdAndDelete(id);
+            if (!project) {
+                return res.status(404).json({ error: 'Proyecto no encontrado' });
+            }
+
+            res.json({ mensaje: 'Proyectos eliminado correctamente' });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({error: err.message});
+        }
+    }
+)
+
 
 
 export default projectRouter;
