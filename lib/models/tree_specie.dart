@@ -19,7 +19,7 @@ class TreeSpecie{
     };
   }
 
-  // Factory fucntion to parse from JSON to object
+  // Factory function to parse from JSON to object
   factory TreeSpecie.fromJson(Map<String, dynamic> parsedJson){
     return TreeSpecie(
       id: parsedJson["_id"] ?? '',
