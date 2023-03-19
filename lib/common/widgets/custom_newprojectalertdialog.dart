@@ -5,7 +5,7 @@ import 'package:tree_timer_app/features/project_service.dart';
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
   final String title;
-  String? hintText = DateFormat('yyyy_MM_dd').format(DateTime.now()).toString();
+  String hintText = DateFormat('yyyy_MM_dd_HH:mm:ss').format(DateTime.now()).toString();
 
   NewProjectCustomAlertDialog({
     Key? key,
@@ -43,12 +43,40 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
         decoration: InputDecoration(hintText: widget.hintText),
       ),
       actions: <Widget>[
-        ElevatedButton(
-          onPressed: () {
-            projectService.newProject(context: context, name: _textController.text);
-            Navigator.of(context).pop();
-          },
-          child: Text("Crear")
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Cancelar")
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // if project name empty -> hintText as value
+                      if(_textController.value == TextEditingValue.empty)
+                      {
+                        _textController.value = TextEditingValue(text: widget.hintText);
+                      }
+                      projectService.newProject(context: context, name: _textController.text);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("Crear")
+                  ),
+                ],
+              ),
+            )
+          ],
         )
       ],
     );
