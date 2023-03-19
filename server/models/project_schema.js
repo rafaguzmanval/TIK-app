@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import treeDataSheetSchemaModel from "./tree_data_sheets_schema.js";
 
 const projectSchema = mongoose.Schema(
     {
@@ -19,6 +20,17 @@ const projectSchema = mongoose.Schema(
     //    }]
     }
 );
+
+// Delete all the tree data sheets associated
+projectSchema.pre('findOneAndDelete', async function(next) {
+    try {
+        console.log("ESTOY BORRANDO LAS FICHAS DE DATOS ASOCIADAS AL PROYECTO");
+        await treeDataSheetSchemaModel.deleteMany({ project_id: this._id });
+        next();
+    } catch (err) {
+        next(err);
+    }
+  });
 
 export const projectSchemaModel = mongoose.model("Projects", projectSchema);
 export default projectSchemaModel;
