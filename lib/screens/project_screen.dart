@@ -165,7 +165,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "");
+          bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
           if(deleteProject == true && widget.project != null){
             projectService.deleteProject(context: context, id: widget.project.id);
             Navigator.pop(context);
