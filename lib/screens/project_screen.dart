@@ -91,7 +91,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                           leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
                                           title: Text(snapshot.data[index]["specific_tree_id"].toString()),
                                           onTap: () async {
-                                            Navigator.push(
+                                            await Navigator.push(
                                               context,
                                               MaterialPageRoute(              
                                                 builder: (context) => TreeDataSheetScreen(
@@ -100,6 +100,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                                 ),
                                               ),
                                             );
+                                            // Rebuild widget
+                                            setState(() {
+                                            });
                                           },
                                         );
                                       },
@@ -128,13 +131,17 @@ class _ProjectScreenState extends State<ProjectScreen> {
         child: Container(height: 50.0),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.push(
+        onPressed: () async {
+          await Navigator.push(
               context,
               MaterialPageRoute(              
                 builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
               ),
           );
+          // Rebuild widget
+          setState(() {
+            
+          });
         },
         tooltip: 'Crear nueva ficha de datos',
         child: const Icon(Icons.add),
