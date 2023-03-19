@@ -60,19 +60,21 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
                                   title: Text(snapshot.data[index]["name"]),
-                                  onTap: () {
+                                  onTap: () async {
                                     Project project = Project(
                                         id: snapshot.data[index]["_id"],
                                         name: snapshot.data[index]["name"],
                                         description: snapshot.data[index]["description"] ?? '',
                                         // listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
                                     );
-                                    Navigator.push(
+                                    await Navigator.push(
                                         context,
                                         MaterialPageRoute(              
                                           builder: (context) => ProjectScreen(project: project),
                                         ),
                                     );
+                                    // Rebuild widget
+                                    setState(() {});
                                   },
                                 );
                               },
