@@ -4,30 +4,48 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
 
-class TreeDataSheet extends StatefulWidget{
+class TreeDataSheetScreen extends StatefulWidget{
 
+  TreeDataSheet? treeDataSheet;
   final Project project;
+  String? specificTreeIdValue;
+  TreeSpecie? selectedSpecie;
+  String? descriptionValue;
 
-  TreeDataSheet({
+  TreeDataSheetScreen({
     Key? key,
-    required this.project
+    required this.treeDataSheet,
+    required this.project,
   }) : super(key:key);
 
   @override
-  State<TreeDataSheet> createState() => _TreeDataSheetState();
+  State<TreeDataSheetScreen> createState() => _TreeDataSheetScreenState();
 }
 
-class _TreeDataSheetState extends State<TreeDataSheet>{
+class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
   TreeSpecieService treeSpecieService = new TreeSpecieService();
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   final treeSpecieController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  String _specificTreeId = '';
-  TreeSpecie? _specie;
-  String _description = '';
+
+  Future<dynamic> initSpecieValue() async {
+    widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
+    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name ?? '');
+  }
+
+  @override
+  void initState() {
+    // Initialize value of controller if it is valid
+    if(widget.treeDataSheet != null)
+    {
+      initSpecieValue();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,11 +63,12 @@ class _TreeDataSheetState extends State<TreeDataSheet>{
             child: ListView(
               children: [
                 TextFormField(
+                  initialValue: widget.treeDataSheet?.specific_tree_id,
                   decoration: InputDecoration(
                     labelText: 'ID de árbol',
                   ),
                   onSaved: (value) {
-                    _specificTreeId = value!;
+                    widget.specificTreeIdValue = value!;
                   },
                   validator: (value) {
                     if(value!.isEmpty){
@@ -74,24 +93,25 @@ class _TreeDataSheetState extends State<TreeDataSheet>{
                 TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                   onPressed: () async {
-                    _specie = await showDialog(
+                    widget.selectedSpecie = await showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return CustomAlertDialogTreeSpecies();
                       }
                     );
                     // We set the value of tree specie text form field
-                    treeSpecieController.value = TextEditingValue(text: _specie?.name ?? '');
+                    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                   },
                   child: Text('Seleccionar especie de árbol')
                 ),
                 TextFormField(
+                  initialValue: widget.treeDataSheet?.description,
                   maxLines: 3,
                   decoration: InputDecoration(
                     labelText: 'Notas de árbol',
                   ),
                   onSaved: (value) {
-                    _description = value!;
+                    widget.descriptionValue = value!;
                   },
                 )
               ]
@@ -107,8 +127,9 @@ class _TreeDataSheetState extends State<TreeDataSheet>{
             heroTag: UniqueKey(),
             onPressed: () async {
               bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
-              if(deleteDataSheet == true){
-                //Delete data sheet
+              if(deleteDataSheet == true && widget.treeDataSheet != null){
+                treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
+                Navigator.pop(context);
               }else{
                 return null;
               }
@@ -126,8 +147,21 @@ class _TreeDataSheetState extends State<TreeDataSheet>{
                 _formKey.currentState!.save();
                 bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
                 if(saveDataSheet == true){
-                  //Save data sheet
-                  treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: _specie!, treeId: _specificTreeId, description: _description);
+                  // Update data sheet or save if does not exists
+                  if(widget.treeDataSheet != null)
+                  {
+                    treeDataSheetService.updateTreeDataSheet(
+                      context: context,
+                      id: widget.treeDataSheet!.id,
+                      project_id: widget.project.id,
+                      treeSpecie: widget.selectedSpecie!,
+                      treeId: widget.specificTreeIdValue!,
+                      description: widget.descriptionValue
+                    );
+                  }
+                  else{
+                    treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue);
+                  }
                 }else{
                   return null;
                 }
