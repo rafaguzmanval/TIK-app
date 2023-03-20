@@ -49,8 +49,8 @@ class _TreeTimerApp extends State<TreeTimerApp> {
       onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
       home: (Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty)
           ? const Home(title: 'Bienvenido',)
-          // : const Login(),
-          : const Home(title: 'Bienvenido',),
+          : const Login(),
+          // : const Home(title: 'Bienvenido',),
       /*routes: {
         "/": (context) => const Login(title: 'Login'),
         "/register": (context) => const Register(title: 'Registro'),
