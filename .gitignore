@@ -42,6 +42,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Add OS folder +100mb storage
-/windows
+.env
+/android/local.properties
