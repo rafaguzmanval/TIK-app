@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
+import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
 import 'package:rive/rive.dart';
 
 
@@ -20,8 +22,27 @@ class _LoginState extends State<Login> {
   final AuthService authService = AuthService();
   final _loginFormKey = GlobalKey<FormState>();
 
-  TextEditingController _emailController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _emailController =  TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  late RiveAnimationController _controller;
+  SMIInput<bool>? _hidePassword;
+
+  void _onRiveInit(Artboard artboard) {
+    final controller = StateMachineController.fromArtboard(artboard, 'StateMachine');
+    artboard.addController(controller!);
+    _hidePassword = controller.findInput<bool>('pressed') as SMIBool ;
+  }
+
+  void _hitHidePassword(bool hideText) {
+    if(hideText == false)
+    {
+      _hidePassword?.change(false);
+    }
+    else{
+      _hidePassword?.change(true);
+    }
+  } 
 
   void loginUser(){
     authService.loginUser(
@@ -29,6 +50,13 @@ class _LoginState extends State<Login> {
       email: _emailController.text,
       password: _passwordController.text
     );
+  }
+
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = SimpleAnimation('idle');
   }
 
   @override
@@ -46,9 +74,7 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   width: 250,
                   height: 250,
-                  child: RiveAnimation.asset("assets/rive/tree.riv", fit: BoxFit.cover,))
-                // RiveAnimation.asset("assets/rive/tree.riv", fit: BoxFit.cover,)
-                // RiveAnimation.asset("tree.riv")
+                  child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
               ],
             ),
             Form(
@@ -56,9 +82,14 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomTextField(controller: _emailController, hintText: "Email"),
+                  CustomTextField(controller: _emailController, labelText: "Email"),
                   SizedBox(height: 15),
-                  CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
+                  // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
+                  CustomPasswordFormField(
+                    onVisibilityPressed: (isPasswordVisible) {
+                      _hitHidePassword(isPasswordVisible);
+                    },
+                  ),
                   SizedBox(height: 35),
                   Container(
                     width: 200,
@@ -71,7 +102,7 @@ class _LoginState extends State<Login> {
                       onTap: (){
                         if(_loginFormKey.currentState!.validate()) {
                           loginUser();
-                        } 
+                        }
                       },
                     ),
                   ),
@@ -85,7 +116,7 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-          ] 
+          ]
         ),
       ),
     );
