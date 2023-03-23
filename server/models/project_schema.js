@@ -24,8 +24,8 @@ const projectSchema = mongoose.Schema(
 // Delete all the tree data sheets associated
 projectSchema.pre('findOneAndDelete', async function(next) {
     try {
-        console.log("ESTOY BORRANDO LAS FICHAS DE DATOS ASOCIADAS AL PROYECTO");
-        await treeDataSheetSchemaModel.deleteMany({ project_id: this._id });
+        const doc = this;
+        await treeDataSheetSchemaModel.deleteMany({ project_id: doc._conditions._id });
         next();
     } catch (err) {
         next(err);
