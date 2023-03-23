@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class CustomPasswordFormField extends StatefulWidget
 {
 
+  final TextEditingController controller;
   final ValueChanged<bool>? onVisibilityPressed;
 
   CustomPasswordFormField({
     Key? key,
+    required this.controller,
     this.onVisibilityPressed,
   }) : super(key:key);
 
@@ -22,6 +24,7 @@ class _CustomPasswordFormField extends State<CustomPasswordFormField>
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       obscureText: hideText,
       decoration: InputDecoration(
         labelText: 'Contraseña',

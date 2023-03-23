@@ -86,6 +86,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 15),
                   // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
                   CustomPasswordFormField(
+                    controller: _passwordController,
                     onVisibilityPressed: (isPasswordVisible) {
                       _hitHidePassword(isPasswordVisible);
                     },
