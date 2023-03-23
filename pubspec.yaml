@@ -70,6 +70,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/rive/tree.riv
+    - assets/rive/tree_and_title.riv
+    - assets/rive/tree_and_title_v2.riv
+    - assets/rive/tree_v3.riv
+    - assets/app_title.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
