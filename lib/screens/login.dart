@@ -66,7 +66,7 @@ class _LoginState extends State<Login> {
         title: Text(Login.title),
       ),
       body: Container(
-        margin: EdgeInsets.all(50),
+        margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
         child: Column(
           children: [
             Stack(
