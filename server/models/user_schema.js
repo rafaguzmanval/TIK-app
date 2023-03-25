@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcryptjs from 'bcryptjs';
+import projectSchemaModel from "./project_schema.js";
 
 const SALT_ROUNDS = 10;
 
@@ -58,6 +59,18 @@ userSchema.methods.comparePassword = function (password, callback){
             callback(null, isMatch);
     });
 }
+
+// Delete all the projects associated
+userSchema.pre('findOneAndDelete', async function(next){
+    try{
+        const user = this;
+        await projectSchemaModel.deleteMany({user_id: user._condictions._id});
+        next();
+    }catch(err){
+        next(err);
+    }
+});
+
 
 export const userModel = mongoose.model("Users", userSchema);
 

@@ -6,7 +6,6 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
-import 'package:tree_timer_app/providers/tree_specie_provider.dart';
 import 'package:tree_timer_app/screens/home.dart';
 import 'package:tree_timer_app/screens/login.dart';
 
