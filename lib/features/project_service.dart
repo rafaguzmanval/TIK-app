@@ -12,6 +12,7 @@ class ProjectService{
   void newProject({
     required BuildContext context,
     required String name,
+    required String user_id,
   })
   async{
 
@@ -20,6 +21,7 @@ class ProjectService{
         id: '',
         name: name,
         description: '',
+        user_id: user_id
         // listTreeSheetsId: []
       );
 
@@ -42,9 +44,9 @@ class ProjectService{
     }
   }
 
-  Future<dynamic> getProjects() async {
+  Future<dynamic> getProjects(String user_id) async {
     final response = await http.get(
-        Uri.parse('$url/projects/getall'),
+        Uri.parse('$url/projects/getall/$user_id'),
       );
 
     if (response.statusCode == 200) {
