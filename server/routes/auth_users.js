@@ -7,7 +7,7 @@ import auth from "../middlewares/auth.js";
 const authUserRouter = Router();
 const encoder = new TextEncoder();
 
-//Obtener los detalles de una cuenta a partir del guid
+//Obtain user details from email
 authUserRouter.get("/:email", async (req, res) => {
   const { email } = req.params;
 
@@ -17,7 +17,7 @@ authUserRouter.get("/:email", async (req, res) => {
   return res.send(user);
 });
 
-//Obtener los detalles de una cuenta a partir del guid
+//Obtain user details from email and password
 authUserRouter.get("/:email/:password", async (req, res) => {
   const { email, password } = req.params;
 
@@ -37,8 +37,7 @@ authUserRouter.get("/:email/:password", async (req, res) => {
 
 });
 
-// Register route
-// Crear una nueva cuenta
+// Register new account route
 authUserRouter.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -46,16 +45,12 @@ authUserRouter.post("/register", async (req, res) => {
     
     if (!email || !password || !name) return res.status(400).json({ msg: "Error faltan campos por recibir"});
 
-    // Se pone exec para convertirlo en promesa aunque si no lo pones
-    // Mongoose lo hace en su implementacion
     const user = await userModel.findOne({email: email}).exec();
 
     if (user) return res.status(409).json({ msg: "El usuario ya se encuentra registrado"});
 
-    // Rellenamos los campos requeridos en el esquema
     const newUser = new userModel({name, email, password});
 
-    // Es una promesa
     await newUser.save();
 
     return res.json({ msg: "Usuario registrado correctamente"});
@@ -67,7 +62,6 @@ authUserRouter.post("/register", async (req, res) => {
 });
 
 // Login route
-// Loguearse en cuenta a partir de email y contraseña
 authUserRouter.post("/login", async (req, res) => {
   const { email, password } = req.body;
 

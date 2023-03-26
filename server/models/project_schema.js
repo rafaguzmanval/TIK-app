@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-import treeDataSheetSchemaModel from "./tree_data_sheets_schema.js";
+import treeDataSheetSchemaModel from "./user_schema.js";
 
 const projectSchema = mongoose.Schema(
     {
        name: {
         required: true,
-        unique: true,
+        unique: false,
         type: String,
         trim: true
        },
@@ -14,6 +14,12 @@ const projectSchema = mongoose.Schema(
         type: String,
         trim: true
        },
+
+       user_id: {
+        required: true,
+        type: mongoose.Types.ObjectId,
+        ref: "Users"
+       }
     //    tree_data_sheets_id: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: "TreeDataSheets"
@@ -21,16 +27,21 @@ const projectSchema = mongoose.Schema(
     }
 );
 
+// Dont allow duplicated projects with same name and user id
+projectSchema.index({ user_id: 1, name: 1 }, { unique: true });
+
+
 // Delete all the tree data sheets associated
 projectSchema.pre('findOneAndDelete', async function(next) {
     try {
-        console.log("ESTOY BORRANDO LAS FICHAS DE DATOS ASOCIADAS AL PROYECTO");
-        await treeDataSheetSchemaModel.deleteMany({ project_id: this._id });
+        const doc = this;
+        await treeDataSheetSchemaModel.deleteMany({ project_id: doc._conditions._id });
         next();
     } catch (err) {
         next(err);
     }
   });
+  
 
 export const projectSchemaModel = mongoose.model("Projects", projectSchema);
 export default projectSchemaModel;
