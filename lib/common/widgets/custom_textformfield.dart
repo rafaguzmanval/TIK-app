@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String hintText;
+  final String labelText;
   final bool isPassword;
 
   const CustomTextField({
     Key? key,
     required this.controller,
-    required this.hintText,
+    required this.labelText,
     this.isPassword = false,
   }) : super(key:key);
 
@@ -20,10 +20,10 @@ class CustomTextField extends StatelessWidget {
       obscureText: isPassword ? true : false,
       controller: controller,
       decoration: InputDecoration(
-        hintText: hintText,
+        labelText: labelText,
       ),
       validator: (val) {
-        String hintTextLowerCase = hintText.toLowerCase();
+        String hintTextLowerCase = labelText.toLowerCase();
         if(val == null || val.isEmpty) {
           return 'Introduce tu $hintTextLowerCase';
         }

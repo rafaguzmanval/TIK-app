@@ -136,6 +136,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                       ),
                       SizedBox(height: 15,),
                       FloatingActionButton(
+                        // To avoid conflicts with same tags between floating buttons
                         heroTag: UniqueKey(),
                         onPressed: () async {
                           await Navigator.push(
@@ -165,6 +166,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
         child: Container(height: 50.0),
       ),
       floatingActionButton: FloatingActionButton(
+        // To avoid conflicts with same tags between floating buttons
         heroTag: UniqueKey(),
         onPressed: () async {
           bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
