@@ -9,7 +9,7 @@ import 'package:tree_timer_app/constants/global_variables.dart';
 
 class ProjectService{
 
-  void newProject({
+Future<bool> newProject({
     required BuildContext context,
     required String name,
     required String user_id,
@@ -34,13 +34,14 @@ class ProjectService{
         body: project.toJson(),
       );
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Nuevo proyecto creado correctamente!");
-        }
-      );
+      if(res.statusCode == 200)
+      {
+        return true;
+      } else {
+        return false;
+      }
     } catch(err){
-      showSnackBar(context, err.toString());
+        return false;
     }
   }
 

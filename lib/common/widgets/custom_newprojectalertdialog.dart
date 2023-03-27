@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 
@@ -64,20 +65,29 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
               child: Column(
                 children: [
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // if project name empty -> hintText as value
                       if(_textController.value == TextEditingValue.empty)
                       {
                         _textController.value = TextEditingValue(text: widget.hintText);
                       }
 
-                      projectService.newProject(
+                      //Check if correct creation
+                      bool projectCreated = await projectService.newProject(
                         context: context,
                         name: _textController.text,
                         user_id:  Provider.of<UserProvider>(context, listen: false).user.id
                       );
-                      
+
                       Navigator.of(context).pop();
+
+                      if(projectCreated == true)
+                      {
+                        return showSnackBar(context, "¡Nuevo proyecto creado correctamente!");
+                      }
+                      else{
+                        return showSnackBar(context, "Error al crear nuevo proyecto");
+                      }
                     },
                     child: Text("Crear")
                   ),
