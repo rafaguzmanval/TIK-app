@@ -56,13 +56,13 @@ class _RegisterState extends State<Register>
             key: _registrationFormKey,
             child: ListView(
               children: [
-                CustomTextField(controller: _nameController, hintText: "Nombre"),
+                CustomTextField(controller: _nameController, labelText: "Nombre"),
                 SizedBox(height: 15),
-                CustomTextField(controller: _emailController, hintText: "Email"),
+                CustomTextField(controller: _emailController, labelText: "Email"),
                 SizedBox(height: 15),
-                CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
+                CustomTextField(controller: _passwordController, labelText: "Contraseña", isPassword: true,),
                 SizedBox(height: 15),
-                CustomTextField(controller: _confirmPasswordController, hintText: "Confirmar contraseña", isPassword: true,),
+                CustomTextField(controller: _confirmPasswordController, labelText: "Confirmar contraseña", isPassword: true,),
                 SizedBox(height: 35),
                 Container(
                     width: 200,

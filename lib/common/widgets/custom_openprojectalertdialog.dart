@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_timer_app/providers/user_provider.dart';
   import 'package:tree_timer_app/screens/project_screen.dart';
 import '../../constants/utils.dart';
 
@@ -43,7 +45,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FutureBuilder(
-                  future: projectService.getProjects(),
+                  future: projectService.getProjects(Provider.of<UserProvider>(context, listen: false).user.id),
                   builder: (context, snapshot) {
                     if(snapshot.hasData)
                     {
@@ -65,6 +67,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                         id: snapshot.data[index]["_id"],
                                         name: snapshot.data[index]["name"],
                                         description: snapshot.data[index]["description"] ?? '',
+                                        user_id:  Provider.of<UserProvider>(context, listen: false).user.id,
                                         // listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
                                     );
                                     await Navigator.push(

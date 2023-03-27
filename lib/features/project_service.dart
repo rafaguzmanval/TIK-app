@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
@@ -11,6 +12,7 @@ class ProjectService{
   void newProject({
     required BuildContext context,
     required String name,
+    required String user_id,
   })
   async{
 
@@ -19,6 +21,7 @@ class ProjectService{
         id: '',
         name: name,
         description: '',
+        user_id: user_id
         // listTreeSheetsId: []
       );
 
@@ -41,9 +44,9 @@ class ProjectService{
     }
   }
 
-  Future<dynamic> getProjects() async {
+  Future<dynamic> getProjects(String user_id) async {
     final response = await http.get(
-        Uri.parse('$url/projects/getall'),
+        Uri.parse('$url/projects/getall/$user_id'),
       );
 
     if (response.statusCode == 200) {
@@ -55,7 +58,7 @@ class ProjectService{
     }
   }
 
-  void deleteProject({required BuildContext context, required String id}) async {
+  Future deleteProject({required BuildContext context, required String id}) async {
     try
     {
       final response = await http.delete(

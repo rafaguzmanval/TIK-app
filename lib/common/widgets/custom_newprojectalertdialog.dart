@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:tree_timer_app/features/project_service.dart';
+import 'package:tree_timer_app/providers/user_provider.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
@@ -68,7 +70,13 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                       {
                         _textController.value = TextEditingValue(text: widget.hintText);
                       }
-                      projectService.newProject(context: context, name: _textController.text);
+
+                      projectService.newProject(
+                        context: context,
+                        name: _textController.text,
+                        user_id:  Provider.of<UserProvider>(context, listen: false).user.id
+                      );
+                      
                       Navigator.of(context).pop();
                     },
                     child: Text("Crear")
