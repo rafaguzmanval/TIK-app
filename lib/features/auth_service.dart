@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,6 +7,7 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/screens/home.dart';
 import 'package:tree_timer_app/screens/login.dart';
@@ -52,7 +52,7 @@ class AuthService{
   }
 
   // Login user
-  void loginUser({
+  Future loginUser({
     required BuildContext context,
     required String email,
     required String password
@@ -76,24 +76,26 @@ class AuthService{
         },
         body: user.toJson(),
       );
+
+      return ValidResponse.fromResponse(res, res.body);
   
-      httpErrorHandler(res: res, context: context,
-      onSuccess: ()async{
-          Map<String, dynamic> infoRes = json.decode(res.body);
-          String name = infoRes['name'];
+      // httpErrorHandler(res: res, context: context,
+      // onSuccess: ()async{
+      //     Map<String, dynamic> infoRes = json.decode(res.body);
+      //     String name = infoRes['name'];
           
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.setString('auth-token', infoRes["token"]);
-          Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
-          Navigator.pushAndRemoveUntil(
-            context, 
-            MaterialPageRoute(builder: (context) => Home(title: 'Tree Timer App')),
-            (route) => false);
-          //showSnackBar(context, "¡Bienvenido $name!");
-        }
-      );
+      //     SharedPreferences preferences = await SharedPreferences.getInstance();
+      //     await preferences.setString('auth-token', infoRes["token"]);
+      //     Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
+      //     Navigator.pushAndRemoveUntil(
+      //       context, 
+      //       MaterialPageRoute(builder: (context) => Home(title: 'Tree Timer App')),
+      //       (route) => false);
+      //     //showSnackBar(context, "¡Bienvenido $name!");
+      //   }
+      // );
     } catch(err){
-      showSnackBar(context, err.toString());
+      return ValidResponse(isSuccess: false, body: err.toString());
     }
   }
 
@@ -138,7 +140,7 @@ class AuthService{
         }
       );
 
-      Bool valid = jsonDecode(validTokenRes.body);
+      bool valid = jsonDecode(validTokenRes.body);
       if(valid == true){
         // Now get user data, using middleware in server
         http.Response response = await http.get(
@@ -150,10 +152,8 @@ class AuthService{
         );
 
         var userProvider = Provider.of<UserProvider>(context, listen: false);
-        print('Estoy en auth_service.dart, $userProvider');
         userProvider.setUser(jsonDecode(response.body));
       }
-        print('Estoy en auth_service.dart444');
 
     } catch(err){
         print("Estoy en auth_service.dartsd");

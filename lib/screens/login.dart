@@ -66,62 +66,24 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text(Login.title),
       ),
-      body: Container(
-        margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
-              ],
-            ),
-            // Form(
-            //   key: _loginFormKey,
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       CustomTextField(controller: _emailController, labelText: "Email"),
-            //       SizedBox(height: 15),
-            //       // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
-            //       CustomPasswordFormField(
-            //         controller: _passwordController,
-            //         onVisibilityPressed: (isPasswordVisible) {
-            //           _hitHidePassword(isPasswordVisible);
-            //         },
-            //       ),
-            //       SizedBox(height: 35),
-            //       Container(
-            //         width: 200,
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(10),
-            //         ),
-            //         child: CustomButton(
-            //           text: "Login",
-            //           textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            //           onTap: (){
-            //             if(_loginFormKey.currentState!.validate()) {
-            //               loginUser();
-            //             }
-            //           },
-            //         ),
-            //       ),
-            //       SizedBox(height: 35),
-            //       GestureDetector(
-            //         onTap:(){
-            //           Navigator.pushNamed(context, '/register');
-            //         },
-            //         child: const Text("¿Nuevo usuario? Cree una cuenta")
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            LoginForm(onVisibilityPressed: (value) => {
-              _hitHidePassword(value)
-            },)
-          ]
+      body: Center(
+        child: Container(
+          margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 250,
+                    child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
+                ],
+              ),
+              LoginForm(onVisibilityPressed: (value) => {
+                _hitHidePassword(value)
+              },)
+            ]
+          ),
         ),
       ),
     );
