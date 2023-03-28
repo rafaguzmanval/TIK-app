@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
+import 'package:tree_timer_app/common/widgets/login_form.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
@@ -77,46 +78,49 @@ class _LoginState extends State<Login> {
                   child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
               ],
             ),
-            Form(
-              key: _loginFormKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomTextField(controller: _emailController, labelText: "Email"),
-                  SizedBox(height: 15),
-                  // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
-                  CustomPasswordFormField(
-                    controller: _passwordController,
-                    onVisibilityPressed: (isPasswordVisible) {
-                      _hitHidePassword(isPasswordVisible);
-                    },
-                  ),
-                  SizedBox(height: 35),
-                  Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: CustomButton(
-                      text: "Login",
-                      textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      onTap: (){
-                        if(_loginFormKey.currentState!.validate()) {
-                          loginUser();
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 35),
-                  GestureDetector(
-                    onTap:(){
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    child: const Text("¿Nuevo usuario? Cree una cuenta")
-                  ),
-                ],
-              ),
-            ),
+            // Form(
+            //   key: _loginFormKey,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       CustomTextField(controller: _emailController, labelText: "Email"),
+            //       SizedBox(height: 15),
+            //       // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
+            //       CustomPasswordFormField(
+            //         controller: _passwordController,
+            //         onVisibilityPressed: (isPasswordVisible) {
+            //           _hitHidePassword(isPasswordVisible);
+            //         },
+            //       ),
+            //       SizedBox(height: 35),
+            //       Container(
+            //         width: 200,
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(10),
+            //         ),
+            //         child: CustomButton(
+            //           text: "Login",
+            //           textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            //           onTap: (){
+            //             if(_loginFormKey.currentState!.validate()) {
+            //               loginUser();
+            //             }
+            //           },
+            //         ),
+            //       ),
+            //       SizedBox(height: 35),
+            //       GestureDetector(
+            //         onTap:(){
+            //           Navigator.pushNamed(context, '/register');
+            //         },
+            //         child: const Text("¿Nuevo usuario? Cree una cuenta")
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            LoginForm(onVisibilityPressed: (value) => {
+              _hitHidePassword(value)
+            },)
           ]
         ),
       ),
