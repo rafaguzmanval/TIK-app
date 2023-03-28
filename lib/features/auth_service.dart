@@ -79,21 +79,6 @@ class AuthService{
 
       return ValidResponse.fromResponse(res, res.body);
   
-      // httpErrorHandler(res: res, context: context,
-      // onSuccess: ()async{
-      //     Map<String, dynamic> infoRes = json.decode(res.body);
-      //     String name = infoRes['name'];
-          
-      //     SharedPreferences preferences = await SharedPreferences.getInstance();
-      //     await preferences.setString('auth-token', infoRes["token"]);
-      //     Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
-      //     Navigator.pushAndRemoveUntil(
-      //       context, 
-      //       MaterialPageRoute(builder: (context) => Home(title: 'Tree Timer App')),
-      //       (route) => false);
-      //     //showSnackBar(context, "¡Bienvenido $name!");
-      //   }
-      // );
     } catch(err){
       return ValidResponse(isSuccess: false, body: err.toString());
     }
