@@ -37,12 +37,14 @@ class _CustomPasswordFormField extends State<CustomPasswordFormField>
             setState(() {
               hideText = !hideText;
             });
-            widget.onVisibilityPressed!(hideText);
+            if(widget.onVisibilityPressed != null){
+              widget.onVisibilityPressed!(hideText);
+            }
           },          
         ),
       ),
       onTap: () => {
-        if(hideText == true)
+        if(hideText == true && widget.onVisibilityPressed != null)
         {
          widget.onVisibilityPressed!(true)
         }
