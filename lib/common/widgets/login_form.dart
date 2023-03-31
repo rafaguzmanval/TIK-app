@@ -6,6 +6,7 @@ import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
+import 'package:tree_timer_app/common/widgets/custom_positioned_login_animations.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
@@ -33,10 +34,12 @@ class _LoginFormState extends State<LoginForm>{
   final TextEditingController _passwordController = TextEditingController();
 
   bool isShowLoading =  false;
+  bool isShowConfetti =  false;
 
   late SMITrigger check;
   late SMITrigger error;
   late SMITrigger reset;
+  late SMITrigger confetti;
 
   StateMachineController getRiveController(Artboard artboard){
     StateMachineController? controller = StateMachineController.fromArtboard(artboard, "State Machine 1");
@@ -54,9 +57,14 @@ class _LoginFormState extends State<LoginForm>{
     if(result.isSuccess == true){
       check.fire();
       Future.delayed(Duration(seconds: 2), () async {
+          
         setState(() {
-            isShowLoading = false;
-          });
+          isShowLoading = false;
+        });
+
+        confetti.fire();
+        Future.delayed(Duration(seconds: 1), () async {
+
           // Call user provider
           Map<String, dynamic> infoRes = json.decode(result.body);
           String name = infoRes['name'];
@@ -67,11 +75,11 @@ class _LoginFormState extends State<LoginForm>{
           // Navigate to home
           Navigator.pushAndRemoveUntil(
                 context, 
-                MaterialPageRoute(builder: (context) => Home(title: 'Tree Timer App')),
+                MaterialPageRoute(builder: (context) => const Home(title: 'Tree Timer App')),
                 (route) => false
           );
-        }
-      );
+        });
+      });
     }else{ // Error animation
       error.fire();
       Future.delayed(Duration(seconds: 2), () async {
@@ -118,6 +126,7 @@ class _LoginFormState extends State<LoginForm>{
                         // Check animation
                         setState(() {
                           isShowLoading = true;
+                          isShowConfetti = true;
                         });
 
                         checkLoginUser();
@@ -138,27 +147,32 @@ class _LoginFormState extends State<LoginForm>{
             ],
           ),
         ),
-        // Check Check/Error animation
+        // Check/Error animation
         // Hide if its loading
-        isShowLoading ? Positioned.fill(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 125,
-                width: 125,
-                child: RiveAnimation.asset(
-                  "assets/rive/checkerror.riv",
-                  onInit: (artboard){
-                    StateMachineController controller = getRiveController(artboard);
-                    check = controller.findSMI("Check") as SMITrigger;
-                    error = controller.findSMI("Error") as SMITrigger;
-                    reset = controller.findSMI("Reset") as SMITrigger;
-                  }
-                ),
-              ),
-            ],
+        isShowLoading ? CustomPositionedLoginAnimation(
+          child: RiveAnimation.asset(
+            "assets/rive/checkerror.riv",
+            onInit: (artboard){
+              StateMachineController controller = getRiveController(artboard);
+              check = controller.findSMI("Check") as SMITrigger;
+              error = controller.findSMI("Error") as SMITrigger;
+              reset = controller.findSMI("Reset") as SMITrigger;
+            }
           ),
-        ) : SizedBox(),
+        ) : const SizedBox(),
+        // Confetti animation
+        isShowConfetti ? CustomPositionedLoginAnimation(
+          child: Transform.scale(
+            scale: 3,
+            child: RiveAnimation.asset(
+              "assets/rive/confetti.riv",
+              onInit: (artboard){
+                StateMachineController controller = getRiveController(artboard);
+                confetti = controller.findSMI("Trigger explosion") as SMITrigger;
+              },
+            ),
+          )
+        ) : const SizedBox(),
       ],
     );
   }

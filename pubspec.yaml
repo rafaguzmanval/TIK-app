@@ -74,6 +74,7 @@ flutter:
     - assets/rive/tree_and_title_v2.riv
     - assets/rive/tree_v3.riv
     - assets/rive/checkerror.riv
+    - assets/rive/confetti.riv
     - assets/app_title.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
