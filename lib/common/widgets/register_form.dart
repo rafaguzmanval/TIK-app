@@ -50,7 +50,19 @@ class _RegisterFormState extends State<RegisterForm>{
       // Trigger check animation
       _CheckAnimationKey.currentState?.triggerCheckFire();
       Future.delayed(Duration(seconds: 2), () async {
-          
+        if(mounted)
+        {
+           setState(() {
+            isShowLoading = false;
+            });
+            // if(widget.onDispose != null){
+            //   widget.onDispose!(result);
+            // }
+            httpErrorHandler(res: res, context: context,
+            onSuccess: (){
+              showSnackBar(context, "¡Usuario registrado correctamente!");
+            });
+        }  
         setState(() {
           isShowLoading = false;
         });
@@ -60,87 +72,90 @@ class _RegisterFormState extends State<RegisterForm>{
         httpErrorHandler(res: res, context: context,
         onSuccess: (){
           showSnackBar(context, "¡Usuario registrado correctamente!");
-        }
-      );
+        });
+
         Navigator.pop(context);
       });
     }else{ // Error animation
       _CheckAnimationKey.currentState?.triggerErrorFire();
       Future.delayed(Duration(seconds: 2), () async {
+        if(mounted){
           setState(() {
             isShowLoading = false;
           });
         }
+      }
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(60))
-      ),
-      child: FractionallySizedBox(
-        heightFactor: 0.6,
+    return Container(
+      height: 620,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(60))),
         child: Container(
-          height: double.infinity,
           width: 310,
           margin: EdgeInsets.symmetric(horizontal: 16),
-          child: Form(
-            key: _registrationFormKey,
-            child: ListView(
-              padding: EdgeInsets.all(20),
-              children: [
-                Center(child: Text("Registro", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
-                SizedBox(height: 15),
-                CustomTextField(controller: _nameController, labelText: "Nombre"),
-                SizedBox(height: 15),
-                CustomTextField(controller: _emailController, labelText: "Email"),
-                SizedBox(height: 15),
-                CustomPasswordFormField(controller: _passwordController),
-                SizedBox(height: 15),
-                CustomPasswordFormField(controller: _confirmPasswordController),
-                SizedBox(height: 35),
-                Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  // ignore: prefer_const_constructors
-                  child: CustomButton(
-                    text: "Crear cuenta",
-                    textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    onTap: (){
-                      if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
-                        setState(() {
-                          isShowLoading = true;
-                        });
-                        RegisterUser();
-                      } 
-                    }
-                  ),
-                ),
-                Container(
-                  height: double.minPositive,
-                  child: Stack(
-                    clipBehavior: Clip.none,
+          child: Column(
+            children: [
+              Expanded(
+                child: Form(
+                  key: _registrationFormKey,
+                  child: ListView(
+                    padding: EdgeInsets.all(20),
                     children: [
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: -65,
-                        child: CircleAvatar(radius: 16, backgroundColor: Colors.grey.shade100, child: Icon(Icons.close),)
+                      Center(child: Text("Registro", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                      SizedBox(height: 15),
+                      CustomTextField(controller: _nameController, labelText: "Nombre"),
+                      SizedBox(height: 15),
+                      CustomTextField(controller: _emailController, labelText: "Email"),
+                      SizedBox(height: 15),
+                      CustomPasswordFormField(controller: _passwordController),
+                      SizedBox(height: 15),
+                      CustomPasswordFormField(controller: _confirmPasswordController),
+                      SizedBox(height: 35),
+                      Container(
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        // ignore: prefer_const_constructors
+                        child: CustomButton(
+                          text: "Crear cuenta",
+                          textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          onTap: (){
+                            if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
+                              setState(() {
+                                isShowLoading = true;
+                              });
+                              RegisterUser();
+                            } 
+                          }
+                        ),
                       ),
-                      isShowLoading ? CustomPositionedLoginAnimation(
-                        child: CheckAnimation(keyChild: _CheckAnimationKey,),
-                        bottom: -100,
-                      ) : const SizedBox(),
-                    ]
+                    ],
+                  )
+                ),
+              ),
+              SizedBox(height: 15,),
+              isShowLoading ? CustomPositionedLoginAnimation(
+                child: CheckAnimation(keyChild: _CheckAnimationKey,),
+              ) : const SizedBox(),
+              Container(
+                height: 100,
+                width: 100,
+                child: GestureDetector(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Center(
+                      child: CircleAvatar(radius: 20, backgroundColor: Colors.grey.shade100, child: Icon(Icons.close),)
                   ),
                 ),
-              ],
-            )
+              ),
+            ],
           ),
         ),
       ),
