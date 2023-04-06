@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/common/widgets/login_form.dart';
+import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
@@ -81,7 +82,42 @@ class _LoginState extends State<Login> {
               ),
               LoginForm(onVisibilityPressed: (value) => {
                 _hitHidePassword(value)
-              },)
+              }),
+              SizedBox(height: 35),
+              GestureDetector(
+                onTap:(){
+                  
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("¿Nuevo usuario?"),
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Future.delayed(Duration(milliseconds: 100), (){
+                            // Navigator.pushNamed(context, '/register');
+                            showGeneralDialog(context: context,
+                              barrierDismissible: true,
+                              barrierLabel: "",
+                              pageBuilder: (context, _, __) => Center(
+                                child: RegisterForm(),
+                              )
+                            );
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          shape: StadiumBorder(),
+                          padding: EdgeInsets.all(10),
+                          backgroundColor: Colors.lightGreen
+                        ),
+                        child: const Text("Cree una cuenta"),
+                      )
+                    ),
+                  ],
+                )
+              ),
             ]
           ),
         ),
