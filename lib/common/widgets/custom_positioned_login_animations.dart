@@ -22,21 +22,11 @@ class CustomPositionedLoginAnimation extends StatelessWidget
       right: right,
       top: top,
       bottom: bottom,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 1,
-            child: Center(
-              child: SizedBox(
-                height: height,
-                width: width,
-                child: this.child
-                ),
-            ),
-          ),
-        ],
-      )
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: this.child
+        ),
     );
   }
 
