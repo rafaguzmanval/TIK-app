@@ -3,11 +3,15 @@ import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/constants/utils.dart';
+import 'package:tree_timer_app/features/auth_service.dart';
 
 class RegisterForm extends StatefulWidget{
 
+  final AuthService authService;
+  
   RegisterForm({
     Key? key,
+    required this.authService,
   }) : super(key:key);
 
   @override
@@ -62,7 +66,8 @@ class _RegisterFormState extends State<RegisterForm>{
                     textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     onTap: (){
                       if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
-                        // registerUser();
+                        widget.authService.registerUser(context: context,name: _nameController.text,
+                          email: _emailController.text,password: _passwordController.text);
                       } 
                     }
                   ),
