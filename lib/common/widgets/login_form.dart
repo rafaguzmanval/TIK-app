@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tree_timer_app/common/widgets/check_animation.dart';
+import 'package:tree_timer_app/common/widgets/confetti_animation.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
 import 'package:tree_timer_app/common/widgets/custom_positioned_login_animations.dart';
@@ -19,8 +21,7 @@ class LoginForm extends StatefulWidget{
   final ValueChanged<bool>? onVisibilityPressed;
 
   LoginForm({
-    Key? key,
-    required this.onVisibilityPressed,
+    Key? key, this.onVisibilityPressed,
   }) : super(key:key);
 
   @override
@@ -28,7 +29,11 @@ class LoginForm extends StatefulWidget{
 }
 class _LoginFormState extends State<LoginForm>{
 
+  // Global keys: form and animations
   final _loginFormKey = GlobalKey<FormState>();
+  final _CheckAnimationKey = GlobalKey<CheckAnimationState>();
+  final _ConfettiAnimationKey = GlobalKey<ConfettiAnimationState>();
+
   final AuthService authService = AuthService();
   final TextEditingController _emailController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -36,16 +41,9 @@ class _LoginFormState extends State<LoginForm>{
   bool isShowLoading =  false;
   bool isShowConfetti =  false;
 
-  late SMITrigger check;
-  late SMITrigger error;
-  late SMITrigger reset;
   late SMITrigger confetti;
 
-  StateMachineController getRiveController(Artboard artboard){
-    StateMachineController? controller = StateMachineController.fromArtboard(artboard, "State Machine 1");
-    artboard.addController(controller!);
-    return controller;
-  }
+  _LoginFormState();
 
   void checkLoginUser() async{
     ValidResponse result = await authService.loginUser(
@@ -55,14 +53,16 @@ class _LoginFormState extends State<LoginForm>{
     );
     // If successful login then successful animation
     if(result.isSuccess == true){
-      check.fire();
+      // Trigger check animation
+      _CheckAnimationKey.currentState?.triggerCheckFire();
       Future.delayed(Duration(seconds: 2), () async {
           
         setState(() {
           isShowLoading = false;
         });
 
-        confetti.fire();
+        // Trigger confetti animation
+        _ConfettiAnimationKey.currentState?.triggerConfettiFire();
         Future.delayed(Duration(seconds: 1), () async {
 
           // Call user provider
@@ -81,7 +81,7 @@ class _LoginFormState extends State<LoginForm>{
         });
       });
     }else{ // Error animation
-      error.fire();
+      _CheckAnimationKey.currentState?.triggerErrorFire();
       Future.delayed(Duration(seconds: 2), () async {
           setState(() {
             isShowLoading = false;
@@ -102,7 +102,6 @@ class _LoginFormState extends State<LoginForm>{
             children: [
               CustomTextField(controller: _emailController, labelText: "Email"),
               SizedBox(height: 15),
-              // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
               CustomPasswordFormField(
                 controller: _passwordController,
                 onVisibilityPressed: (isPasswordVisible) {
@@ -133,7 +132,6 @@ class _LoginFormState extends State<LoginForm>{
                      
                       }
                     });
-                    
                   },
                 ),
               ),
@@ -143,27 +141,13 @@ class _LoginFormState extends State<LoginForm>{
         // Check/Error animation
         // Hide if its loading
         isShowLoading ? CustomPositionedLoginAnimation(
-          child: RiveAnimation.asset(
-            "assets/rive/checkerror.riv",
-            onInit: (artboard){
-              StateMachineController controller = getRiveController(artboard);
-              check = controller.findSMI("Check") as SMITrigger;
-              error = controller.findSMI("Error") as SMITrigger;
-              reset = controller.findSMI("Reset") as SMITrigger;
-            }
-          ),
+          child: CheckAnimation(keyChild: _CheckAnimationKey,)
         ) : const SizedBox(),
         // Confetti animation
         isShowConfetti ? CustomPositionedLoginAnimation(
           child: Transform.scale(
             scale: 3,
-            child: RiveAnimation.asset(
-              "assets/rive/confetti.riv",
-              onInit: (artboard){
-                StateMachineController controller = getRiveController(artboard);
-                confetti = controller.findSMI("Trigger explosion") as SMITrigger;
-              },
-            ),
+            child: ConfettiAnimation(keyChild: _ConfettiAnimationKey),
           )
         ) : const SizedBox(),
       ],
