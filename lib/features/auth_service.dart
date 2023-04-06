@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/user.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:tree_timer_app/constants/global_variables.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
@@ -15,7 +15,7 @@ import 'package:tree_timer_app/screens/login.dart';
 class AuthService{
 
   // Register user
-  void registerUser({
+  Future registerUser({
     required BuildContext context,
     required String name,
     required String email,
@@ -33,7 +33,7 @@ class AuthService{
       );
 
 
-      http.Response res = await http.post(
+      Response res = await post(
         Uri.parse('$url/accounts/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -41,11 +41,14 @@ class AuthService{
         body: user.toJson(),
       );
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Cuenta creada correctamente!");
-        }
-      );
+      // return ValidResponse.fromResponse(res, res.body);
+      return res;
+
+      // httpErrorHandler(res: res, context: context,
+      //   onSuccess: (){
+      //     showSnackBar(context, "¡Cuenta creada correctamente!");
+      //   }
+      // );
     } catch(err){
       showSnackBar(context, err.toString());
     }
@@ -69,7 +72,7 @@ class AuthService{
       );
 
 
-      http.Response res = await http.post(
+      Response res = await post(
         Uri.parse('$url/accounts/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -117,7 +120,7 @@ class AuthService{
         preferences.setString('auth-token', '');
       }
 
-      http.Response validTokenRes = await http.post(
+      Response validTokenRes = await post(
         Uri.parse('$url/accounts/checkToken'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -128,7 +131,7 @@ class AuthService{
       bool valid = jsonDecode(validTokenRes.body);
       if(valid == true){
         // Now get user data, using middleware in server
-        http.Response response = await http.get(
+        Response response = await get(
           Uri.parse('$url/'),
           headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
