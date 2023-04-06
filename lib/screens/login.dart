@@ -5,6 +5,7 @@ import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/common/widgets/login_form.dart';
 import 'package:tree_timer_app/common/widgets/register_form.dart';
+import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
@@ -98,7 +99,10 @@ class _LoginState extends State<Login> {
                             barrierDismissible: true,
                             barrierLabel: "",
                             pageBuilder: (context, _, __) => Center(
-                              child: RegisterForm(authService: authService,),
+                              child: RegisterForm(authService: authService,
+                              onDispose: (result){
+                                  returnResponseMessage(result);
+                                }),
                             )
                           );
                         });
