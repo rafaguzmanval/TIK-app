@@ -18,10 +18,11 @@ import 'package:tree_timer_app/screens/home.dart';
 
 class LoginForm extends StatefulWidget{
 
+  final AuthService authService;
   final ValueChanged<bool>? onVisibilityPressed;
 
   LoginForm({
-    Key? key, this.onVisibilityPressed,
+    Key? key, this.onVisibilityPressed, required this.authService,
   }) : super(key:key);
 
   @override
@@ -34,6 +35,7 @@ class _LoginFormState extends State<LoginForm>{
   final _CheckAnimationKey = GlobalKey<CheckAnimationState>();
   final _ConfettiAnimationKey = GlobalKey<ConfettiAnimationState>();
 
+  //CHANGE THIS AND USED AUTHSERVICE FROM PARENT WIDGET
   final AuthService authService = AuthService();
   final TextEditingController _emailController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
