@@ -82,41 +82,36 @@ class _LoginState extends State<Login> {
               ),
               LoginForm(onVisibilityPressed: (value) => {
                 _hitHidePassword(value)
-              }),
+              }, ),
               SizedBox(height: 35),
-              GestureDetector(
-                onTap:(){
-                  
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("¿Nuevo usuario?"),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Future.delayed(Duration(milliseconds: 100), (){
-                            // Navigator.pushNamed(context, '/register');
-                            showGeneralDialog(context: context,
-                              barrierDismissible: true,
-                              barrierLabel: "",
-                              pageBuilder: (context, _, __) => Center(
-                                child: RegisterForm(),
-                              )
-                            );
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          shape: StadiumBorder(),
-                          padding: EdgeInsets.all(10),
-                          backgroundColor: Colors.lightGreen
-                        ),
-                        child: const Text("Cree una cuenta"),
-                      )
-                    ),
-                  ],
-                )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("¿Nuevo usuario?"),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Future.delayed(Duration(milliseconds: 100), (){
+                          // Navigator.pushNamed(context, '/register');
+                          showGeneralDialog(context: context,
+                            barrierDismissible: true,
+                            barrierLabel: "",
+                            pageBuilder: (context, _, __) => Center(
+                              child: RegisterForm(authService: authService,),
+                            )
+                          );
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.all(10),
+                        backgroundColor: Colors.lightGreen
+                      ),
+                      child: const Text("Cree una cuenta"),
+                    )
+                  ),
+                ],
               ),
             ]
           ),
