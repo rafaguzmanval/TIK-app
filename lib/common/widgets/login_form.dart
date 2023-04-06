@@ -137,13 +137,6 @@ class _LoginFormState extends State<LoginForm>{
                   },
                 ),
               ),
-              SizedBox(height: 35),
-              GestureDetector(
-                onTap:(){
-                  Navigator.pushNamed(context, '/register');
-                },
-                child: const Text("¿Nuevo usuario? Cree una cuenta")
-              ),
             ],
           ),
         ),
