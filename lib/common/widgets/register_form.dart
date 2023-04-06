@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:tree_timer_app/common/widgets/check_animation.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
+import 'package:tree_timer_app/common/widgets/custom_positioned_login_animations.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
+import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 
 class RegisterForm extends StatefulWidget{
 
   final AuthService authService;
+  final ValueChanged<ValidResponse>? onDispose;
   
   RegisterForm({
     Key? key,
     required this.authService,
+    this.onDispose,
   }) : super(key:key);
 
   @override
@@ -23,10 +30,50 @@ class _RegisterFormState extends State<RegisterForm>{
   // Use for fields validators
   final _registrationFormKey = GlobalKey<FormState>();
 
+  // Check animation global key
+  final _CheckAnimationKey = GlobalKey<CheckAnimationState>();
+
   final TextEditingController _nameController = new TextEditingController();
   final TextEditingController _emailController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
   final TextEditingController _confirmPasswordController = new TextEditingController();
+
+  bool isShowLoading =  false;
+
+  void RegisterUser() async{
+    // ValidResponse result = await widget.authService.registerUser(context: context,name: _nameController.text,
+    // email: _emailController.text,password: _passwordController.text);
+    Response res = await widget.authService.registerUser(context: context,name: _nameController.text,
+    email: _emailController.text,password: _passwordController.text);
+    // If successful login then successful animation
+    if(ValidResponse.fromResponse(res, res.body).isSuccess == true){
+      // Trigger check animation
+      _CheckAnimationKey.currentState?.triggerCheckFire();
+      Future.delayed(Duration(seconds: 2), () async {
+          
+        setState(() {
+          isShowLoading = false;
+        });
+        // if(widget.onDispose != null){
+        //   widget.onDispose!(result);
+        // }
+        httpErrorHandler(res: res, context: context,
+        onSuccess: (){
+          showSnackBar(context, "¡Usuario registrado correctamente!");
+        }
+      );
+        Navigator.pop(context);
+      });
+    }else{ // Error animation
+      _CheckAnimationKey.currentState?.triggerErrorFire();
+      Future.delayed(Duration(seconds: 2), () async {
+          setState(() {
+            isShowLoading = false;
+          });
+        }
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,8 +113,10 @@ class _RegisterFormState extends State<RegisterForm>{
                     textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     onTap: (){
                       if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
-                        widget.authService.registerUser(context: context,name: _nameController.text,
-                          email: _emailController.text,password: _passwordController.text);
+                        setState(() {
+                          isShowLoading = true;
+                        });
+                        RegisterUser();
                       } 
                     }
                   ),
@@ -83,6 +132,10 @@ class _RegisterFormState extends State<RegisterForm>{
                         bottom: -65,
                         child: CircleAvatar(radius: 16, backgroundColor: Colors.grey.shade100, child: Icon(Icons.close),)
                       ),
+                      isShowLoading ? CustomPositionedLoginAnimation(
+                        child: CheckAnimation(keyChild: _CheckAnimationKey,),
+                        bottom: -100,
+                      ) : const SizedBox(),
                     ]
                   ),
                 ),
