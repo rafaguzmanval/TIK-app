@@ -35,8 +35,6 @@ class _LoginFormState extends State<LoginForm>{
   final _CheckAnimationKey = GlobalKey<CheckAnimationState>();
   final _ConfettiAnimationKey = GlobalKey<ConfettiAnimationState>();
 
-  //CHANGE THIS AND USED AUTHSERVICE FROM PARENT WIDGET
-  final AuthService authService = AuthService();
   final TextEditingController _emailController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -48,7 +46,7 @@ class _LoginFormState extends State<LoginForm>{
   _LoginFormState();
 
   void checkLoginUser() async{
-    ValidResponse result = await authService.loginUser(
+    ValidResponse result = await widget.authService.loginUser(
       context: context,
       email: _emailController.text,
       password: _passwordController.text
@@ -61,6 +59,7 @@ class _LoginFormState extends State<LoginForm>{
           
         setState(() {
           isShowLoading = false;
+          isShowConfetti = true;
         });
 
         // Trigger confetti animation
@@ -87,6 +86,7 @@ class _LoginFormState extends State<LoginForm>{
       Future.delayed(Duration(seconds: 2), () async {
           setState(() {
             isShowLoading = false;
+            isShowConfetti = false;
           });
         }
       );
@@ -147,10 +147,7 @@ class _LoginFormState extends State<LoginForm>{
         ) : const SizedBox(),
         // Confetti animation
         isShowConfetti ? CustomPositionedLoginAnimation(
-          child: Transform.scale(
-            scale: 3,
-            child: ConfettiAnimation(keyChild: _ConfettiAnimationKey),
-          )
+          child: Transform.scale(scale: 3,child: ConfettiAnimation(keyChild: _ConfettiAnimationKey)),
         ) : const SizedBox(),
       ],
     );
