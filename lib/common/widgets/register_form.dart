@@ -140,9 +140,8 @@ class _RegisterFormState extends State<RegisterForm>{
                 ),
               ),
               SizedBox(height: 15,),
-              isShowLoading ? CustomPositionedLoginAnimation(
-                child: CheckAnimation(keyChild: _CheckAnimationKey,),
-              ) : const SizedBox(),
+              isShowLoading ? SizedBox(height: 125, width: 125, child: CheckAnimation(keyChild: _CheckAnimationKey,))
+               : const SizedBox(),
               Container(
                 height: 100,
                 width: 100,
