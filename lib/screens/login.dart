@@ -81,7 +81,7 @@ class _LoginState extends State<Login> {
                     child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
                 ],
               ),
-              LoginForm(onVisibilityPressed: (value) => {
+              LoginForm(authService: authService, onVisibilityPressed: (value) => {
                 _hitHidePassword(value)
               }, ),
               SizedBox(height: 35),
