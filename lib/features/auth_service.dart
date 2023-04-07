@@ -19,7 +19,8 @@ class AuthService{
     required BuildContext context,
     required String name,
     required String email,
-    required String password
+    required String password,
+    required String confirmpassword
   })
   async{
 
@@ -29,6 +30,7 @@ class AuthService{
         name: name,
         email: email,
         password: password,
+        confirmpassword: confirmpassword,
         token: ''
       );
 
@@ -68,6 +70,7 @@ class AuthService{
         name: '',
         email: email,
         password: password,
+        confirmpassword: '',
         token: ''
       );
 

@@ -32,7 +32,8 @@ class _RegisterState extends State<Register>
       context: context,
       name: _nameController.text,
       email: _emailController.text,
-      password: _passwordController.text
+      password: _passwordController.text,
+      confirmpassword: _confirmPasswordController.text
     );
   }
 

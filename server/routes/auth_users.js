@@ -39,11 +39,12 @@ authUserRouter.get("/:email/:password", async (req, res) => {
 
 // Register new account route
 authUserRouter.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmpassword } = req.body;
 
   try{
     
     if (!email || !password || !name) return res.status(400).json({ msg: "Error faltan campos por recibir"});
+    if (password != confirmpassword) return res.status(400).json({ msg: "Las contraseñas no coinciden"});
 
     const user = await userModel.findOne({email: email}).exec();
 

@@ -44,9 +44,10 @@ class _RegisterFormState extends State<RegisterForm>{
     // ValidResponse result = await widget.authService.registerUser(context: context,name: _nameController.text,
     // email: _emailController.text,password: _passwordController.text);
     Response res = await widget.authService.registerUser(context: context,name: _nameController.text,
-    email: _emailController.text,password: _passwordController.text);
+    email: _emailController.text,password: _passwordController.text, confirmpassword: _confirmPasswordController.text);
     // If successful login then successful animation
-    if(ValidResponse.fromResponse(res, res.body).isSuccess == true){
+    ValidResponse validResponse = ValidResponse.fromResponse(res, res.body);
+    if(validResponse.isSuccess == true){
       // Trigger check animation
       _CheckAnimationKey.currentState?.triggerCheckFire();
       Future.delayed(Duration(seconds: 2), () async {
@@ -60,22 +61,16 @@ class _RegisterFormState extends State<RegisterForm>{
             // }
             httpErrorHandler(res: res, context: context,
             onSuccess: (){
-              showSnackBar(context, "¡Usuario registrado correctamente!");
+              showSnackBar(context, returnResponseMessage(validResponse));
             });
         }  
         setState(() {
           isShowLoading = false;
         });
-        // if(widget.onDispose != null){
-        //   widget.onDispose!(result);
-        // }
-        httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Usuario registrado correctamente!");
-        });
-
+        
         Navigator.pop(context);
       });
+      
     }else{ // Error animation
       _CheckAnimationKey.currentState?.triggerErrorFire();
       Future.delayed(Duration(seconds: 2), () async {
@@ -83,6 +78,7 @@ class _RegisterFormState extends State<RegisterForm>{
           setState(() {
             isShowLoading = false;
           });
+          showSnackBar(context, returnResponseMessage(validResponse));
         }
       }
       );
@@ -126,7 +122,7 @@ class _RegisterFormState extends State<RegisterForm>{
                           text: "Crear cuenta",
                           textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           onTap: (){
-                            if(_registrationFormKey.currentState!.validate() && compareStr(_passwordController.text, _confirmPasswordController.text)) {
+                            if(_registrationFormKey.currentState!.validate()) {
                               setState(() {
                                 isShowLoading = true;
                               });
