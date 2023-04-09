@@ -46,13 +46,13 @@ class _LoginFormState extends State<LoginForm>{
   _LoginFormState();
 
   void checkLoginUser() async{
-    ValidResponse result = await widget.authService.loginUser(
+    ValidResponse? result = await widget.authService.loginUser(
       context: context,
       email: _emailController.text,
       password: _passwordController.text
     );
     // If successful login then successful animation
-    if(result.isSuccess == true){
+    if(result?.isSuccess == true){
       // Trigger check animation
       _CheckAnimationKey.currentState?.triggerCheckFire();
       Future.delayed(Duration(seconds: 2), () async {
@@ -67,7 +67,7 @@ class _LoginFormState extends State<LoginForm>{
         Future.delayed(Duration(seconds: 1), () async {
 
           // Call user provider
-          Map<String, dynamic> infoRes = json.decode(result.body);
+          Map<String, dynamic> infoRes = json.decode(result?.body);
           String name = infoRes['name'];
           
           SharedPreferences preferences = await SharedPreferences.getInstance();

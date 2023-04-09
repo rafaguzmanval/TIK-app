@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
@@ -14,6 +17,9 @@ import 'package:tree_timer_app/screens/login.dart';
 
 class AuthService{
 
+  // Establish timeout to 10 seconds
+  static const int timeoutDurationSeconds = 10;
+
   // Register user
   Future registerUser({
     required BuildContext context,
@@ -23,7 +29,7 @@ class AuthService{
     required String confirmpassword
   })
   async{
-
+     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
       User user = User(
         id: '',
@@ -35,13 +41,14 @@ class AuthService{
       );
 
 
-      Response res = await post(
+      Response res = await client.post(
         Uri.parse('$url/accounts/register'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: user.toJson(),
       );
+      
 
       // return ValidResponse.fromResponse(res, res.body);
       return res;
@@ -51,8 +58,12 @@ class AuthService{
       //     showSnackBar(context, "¡Cuenta creada correctamente!");
       //   }
       // );
-    } catch(err){
+    }on SocketException catch (_) {
+      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+    }catch(err){
       showSnackBar(context, err.toString());
+    }finally {
+      client.close();
     }
   }
 
@@ -63,7 +74,7 @@ class AuthService{
     required String password
   })
   async{
-
+    final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
       User user = User(
         id: '',
@@ -75,7 +86,7 @@ class AuthService{
       );
 
 
-      Response res = await post(
+      Response res = await client.post(
         Uri.parse('$url/accounts/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -85,13 +96,18 @@ class AuthService{
 
       return ValidResponse.fromResponse(res, res.body);
   
-    } catch(err){
+    }on SocketException catch (_) {
+      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+    }catch(err){
       return ValidResponse(isSuccess: false, body: err.toString());
+    }finally {
+      client.close();
     }
   }
 
   void logoutUser(BuildContext context)
   async {
+    final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
       if(context == null) return showSnackBar(context, "Erro al cerrar sesión");
 
@@ -106,6 +122,8 @@ class AuthService{
       );
     }catch(err){
       showSnackBar(context, err.toString());
+    }finally {
+      client.close();
     }
   }
 
@@ -114,6 +132,7 @@ class AuthService{
     BuildContext context,
   )
   async{
+    final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String? token = preferences.getString('auth-token');
@@ -123,7 +142,7 @@ class AuthService{
         preferences.setString('auth-token', '');
       }
 
-      Response validTokenRes = await post(
+      Response validTokenRes = await client.post(
         Uri.parse('$url/accounts/checkToken'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -146,9 +165,13 @@ class AuthService{
         userProvider.setUser(jsonDecode(response.body));
       }
 
+    }on SocketException catch (_) {
+      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
     } catch(err){
-        print("Estoy en auth_service.dartsd");
-      //showSnackBar(context, err.toString());
+      showSnackBar(context, err.toString());
+    }finally {
+      client.close();
     }
   }
+
 }
