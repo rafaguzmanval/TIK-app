@@ -5,7 +5,7 @@ import 'package:tree_timer_app/models/user.dart';
 // Class use to get and set user data
 class UserProvider extends ChangeNotifier {
   // Private user variable
-  User _user = new User(id: '', name: '', email: '', password: '', token: '');
+  User _user = new User(id: '', name: '', email: '', password: '', confirmpassword: '', token: '');
 
   User get user => _user;
 

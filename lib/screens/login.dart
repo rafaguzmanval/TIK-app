@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
+import 'package:tree_timer_app/common/widgets/login_form.dart';
+import 'package:tree_timer_app/common/widgets/register_form.dart';
+import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
@@ -65,59 +68,57 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text(Login.title),
       ),
-      body: Container(
-        margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                SizedBox(
-                  width: 250,
-                  height: 250,
-                  child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
-              ],
-            ),
-            Form(
-              key: _loginFormKey,
-              child: Column(
+      body: Center(
+        child: Container(
+          margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  SizedBox(
+                    width: 250,
+                    height: 250,
+                    child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
+                ],
+              ),
+              LoginForm(authService: authService, onVisibilityPressed: (value) => {
+                _hitHidePassword(value)
+              }, ),
+              SizedBox(height: 35),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomTextField(controller: _emailController, labelText: "Email"),
-                  SizedBox(height: 15),
-                  // CustomTextField(controller: _passwordController, hintText: "Contraseña", isPassword: true,),
-                  CustomPasswordFormField(
-                    controller: _passwordController,
-                    onVisibilityPressed: (isPasswordVisible) {
-                      _hitHidePassword(isPasswordVisible);
-                    },
-                  ),
-                  SizedBox(height: 35),
+                  const Text("¿Nuevo usuario?"),
                   Container(
-                    width: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: CustomButton(
-                      text: "Login",
-                      textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      onTap: (){
-                        if(_loginFormKey.currentState!.validate()) {
-                          loginUser();
-                        }
+                    margin: EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Future.delayed(Duration(milliseconds: 100), (){
+                          // Navigator.pushNamed(context, '/register');
+                          showGeneralDialog(context: context,
+                            barrierDismissible: true,
+                            barrierLabel: "",
+                            pageBuilder: (context, _, __) => Center(
+                              child: RegisterForm(authService: authService,
+                              onDispose: (result){
+                                  returnResponseMessage(result);
+                                }),
+                            )
+                          );
+                        });
                       },
-                    ),
-                  ),
-                  SizedBox(height: 35),
-                  GestureDetector(
-                    onTap:(){
-                      Navigator.pushNamed(context, '/register');
-                    },
-                    child: const Text("¿Nuevo usuario? Cree una cuenta")
+                      style: ElevatedButton.styleFrom(
+                        shape: StadiumBorder(),
+                        padding: EdgeInsets.all(10),
+                        backgroundColor: Colors.lightGreen
+                      ),
+                      child: const Text("Cree una cuenta"),
+                    )
                   ),
                 ],
               ),
-            ),
-          ]
+            ]
+          ),
         ),
       ),
     );

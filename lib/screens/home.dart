@@ -49,7 +49,7 @@ class _Home extends State<Home>{
                 decoration: const BoxDecoration(
                   color: Colors.green,
                 ),
-                child: Text('¡Bienvenido $userName!'),
+                child: Text('¡Bienvenid@ $userName!'),
               ),
             ),
             const SizedBox(height: 15),

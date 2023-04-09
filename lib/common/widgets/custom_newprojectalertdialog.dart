@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
@@ -72,22 +75,23 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                         _textController.value = TextEditingValue(text: widget.hintText);
                       }
 
-                      //Check if correct creation
-                      bool projectCreated = await projectService.newProject(
+                      Response? res = await projectService.newProject(
                         context: context,
                         name: _textController.text,
                         user_id:  Provider.of<UserProvider>(context, listen: false).user.id
                       );
 
+                      if(res != null){
+                        ValidResponse? validResponse = ValidResponse.fromResponse(res, res.body);
+                          if(validResponse.isSuccess == true){
+                            httpErrorHandler(res: res, context: context,
+                              onSuccess: (){
+                                showSnackBar(context, returnResponseMessage(validResponse));
+                              });
+                          }
+                      }
+                      
                       Navigator.of(context).pop();
-
-                      if(projectCreated == true)
-                      {
-                        return showSnackBar(context, "¡Nuevo proyecto creado correctamente!");
-                      }
-                      else{
-                        return showSnackBar(context, "Error al crear nuevo proyecto");
-                      }
                     },
                     child: Text("Crear")
                   ),

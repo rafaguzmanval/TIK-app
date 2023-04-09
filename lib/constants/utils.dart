@@ -1,4 +1,7 @@
+import "dart:convert";
+
 import "package:flutter/material.dart";
+import "package:tree_timer_app/models/valid_response.dart";
 
 void showSnackBar(BuildContext context, String text){
   ScaffoldMessenger.of(context).showSnackBar(
@@ -9,7 +12,6 @@ void showSnackBar(BuildContext context, String text){
 }
 
 bool compareStr(String text1, String Text2){
-  print(text1 + Text2);
   return text1 == Text2 ? true : false;
 }
 
@@ -37,4 +39,14 @@ Future<bool?> showConfirmDialog(BuildContext context, String title, String conte
       );
     },
   );
+}
+
+String returnResponseMessage(ValidResponse res)
+{
+  String ret = "";
+  dynamic jsonResponse = jsonDecode(res.body);
+    if(jsonResponse["msg"] != "")
+      ret = jsonResponse["msg"];
+
+  return ret;
 }

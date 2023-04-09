@@ -1,6 +1,9 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:http/io_client.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
@@ -9,13 +12,13 @@ import 'package:tree_timer_app/constants/global_variables.dart';
 
 class ProjectService{
 
-Future<bool> newProject({
+  Future newProject({
     required BuildContext context,
     required String name,
     required String user_id,
   })
   async{
-
+    final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: 10));
     try{
       Project project = Project(
         id: '',
@@ -26,7 +29,7 @@ Future<bool> newProject({
       );
 
 
-      http.Response res = await http.post(
+      Response res = await client.post(
         Uri.parse('$url/projects/new'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -34,14 +37,14 @@ Future<bool> newProject({
         body: project.toJson(),
       );
 
-      if(res.statusCode == 200)
-      {
-        return true;
-      } else {
-        return false;
-      }
-    } catch(err){
-        return false;
+      return res;
+
+    }on SocketException catch (_) {
+      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+    }catch(err){
+      showSnackBar(context, err.toString());
+    }finally {
+      client.close();
     }
   }
 

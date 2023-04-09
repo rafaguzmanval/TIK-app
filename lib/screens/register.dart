@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import '../common/widgets/custom_button.dart';
@@ -31,7 +32,8 @@ class _RegisterState extends State<Register>
       context: context,
       name: _nameController.text,
       email: _emailController.text,
-      password: _passwordController.text
+      password: _passwordController.text,
+      confirmpassword: _confirmPasswordController.text
     );
   }
 
@@ -60,9 +62,9 @@ class _RegisterState extends State<Register>
                 SizedBox(height: 15),
                 CustomTextField(controller: _emailController, labelText: "Email"),
                 SizedBox(height: 15),
-                CustomTextField(controller: _passwordController, labelText: "Contraseña", isPassword: true,),
+                CustomPasswordFormField(controller: _passwordController),
                 SizedBox(height: 15),
-                CustomTextField(controller: _confirmPasswordController, labelText: "Confirmar contraseña", isPassword: true,),
+                CustomPasswordFormField(controller: _confirmPasswordController),
                 SizedBox(height: 35),
                 Container(
                     width: 200,

@@ -6,6 +6,7 @@ class User{
   final String name;
   final String email;
   final String password;
+  final String confirmpassword;
   final String token;
 
   User({
@@ -13,6 +14,7 @@ class User{
     required this.name,
     required this.email,
     required this.password,
+    required this.confirmpassword,
     required this.token
   }); 
 
@@ -23,6 +25,7 @@ class User{
       "name": name,
       "email": email,
       "password": password,
+      "confirmpassword": confirmpassword,
       "token": token
     };
   }
@@ -34,6 +37,9 @@ class User{
       name: parsedJson["name"],
       email: parsedJson["email"],
       password: parsedJson["password"],
+      confirmpassword: parsedJson["confirmpassword"] != null && parsedJson["confirmpassword"].isNotEmpty
+      ? parsedJson["confirmpassword"]
+      : '',
       token: parsedJson["token"]
     );
   }
