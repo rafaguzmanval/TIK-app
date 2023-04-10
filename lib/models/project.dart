@@ -3,8 +3,8 @@ import 'dart:convert';
 // Creating user model
 class Project{
   final String id;
-  final String name;
-  final String description;
+  String name;
+  String description;
   final String user_id;
   // final List<String> listTreeSheetsId;
 

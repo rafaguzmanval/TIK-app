@@ -50,3 +50,10 @@ String returnResponseMessage(ValidResponse res)
 
   return ret;
 }
+
+String? mandatoryField(value) {
+    if (value == null || value.isEmpty) {
+      return 'Este campo es obligatorio';
+    }
+    return null;
+  }

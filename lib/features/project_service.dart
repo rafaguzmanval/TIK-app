@@ -9,6 +9,7 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 
 class ProjectService{
 
@@ -74,6 +75,26 @@ class ProjectService{
           showSnackBar(context, "¡Proyecto borrado correctamente!");
         }
       );
+      
+    }
+    catch(err){
+      showSnackBar(context, err.toString());
+    } 
+  }
+
+  Future editProject({required BuildContext context, required Project project}) async {
+    try
+    {
+
+      final res = await http.put(
+        Uri.parse('$url/projects/edit'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: project.toJson(),
+      );
+
+      return ValidResponse.fromResponse(res, res.body);
       
     }
     catch(err){
