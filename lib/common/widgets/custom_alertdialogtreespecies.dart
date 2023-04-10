@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_list_scroll.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
@@ -21,7 +22,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
   TextEditingController searchController = new TextEditingController();
   List<dynamic> filteredSpecies = new List.empty();
   List<dynamic> origSpeciesList = new List.empty();
-  
+  final ScrollController scrollController = ScrollController();
   
   Future<void> _refreshList() async {
     // Aquí puedes actualizar la lista de items desde una fuente externa, como una API o una base de datos.
@@ -70,12 +71,13 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                             // We must to set height and width in order to prevent errors
                             // with listView dimensions
                             width: 400,
-                            height: 450,
+                            height: 400,
                             child: RefreshIndicator(
                               onRefresh: _refreshList,
                               child: ListView.builder(
                                 // itemCount: snapshot.data.length,
                                 itemCount: filteredSpecies.length,
+                                controller: scrollController,
                                 itemBuilder: (context, index) {
                                   return ListTile(
                                     leading: Icon(Icons.book, color: Colors.green,),
@@ -99,6 +101,8 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                             ),
                           ),
                         ),
+                        // Show scroll arrow if number of elements > 8
+                        snapshot.data.length > 8 ? ArrowListScroll(scrollController: scrollController) : SizedBox(),
                       ]
                     );
                   }

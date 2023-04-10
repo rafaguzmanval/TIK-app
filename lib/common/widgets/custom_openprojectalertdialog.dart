@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_list_scroll.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
-  import 'package:tree_timer_app/screens/project_screen.dart';
+  import 'package:tree_timer_app/screens/project.dart';
 import '../../constants/utils.dart';
 
 class OpenProjectCustomAlertDialog extends StatefulWidget
@@ -21,6 +22,7 @@ class OpenProjectCustomAlertDialog extends StatefulWidget
 class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> {
   
   final ProjectService projectService = ProjectService();
+  final ScrollController scrollController = ScrollController();
 
   @override
   void initState(){
@@ -38,6 +40,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
     return AlertDialog(
       title: Text(widget.title),
       content:  SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Container(
           margin: const EdgeInsets.all(30),
           child: Center(
@@ -58,6 +61,10 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                             height: 450,
                             child: ListView.builder(
                               itemCount: snapshot.data.length,
+                              controller: scrollController,
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
@@ -81,8 +88,10 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                   },
                                 );
                               },
-                            ),
+                            ), 
                           ),
+                          // Show scroll arrow if number of elements > 8
+                          snapshot.data.length > 8 ? ArrowListScroll(scrollController: scrollController) : SizedBox(),
                         ]
                       );
                     }
@@ -108,3 +117,4 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
     );
   }
 }
+
