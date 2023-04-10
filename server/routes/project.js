@@ -25,7 +25,7 @@ projectRouter.post("/new",
             return res.json({ msg: "Proyecto creado correctamente"});
 
         } catch(err){
-            return res.status(500).json({error: err.message});
+            return res.status(500).json({msg: err.message});
         }
     }
 );
@@ -73,11 +73,33 @@ projectRouter.delete("/delete/:id",
                 return res.status(404).json({ error: 'Proyecto no encontrado' });
             }
 
-            res.json({ mensaje: 'Proyectos eliminado correctamente' });
+            res.json({ msg: 'Proyectos eliminado correctamente' });
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({error: err.message});
+            return res.status(500).json({msg: err.message});
+        }
+    }
+)
+
+projectRouter.put("/edit",
+    async (req, res) => {
+
+        const { _id, name, description, user_id } = req.body;
+        try {
+            let project = await projectSchemaModel.findById(_id);
+
+            if (project != null) {
+                project.name = name;
+                project.description = description;
+                
+                await project.save();
+            }
+            res.json({ msg: 'Proyecto actualizado correctamente' });
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({msg: err.message});
         }
     }
 )
