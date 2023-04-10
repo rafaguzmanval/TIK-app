@@ -56,14 +56,11 @@ class _RegisterFormState extends State<RegisterForm>{
           {
             setState(() {
               isShowLoading = false;
-              });
-              // if(widget.onDispose != null){
-              //   widget.onDispose!(result);
-              // }
-              httpErrorHandler(res: res, context: context,
-              onSuccess: (){
-                showSnackBar(context, returnResponseMessage(validResponse));
-              });
+            });
+            httpErrorHandler(res: res, context: context,
+            onSuccess: (){
+              showSnackBar(context, returnResponseMessage(validResponse));
+            });
           }  
           setState(() {
             isShowLoading = false;
