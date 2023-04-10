@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
@@ -6,11 +9,12 @@ import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/screens/tree_data_sheet.dart';
 
 class ProjectScreen extends StatefulWidget {
 
-  final Project project;
+  Project project;
 
   ProjectScreen({
     Key? key,
@@ -25,162 +29,242 @@ class _ProjectScreenState extends State<ProjectScreen> {
 
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   ProjectService       projectService       = new ProjectService();
+  bool                 isEditing            = false;
+  final _editFormKey = GlobalKey<FormState>();
+  final TextEditingController descriptionController =  TextEditingController();
+  final TextEditingController titleController =  TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    titleController.text = widget.project.name.toString();
+    descriptionController.text = widget.project.description.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.project.name),
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.only(top: 30.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "Descripción",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold
-                      )
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(top: 15.0, left: 25.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(widget.project.description.toString())
-                      ),
-                    ),
-                  ] 
-                ),
+        title: isEditing ? Form(
+          key: _editFormKey,
+          child: TextFormField(
+            controller: titleController,
+            validator: mandatoryField,
+            maxLines: 1,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              Container(
-                padding: EdgeInsets.only(top: 30.0),
-                child: const Text(
-                  "Fichas disponibles",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold
+              hintText: 'Nombre proyecto',
+            ),
+          )) : Text(widget.project.name),
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        "Descripción",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold
+                        )
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(top: 15.0, left: 25.0, right: 25.0),
+                        child: isEditing ? TextFormField(
+                            controller: descriptionController,
+                            maxLines: 2,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              hintText: 'Descripción',
+                            )) : Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(widget.project.description.toString())
+                            ),
+                      ),
+                    ] 
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: const Text(
+                    "Fichas disponibles",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    )
+                  ),
+                ),      
+                SingleChildScrollView(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30), //border corner radius
+                      boxShadow:[ 
+                        BoxShadow(
+                            color: Colors.grey.withOpacity(0.5), //color of shadow
+                            spreadRadius: 5, //spread radius
+                            blurRadius: 7, // blur radius
+                            offset: Offset(0, 2), // changes position of shadow
+                            //first paramerter of offset is left-right
+                            //second parameter is top to down
+                        ),
+                        //you can set more BoxShadow() here
+                        ],
+                    ),
+                    margin: const EdgeInsets.all(30),
+                    padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FutureBuilder(
+                          future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
+                          builder: (context, snapshot) {
+                            // If we have data from tree data sheets
+                            if(snapshot.hasData)
+                            {
+                              return Column(
+                                children: [
+                                  Container(
+                                    // We must to set height and width in order to prevent errors
+                                    // with listView dimensions
+                                    width: 400,
+                                    height: 300,
+                                    child: ListView.builder(
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        return ListTile(
+                                          contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
+                                          leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
+                                          title: Text(snapshot.data[index]["specific_tree_id"].toString()),
+                                          onTap: () async {
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(              
+                                                builder: (context) => TreeDataSheetScreen(
+                                                  treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
+                                                  project: widget.project,
+                                                ),
+                                              ),
+                                            );
+                                            // Rebuild widget
+                                            setState(() {
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ]
+                              );
+                            }
+                            else if(snapshot.hasError){
+                              showSnackBar(context, snapshot.error.toString());
+                            }
+                            return CircularProgressIndicator();
+                          }
+                        ),
+                        SizedBox(height: 15,),
+                        FloatingActionButton(
+                          // To avoid conflicts with same tags between floating buttons
+                          heroTag: UniqueKey(),
+                          onPressed: () async {
+                            await Navigator.push(
+                                context,
+                                MaterialPageRoute(              
+                                  builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
+                                ),
+                            );
+                            // Rebuild widget
+                            setState(() {
+                              
+                            });
+                          },
+                          tooltip: 'Crear nueva ficha de datos',
+                          child: const Icon(Icons.add),
+                        ),
+                      ],
+                    ),
                   )
                 ),
-              ),      
-              SingleChildScrollView(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30), //border corner radius
-                    boxShadow:[ 
-                      BoxShadow(
-                          color: Colors.grey.withOpacity(0.5), //color of shadow
-                          spreadRadius: 5, //spread radius
-                          blurRadius: 7, // blur radius
-                          offset: Offset(0, 2), // changes position of shadow
-                          //first paramerter of offset is left-right
-                          //second parameter is top to down
-                      ),
-                      //you can set more BoxShadow() here
-                      ],
-                  ),
-                  margin: const EdgeInsets.all(30),
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FutureBuilder(
-                        future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
-                        builder: (context, snapshot) {
-                          // If we have data from tree data sheets
-                          if(snapshot.hasData)
-                          {
-                            return Column(
-                              children: [
-                                Container(
-                                  // We must to set height and width in order to prevent errors
-                                  // with listView dimensions
-                                  width: 400,
-                                  height: 300,
-                                  child: ListView.builder(
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
-                                        leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
-                                        title: Text(snapshot.data[index]["specific_tree_id"].toString()),
-                                        onTap: () async {
-                                          await Navigator.push(
-                                            context,
-                                            MaterialPageRoute(              
-                                              builder: (context) => TreeDataSheetScreen(
-                                                treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
-                                                project: widget.project,
-                                              ),
-                                            ),
-                                          );
-                                          // Rebuild widget
-                                          setState(() {
-                                          });
-                                        },
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ]
-                            );
-                          }
-                          else if(snapshot.hasError){
-                            showSnackBar(context, snapshot.error.toString());
-                          }
-                          return CircularProgressIndicator();
-                        }
-                      ),
-                      SizedBox(height: 15,),
-                      FloatingActionButton(
-                        // To avoid conflicts with same tags between floating buttons
-                        heroTag: UniqueKey(),
-                        onPressed: () async {
-                          await Navigator.push(
-                              context,
-                              MaterialPageRoute(              
-                                builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
-                              ),
-                          );
-                          // Rebuild widget
-                          setState(() {
-                            
-                          });
-                        },
-                        tooltip: 'Crear nueva ficha de datos',
-                        child: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                )
-              ),
-            ]
+              ]
+            ),
           ),
-        ),
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Container(
+              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              alignment: Alignment.centerRight,
+              width: 150.0,
+              height: 60.0,
+              decoration: const BoxDecoration(
+                color: Colors.lightGreen,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: FloatingActionButton(
+                      // To avoid conflicts with same tags between floating buttons
+                      heroTag: UniqueKey(),
+                      onPressed: () async {
+                        bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
+                        if(deleteProject == true && widget.project != null){
+                          await projectService.deleteProject(context: context, id: widget.project.id);
+                          Navigator.pop(context);
+                        }else{
+                          return null;
+                        }
+                      },
+                      tooltip: 'Borrar proyecto',
+                      child: const Icon(Icons.delete),
+                    ),
+                  ),
+                  Expanded(
+                    child: FloatingActionButton(
+                      // To avoid conflicts with same tags between floating buttons
+                      heroTag: UniqueKey(),
+                      onPressed: () async {
+                        // If user is editing then change use this function
+                        if(isEditing == true){
+                          if(_editFormKey.currentState!.validate()) {
+                            bool? deleteProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
+                            if(deleteProject == true){
+                              ValidResponse? validRes = await projectService.editProject(context: context, project: Project(name: titleController.text, id: widget.project.id, description: descriptionController.text, user_id: widget.project.user_id));
+                              if(validRes?.isSuccess == true){
+                                setState(() {
+                                  isEditing = false;
+                                  widget.project.name = titleController.text;
+                                  widget.project.description = descriptionController.text;
+                                });
+                                showSnackBar(context, jsonDecode(validRes?.body)['msg']);
+                              }
+                            }
+                          }
+                        }else{
+                          setState(() {
+                            isEditing = true;
+                          });
+                        }
+                        
+                      },
+                      tooltip: isEditing ? 'Guardar proyecto' : 'Editar proyecto',
+                      child: isEditing ? const Icon(Icons.save) : const Icon(Icons.edit),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        child: Container(height: 50.0),
-      ),
-      floatingActionButton: FloatingActionButton(
-        // To avoid conflicts with same tags between floating buttons
-        heroTag: UniqueKey(),
-        onPressed: () async {
-          bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
-          if(deleteProject == true && widget.project != null){
-            await projectService.deleteProject(context: context, id: widget.project.id);
-            Navigator.pop(context);
-          }else{
-            return null;
-          }
-        },
-        tooltip: 'Borrar proyecto',
-        child: const Icon(Icons.delete),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
