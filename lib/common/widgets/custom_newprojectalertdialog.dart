@@ -92,14 +92,6 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                       }
                       
                       Navigator.of(context).pop();
-
-                      if(projectCreated == true)
-                      {
-                        return showSnackBar(context, "¡Nuevo proyecto creado correctamente!");
-                      }
-                      else{
-                        return showSnackBar(context, "Error al crear nuevo proyecto");
-                      }
                     },
                     child: Text("Crear")
                   ),
