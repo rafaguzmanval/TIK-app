@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
@@ -39,11 +40,51 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   final _formKey = GlobalKey<FormState>();
   // Add position
   LatLng _position = LatLng(0, 0);
+  // Edit boolean
+  bool isEditing = false;
 
   Future<dynamic> initSpecieValue() async {
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
+
+  void onDeleted() async {
+    bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
+    if(deleteDataSheet == true && widget.treeDataSheet != null){
+      treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
+      Navigator.pop(context);
+    }else{
+      return null;
+    }
+  }
+
+  void onSaved () async {
+    if (_formKey.currentState!.validate())
+    {
+      // Save form values
+      _formKey.currentState!.save();
+      bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
+      if(saveDataSheet == true){
+        // Update data sheet or save if does not exists
+        if(widget.treeDataSheet != null)
+        {
+          treeDataSheetService.updateTreeDataSheet(
+            context: context,
+            id: widget.treeDataSheet!.id,
+            project_id: widget.project.id,
+            treeSpecie: widget.selectedSpecie!,
+            treeId: widget.specificTreeIdValue!,
+            description: widget.descriptionValue
+          );
+        }
+        else{
+          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue);
+        }
+      }else{
+        return null;
+      }
+    }
+  }  
 
   @override
   void initState() {
@@ -139,61 +180,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           ),
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            // To prevent same tag between floating action buttons
-            heroTag: UniqueKey(),
-            onPressed: () async {
-              bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
-              if(deleteDataSheet == true && widget.treeDataSheet != null){
-                treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
-                Navigator.pop(context);
-              }else{
-                return null;
-              }
-            },
-            child: Icon(Icons.delete),
-          ),
-          SizedBox(width: 16.0),
-          FloatingActionButton(
-            // To prevent same tag between floating action buttons
-            heroTag: UniqueKey(),
-            onPressed: () async {
-              if (_formKey.currentState!.validate())
-              {
-                // Save form values
-                _formKey.currentState!.save();
-                bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
-                if(saveDataSheet == true){
-                  // Update data sheet or save if does not exists
-                  if(widget.treeDataSheet != null)
-                  {
-                    treeDataSheetService.updateTreeDataSheet(
-                      context: context,
-                      id: widget.treeDataSheet!.id,
-                      project_id: widget.project.id,
-                      treeSpecie: widget.selectedSpecie!,
-                      treeId: widget.specificTreeIdValue!,
-                      description: widget.descriptionValue
-                    );
-                  }
-                  else{
-                    treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue);
-                  }
-                }else{
-                  return null;
-                }
-              }  
-            },
-            tooltip: 'Guardar ficha de datos',
-            child: const Icon(Icons.save),
-          )
-        ],
-      ),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
+
+
 
