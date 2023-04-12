@@ -61,146 +61,152 @@ class _ProjectScreenState extends State<ProjectScreen> {
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.only(top: 30.0),
-                  child: Column(
-                    children: [
-                      const Text(
-                        "Descripción",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold
-                        )
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 15.0, left: 25.0, right: 25.0),
-                        child: isEditing ? TextFormField(
-                            controller: descriptionController,
-                            maxLines: 2,
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
+          Container(
+            // Set all the display height
+            height: MediaQuery.of(context).size.height,
+            child: SingleChildScrollView(
+              // Establish some space between available data sheets and floating buttons
+              padding: EdgeInsets.only(bottom: 60),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 30.0,),
+                    child: Column(
+                      children: [
+                        const Text(
+                          "Descripción",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold
+                          )
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 15.0, left: 25.0, right: 25.0),
+                          child: isEditing ? TextFormField(
+                              controller: descriptionController,
+                              maxLines: 2,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                hintText: 'Descripción',
+                              )) : Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(widget.project.description.toString())
                               ),
-                              hintText: 'Descripción',
-                            )) : Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(widget.project.description.toString())
-                            ),
-                      ),
-                    ] 
+                        ),
+                      ] 
+                    ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 30.0),
-                  child: const Text(
-                    "Fichas disponibles",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold
+                  Container(
+                    padding: EdgeInsets.only(top: 30.0),
+                    child: const Text(
+                      "Fichas disponibles",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold
+                      )
+                    ),
+                  ),      
+                  SingleChildScrollView(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30), //border corner radius
+                        boxShadow:[ 
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.5), //color of shadow
+                              spreadRadius: 5, //spread radius
+                              blurRadius: 7, // blur radius
+                              offset: Offset(0, 2), // changes position of shadow
+                              //first paramerter of offset is left-right
+                              //second parameter is top to down
+                          ),
+                          //you can set more BoxShadow() here
+                          ],
+                      ),
+                      margin: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FutureBuilder(
+                            future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
+                            builder: (context, snapshot) {
+                              // If we have data from tree data sheets
+                              if(snapshot.hasData)
+                              {
+                                return Column(
+                                  children: [
+                                    Container(
+                                      // We must to set height and width in order to prevent errors
+                                      // with listView dimensions
+                                      width: 400,
+                                      height: 300,
+                                      child: ListView.builder(
+                                        itemCount: snapshot.data.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
+                                            leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
+                                            title: Text(snapshot.data[index]["specific_tree_id"].toString()),
+                                            onTap: () async {
+                                              await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(              
+                                                  builder: (context) => TreeDataSheetScreen(
+                                                    treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
+                                                    project: widget.project,
+                                                  ),
+                                                ),
+                                              );
+                                              // Rebuild widget
+                                              setState(() {
+                                              });
+                                            },
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ]
+                                );
+                              }
+                              else if(snapshot.hasError){
+                                showSnackBar(context, snapshot.error.toString());
+                              }
+                              return CircularProgressIndicator();
+                            }
+                          ),
+                          SizedBox(height: 15,),
+                          FloatingActionButton(
+                            // To avoid conflicts with same tags between floating buttons
+                            heroTag: UniqueKey(),
+                            onPressed: () async {
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(              
+                                    builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
+                                  ),
+                              );
+                              // Rebuild widget
+                              setState(() {
+                                
+                              });
+                            },
+                            tooltip: 'Crear nueva ficha de datos',
+                            child: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
                     )
                   ),
-                ),      
-                SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30), //border corner radius
-                      boxShadow:[ 
-                        BoxShadow(
-                            color: Colors.grey.withOpacity(0.5), //color of shadow
-                            spreadRadius: 5, //spread radius
-                            blurRadius: 7, // blur radius
-                            offset: Offset(0, 2), // changes position of shadow
-                            //first paramerter of offset is left-right
-                            //second parameter is top to down
-                        ),
-                        //you can set more BoxShadow() here
-                        ],
-                    ),
-                    margin: const EdgeInsets.all(30),
-                    padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FutureBuilder(
-                          future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
-                          builder: (context, snapshot) {
-                            // If we have data from tree data sheets
-                            if(snapshot.hasData)
-                            {
-                              return Column(
-                                children: [
-                                  Container(
-                                    // We must to set height and width in order to prevent errors
-                                    // with listView dimensions
-                                    width: 400,
-                                    height: 300,
-                                    child: ListView.builder(
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
-                                          leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
-                                          title: Text(snapshot.data[index]["specific_tree_id"].toString()),
-                                          onTap: () async {
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(              
-                                                builder: (context) => TreeDataSheetScreen(
-                                                  treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
-                                                  project: widget.project,
-                                                ),
-                                              ),
-                                            );
-                                            // Rebuild widget
-                                            setState(() {
-                                            });
-                                          },
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ]
-                              );
-                            }
-                            else if(snapshot.hasError){
-                              showSnackBar(context, snapshot.error.toString());
-                            }
-                            return CircularProgressIndicator();
-                          }
-                        ),
-                        SizedBox(height: 15,),
-                        FloatingActionButton(
-                          // To avoid conflicts with same tags between floating buttons
-                          heroTag: UniqueKey(),
-                          onPressed: () async {
-                            await Navigator.push(
-                                context,
-                                MaterialPageRoute(              
-                                  builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
-                                ),
-                            );
-                            // Rebuild widget
-                            setState(() {
-                              
-                            });
-                          },
-                          tooltip: 'Crear nueva ficha de datos',
-                          child: const Icon(Icons.add),
-                        ),
-                      ],
-                    ),
-                  )
-                ),
-              ]
+                ]
+              ),
             ),
           ),
           Positioned(
             right: 0,
             bottom: 0,
             child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              margin: EdgeInsets.fromLTRB(0, 0, 10, 20),
               alignment: Alignment.centerRight,
               width: 150.0,
               height: 60.0,
