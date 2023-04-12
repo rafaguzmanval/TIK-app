@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -16,13 +18,13 @@ class TreeDataSheetScreen extends StatefulWidget{
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
-  double lat = 45.324;
-  double long = 45.564;
+  LatLng? position;
 
   TreeDataSheetScreen({
     Key? key,
     required this.treeDataSheet,
     required this.project,
+    this.position,
   }) : super(key:key);
 
   @override
@@ -35,9 +37,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   final treeSpecieController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  // Add CustomMap controller
-  final mapController = MapController();
-
+  // Add position
+  LatLng _position = LatLng(0, 0);
 
   Future<dynamic> initSpecieValue() async {
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
@@ -50,6 +51,10 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if(widget.treeDataSheet != null)
     {
       initSpecieValue();
+    }
+    // Init the current position to 0 if its null
+    if (widget.position != null) {
+      _position = widget.position!;
     }
     super.initState();
   }
@@ -128,7 +133,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
-                CustomMap(mapController: mapController, lat:40.7128, lng: -74.0060),
+                CustomMap(currentPosition: _position,),
               ]
             ),
           ),

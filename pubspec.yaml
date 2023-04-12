@@ -43,6 +43,8 @@ dependencies:
   rive: ^0.10.3
   flutter_map: ^3.1.0
   latlong2: ^0.8.1
+  geolocator: ^9.0.2
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
