@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CustomFloatingButtonsBottom extends StatelessWidget {
+
   const CustomFloatingButtonsBottom({
     super.key,
     required this.parentWidget,
     required this.onSaved,
     required this.onDeleted,
     required GlobalKey<FormState> formKey,
+    required this.isEditing,
   }) : _formKey = formKey;
 
   final Widget parentWidget;
+  final GlobalKey<FormState> _formKey;
   final Function onSaved;
   final Function onDeleted;
-  final GlobalKey<FormState> _formKey;
+  final bool isEditing;
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +38,8 @@ class CustomFloatingButtonsBottom extends StatelessWidget {
           onPressed: () async {
             onSaved();
           },
-          tooltip: 'Guardar ficha de datos',
-          child: const Icon(Icons.save),
+          tooltip: isEditing ? 'Guardar proyecto' : 'Editar proyecto',
+          child: isEditing ? const Icon(Icons.save) : const Icon(Icons.edit),
         )
       ],
     );

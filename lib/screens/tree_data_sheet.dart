@@ -97,6 +97,10 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if (widget.position != null) {
       _position = widget.position!;
     }
+    // If new data sheet, isEditing = true to set Save icon
+    if(widget.treeDataSheet == null){
+      isEditing = true;
+    }
     super.initState();
   }
 
@@ -180,7 +184,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           ),
         ),
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
