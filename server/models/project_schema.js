@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import treeDataSheetSchemaModel from "./user_schema.js";
+import treeDataSheetSchemaModel from "./tree_data_sheets_schema.js";
 
 const projectSchema = mongoose.Schema(
     {
@@ -32,6 +32,7 @@ projectSchema.index({ user_id: 1, name: 1 }, { unique: true });
 
 
 // Delete all the tree data sheets associated
+// IMPORTANT FIX ERROR THAT DELETE ALL USER ASSOCIATED TO THE PROJECT
 projectSchema.pre('findOneAndDelete', async function(next) {
     try {
         const doc = this;
