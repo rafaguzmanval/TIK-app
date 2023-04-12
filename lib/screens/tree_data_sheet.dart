@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
@@ -14,6 +16,8 @@ class TreeDataSheetScreen extends StatefulWidget{
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
+  double lat = 45.324;
+  double long = 45.564;
 
   TreeDataSheetScreen({
     Key? key,
@@ -31,6 +35,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   final treeSpecieController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  // Add CustomMap controller
+  final mapController = MapController();
+
 
   Future<dynamic> initSpecieValue() async {
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
@@ -58,8 +65,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           key: _formKey,
           child: Container(
             padding: EdgeInsets.all(30.0),
-            width: 400,
-            height: 450,
+            // THIS CANNOT BE 800px
+            width: double.infinity,
+            height: 800,
             child: ListView(
               children: [
                 TextFormField(
@@ -77,6 +85,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     return null;
                   },
                 ),
+                SizedBox(height: 15,),
                 TextFormField(
                   readOnly: true,
                   controller: treeSpecieController,
@@ -104,16 +113,22 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                   child: Text('Seleccionar especie de árbol')
                 ),
+                SizedBox(height: 20,),
                 TextFormField(
                   initialValue: widget.treeDataSheet?.description,
                   maxLines: 3,
                   decoration: InputDecoration(
                     labelText: 'Notas de árbol',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                   onSaved: (value) {
                     widget.descriptionValue = value!;
                   },
-                )
+                ),
+                SizedBox(height: 20,),
+                CustomMap(mapController: mapController, lat:40.7128, lng: -74.0060),
               ]
             ),
           ),
@@ -176,4 +191,4 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     );
   }
 }
- 
+
