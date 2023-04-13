@@ -23,8 +23,8 @@ class TreeDataSheet{
       "specific_tree_id": specific_tree_id,
       "tree_specie_id": tree_specie_id,
       "description": description,
-      "latitude": latitude,
-      "longitude": longitude,
+      "latitude": latitude?.toDouble(),
+      "longitude": longitude?.toDouble(),
     };
   }
 
@@ -36,8 +36,8 @@ class TreeDataSheet{
       specific_tree_id: parsedJson["specific_tree_id"] ?? '',
       tree_specie_id: parsedJson["tree_specie_id"] ?? '',
       description: parsedJson["description"] ?? '',
-      latitude: parsedJson["latitude"] ?? 0,
-      longitude: parsedJson["longitude"] ?? 0,
+      latitude: parsedJson["latitude"]?.toDouble() ?? 0,
+      longitude: parsedJson["longitude"]?.toDouble()?? 0,
     );
   }
 
