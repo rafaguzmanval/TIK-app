@@ -7,10 +7,12 @@ class TreeDataSheet{
   final String specific_tree_id;
   final String tree_specie_id;
   final String? description;
+  final double? latitude;
+  final double? longitude;
 
   TreeDataSheet(
     {required this.id, required this.project_id, required this.specific_tree_id,
-     required this.tree_specie_id, this.description}
+     required this.tree_specie_id, this.description, this.latitude, this.longitude}
   ); 
 
   // Create a object map
@@ -21,6 +23,8 @@ class TreeDataSheet{
       "specific_tree_id": specific_tree_id,
       "tree_specie_id": tree_specie_id,
       "description": description,
+      "latitude": latitude,
+      "longitude": longitude,
     };
   }
 
@@ -32,6 +36,8 @@ class TreeDataSheet{
       specific_tree_id: parsedJson["specific_tree_id"] ?? '',
       tree_specie_id: parsedJson["tree_specie_id"] ?? '',
       description: parsedJson["description"] ?? '',
+      latitude: parsedJson["latitude"] ?? 0,
+      longitude: parsedJson["longitude"] ?? 0,
     );
   }
 

@@ -14,7 +14,9 @@ class TreeDataSheetService{
     required String project_id,
     required TreeSpecie treeSpecie,
     required String treeId,
-    String? description
+    String? description,
+    double? latitude,
+    double? longitude,
   })
   async{
 
@@ -25,6 +27,8 @@ class TreeDataSheetService{
         specific_tree_id: treeId,
         tree_specie_id: treeSpecie.id,
         description: description,
+        latitude: latitude,
+        longitude: longitude, 
       );
 
 
@@ -53,7 +57,9 @@ class TreeDataSheetService{
     required String project_id,
     required TreeSpecie treeSpecie,
     required String treeId,
-    String? description
+    String? description,
+    double? latitude,
+    double? longitude,
   })
   async{
 
@@ -64,6 +70,8 @@ class TreeDataSheetService{
         specific_tree_id: treeId,
         tree_specie_id: treeSpecie.id,
         description: description,
+        latitude: latitude,
+        longitude: longitude,
       );
 
       http.Response res = await http.put(

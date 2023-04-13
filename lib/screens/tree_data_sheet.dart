@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
@@ -19,13 +20,11 @@ class TreeDataSheetScreen extends StatefulWidget{
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
-  LatLng? position;
 
   TreeDataSheetScreen({
     Key? key,
     required this.treeDataSheet,
     required this.project,
-    this.position,
   }) : super(key:key);
 
   @override
@@ -38,7 +37,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   final treeSpecieController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  // Add position
+  // Map variables
+  final _customMapKey = GlobalKey<CustomMapState>();
   LatLng _position = LatLng(0, 0);
   // Edit boolean
   bool isEditing = false;
@@ -74,15 +74,35 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             project_id: widget.project.id,
             treeSpecie: widget.selectedSpecie!,
             treeId: widget.specificTreeIdValue!,
-            description: widget.descriptionValue
+            description: widget.descriptionValue,
+            latitude: _position.latitude,
+            longitude: _position.longitude
           );
         }
         else{
-          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue);
+          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
         }
       }else{
         return null;
       }
+    }
+  }
+
+  void getCurrentLocation() async {
+    // Request permission from user
+    final permissionStatus = await Permission.location.request();
+    
+    // If user allow permission, obtain location
+    if (permissionStatus.isGranted) {
+      final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _position.latitude = position.latitude;
+        _position.longitude = position.longitude;
+        // We call the child widget and update the map
+        _customMapKey.currentState!.updateCurrentLocation( _position);
+      });
+    } else {// Show error permission
+      showSnackBar(context, "Ha denegado el permiso de localización");
     }
   }  
 
@@ -93,15 +113,21 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     {
       initSpecieValue();
     }
-    // Init the current position to 0 if its null
-    if (widget.position != null) {
-      _position = widget.position!;
-    }
-    // If new data sheet, isEditing = true to set Save icon
+    // If new data sheet, isEditing = true
     if(widget.treeDataSheet == null){
       isEditing = true;
     }
     super.initState();
+
+    // if data sheet is not null set map position, we do this before init the widget
+    // to make sure that customMapKey is not null
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      setState(() {
+        _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
+        _customMapKey.currentState!.updateCurrentLocation(_position);
+      });
+    });
+      
   }
 
   @override
@@ -178,7 +204,15 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
-                CustomMap(currentPosition: _position,),
+                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                SizedBox(height: 5,),
+                TextButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                  onPressed: getCurrentLocation,
+                  child: Text('Establecer posición actual')
+                ),
+                SizedBox(height: 10,),
+                CustomMap(key: _customMapKey, currentPosition: _position,),
               ]
             ),
           ),

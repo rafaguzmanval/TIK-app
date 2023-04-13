@@ -22,6 +22,14 @@ const treeDataSheetSchema = mongoose.Schema(
         type: String,
         trim: true
        },
+       latitude: {
+        type: Number,
+        required: false
+       },
+       longitude: {
+        type: Number,
+        required: true
+       }
        
     }
 );

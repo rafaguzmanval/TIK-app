@@ -16,45 +16,21 @@ class CustomMap extends StatefulWidget {
     required this.currentPosition,
   });
 
-
   @override
-  State<CustomMap> createState() => _CustomMapState();
+  State<CustomMap> createState() => CustomMapState();
 }
 
-class _CustomMapState extends State<CustomMap> {
+class CustomMapState extends State<CustomMap> {
 
-  void _getCurrentLocation() async {
-    // Request permission from user
-    final permissionStatus = await Permission.location.request();
-    
-    // If user allow permission, obtain location
-    if (permissionStatus.isGranted) {
-      final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      setState(() {
-        widget.currentPosition!.latitude = position.latitude;
-        widget.currentPosition!.longitude = position.longitude;
-        // Use the controller to move the map and view the new location
-        widget.mapController.move(widget.currentPosition, widget.zoom);
-      });
-    } else {// Show error permission
-      showSnackBar(context, "Ha denegado el permiso de localización");
-    }
-
-    
+  void updateCurrentLocation(LatLng currentPosition) async {
+    // Use the controller to move the map and view the new location
+      widget.mapController.move(currentPosition, widget.zoom);
   }
 
   @override
   Widget build(BuildContext context) {
       return Column(
         children: [
-          const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),),
-          SizedBox(height: 5,),
-          TextButton(
-            style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-            onPressed: _getCurrentLocation,
-            child: Text('Obtener posición')
-          ),
-          SizedBox(height: 10,),
           Container(
             height: 300,
             child: FlutterMap(
