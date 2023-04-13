@@ -39,7 +39,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   final _formKey = GlobalKey<FormState>();
   // Map variables
   final _customMapKey = GlobalKey<CustomMapState>();
-  LatLng _position = LatLng(0, 0);
+  LatLng _position = LatLng(0.0, 0.0);
   // Edit boolean
   bool isEditing = false;
 
@@ -121,12 +121,14 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
     // if data sheet is not null set map position, we do this before init the widget
     // to make sure that customMapKey is not null
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      setState(() {
-        _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
-        _customMapKey.currentState!.updateCurrentLocation(_position);
+    if(widget.treeDataSheet != null){
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        setState(() {
+          _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
+          _customMapKey.currentState!.updateCurrentLocation(_position);
+        });
       });
-    });
+    }
       
   }
 

@@ -49,7 +49,10 @@ class CustomMapState extends State<CustomMap> {
                   MarkerLayer(
                     markers: [
                       Marker(
-                        point: LatLng(widget.currentPosition!.latitude, widget.currentPosition!.longitude),
+                        // To make sure if map initilize, marker showup in coordinates 90, 90
+                        point: widget.currentPosition!.latitude == 0.0 && widget.currentPosition!.longitude == 0.0 ?
+                               LatLng(90, 90) :
+                               LatLng(widget.currentPosition!.latitude, widget.currentPosition!.longitude),
                         width: 80,
                         height: 80,
                         builder: (context) => Container(
