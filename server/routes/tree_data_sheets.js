@@ -6,7 +6,7 @@ const treeDataSheetRouter = Router();
 
 treeDataSheetRouter.post("/new",
     async (req, res) => {
-        const { project_id, specific_tree_id, tree_specie_id, description} = req.body;
+        const { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude} = req.body;
 
         try{
             
@@ -14,7 +14,7 @@ treeDataSheetRouter.post("/new",
             
             const objectProjectId = mongoose.Types.ObjectId(project_id);
             
-            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description});
+            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description, latitude: latitude, longitude: longitude});
 
             await newTreeDataSheet.save();
 
@@ -38,10 +38,10 @@ treeDataSheetRouter.put("/update/:id",
     async (req, res) => {
 
         const { id } = req.params;
-        const  { project_id, specific_tree_id, tree_specie_id, description } = req.body;
+        const  { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude } = req.body;
 
         try {
-            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description }, { new: false });
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude }, { new: false });
 
             if (!treeDataSheet) {
                 return res.status(404).json({ error: 'Ficha de datos no encontrada' });

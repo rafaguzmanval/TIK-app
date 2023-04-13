@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
@@ -18,13 +20,11 @@ class TreeDataSheetScreen extends StatefulWidget{
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
-  LatLng? position;
 
   TreeDataSheetScreen({
     Key? key,
     required this.treeDataSheet,
     required this.project,
-    this.position,
   }) : super(key:key);
 
   @override
@@ -37,13 +37,74 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
   final treeSpecieController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  // Add position
+  // Map variables
+  final _customMapKey = GlobalKey<CustomMapState>();
   LatLng _position = LatLng(0, 0);
+  // Edit boolean
+  bool isEditing = false;
 
   Future<dynamic> initSpecieValue() async {
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
+
+  void onDeleted() async {
+    bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
+    if(deleteDataSheet == true && widget.treeDataSheet != null){
+      treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
+      Navigator.pop(context);
+    }else{
+      return null;
+    }
+  }
+
+  void onSaved () async {
+    if (_formKey.currentState!.validate())
+    {
+      // Save form values
+      _formKey.currentState!.save();
+      bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
+      if(saveDataSheet == true){
+        // Update data sheet or save if does not exists
+        if(widget.treeDataSheet != null)
+        {
+          treeDataSheetService.updateTreeDataSheet(
+            context: context,
+            id: widget.treeDataSheet!.id,
+            project_id: widget.project.id,
+            treeSpecie: widget.selectedSpecie!,
+            treeId: widget.specificTreeIdValue!,
+            description: widget.descriptionValue,
+            latitude: _position.latitude,
+            longitude: _position.longitude
+          );
+        }
+        else{
+          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+        }
+      }else{
+        return null;
+      }
+    }
+  }
+
+  void getCurrentLocation() async {
+    // Request permission from user
+    final permissionStatus = await Permission.location.request();
+    
+    // If user allow permission, obtain location
+    if (permissionStatus.isGranted) {
+      final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _position.latitude = position.latitude;
+        _position.longitude = position.longitude;
+        // We call the child widget and update the map
+        _customMapKey.currentState!.updateCurrentLocation( _position);
+      });
+    } else {// Show error permission
+      showSnackBar(context, "Ha denegado el permiso de localización");
+    }
+  }  
 
   @override
   void initState() {
@@ -52,11 +113,21 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     {
       initSpecieValue();
     }
-    // Init the current position to 0 if its null
-    if (widget.position != null) {
-      _position = widget.position!;
+    // If new data sheet, isEditing = true
+    if(widget.treeDataSheet == null){
+      isEditing = true;
     }
     super.initState();
+
+    // if data sheet is not null set map position, we do this before init the widget
+    // to make sure that customMapKey is not null
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      setState(() {
+        _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
+        _customMapKey.currentState!.updateCurrentLocation(_position);
+      });
+    });
+      
   }
 
   @override
@@ -133,67 +204,25 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
-                CustomMap(currentPosition: _position,),
+                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                SizedBox(height: 5,),
+                TextButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                  onPressed: getCurrentLocation,
+                  child: Text('Establecer posición actual')
+                ),
+                SizedBox(height: 10,),
+                CustomMap(key: _customMapKey, currentPosition: _position,),
               ]
             ),
           ),
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            // To prevent same tag between floating action buttons
-            heroTag: UniqueKey(),
-            onPressed: () async {
-              bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
-              if(deleteDataSheet == true && widget.treeDataSheet != null){
-                treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
-                Navigator.pop(context);
-              }else{
-                return null;
-              }
-            },
-            child: Icon(Icons.delete),
-          ),
-          SizedBox(width: 16.0),
-          FloatingActionButton(
-            // To prevent same tag between floating action buttons
-            heroTag: UniqueKey(),
-            onPressed: () async {
-              if (_formKey.currentState!.validate())
-              {
-                // Save form values
-                _formKey.currentState!.save();
-                bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
-                if(saveDataSheet == true){
-                  // Update data sheet or save if does not exists
-                  if(widget.treeDataSheet != null)
-                  {
-                    treeDataSheetService.updateTreeDataSheet(
-                      context: context,
-                      id: widget.treeDataSheet!.id,
-                      project_id: widget.project.id,
-                      treeSpecie: widget.selectedSpecie!,
-                      treeId: widget.specificTreeIdValue!,
-                      description: widget.descriptionValue
-                    );
-                  }
-                  else{
-                    treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue);
-                  }
-                }else{
-                  return null;
-                }
-              }  
-            },
-            tooltip: 'Guardar ficha de datos',
-            child: const Icon(Icons.save),
-          )
-        ],
-      ),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
+
+
 

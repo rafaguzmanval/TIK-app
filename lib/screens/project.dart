@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
@@ -33,6 +34,40 @@ class _ProjectScreenState extends State<ProjectScreen> {
   final _editFormKey = GlobalKey<FormState>();
   final TextEditingController descriptionController =  TextEditingController();
   final TextEditingController titleController =  TextEditingController();
+
+void onDeleted() async {
+    bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
+    if(deleteProject == true && widget.project != null){
+      await projectService.deleteProject(context: context, id: widget.project.id);
+      Navigator.pop(context);
+    }else{
+      return null;
+    }
+  }
+
+  void onSaved () async {
+    // If user is editing then change use this function
+    if(isEditing == true){
+      if(_editFormKey.currentState!.validate()) {
+        bool? deleteProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
+        if(deleteProject == true){
+          ValidResponse? validRes = await projectService.editProject(context: context, project: Project(name: titleController.text, id: widget.project.id, description: descriptionController.text, user_id: widget.project.user_id));
+          if(validRes?.isSuccess == true){
+            setState(() {
+              isEditing = false;
+              widget.project.name = titleController.text;
+              widget.project.description = descriptionController.text;
+            });
+            showSnackBar(context, jsonDecode(validRes?.body)['msg']);
+          }
+        }
+      }
+    }else{
+      setState(() {
+        isEditing = true;
+      });
+    }
+  }  
 
   @override
   void initState(){
@@ -202,75 +237,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
               ),
             ),
           ),
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 20),
-              alignment: Alignment.centerRight,
-              width: 150.0,
-              height: 60.0,
-              decoration: const BoxDecoration(
-                color: Colors.lightGreen,
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: FloatingActionButton(
-                      // To avoid conflicts with same tags between floating buttons
-                      heroTag: UniqueKey(),
-                      onPressed: () async {
-                        bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
-                        if(deleteProject == true && widget.project != null){
-                          await projectService.deleteProject(context: context, id: widget.project.id);
-                          Navigator.pop(context);
-                        }else{
-                          return null;
-                        }
-                      },
-                      tooltip: 'Borrar proyecto',
-                      child: const Icon(Icons.delete),
-                    ),
-                  ),
-                  Expanded(
-                    child: FloatingActionButton(
-                      // To avoid conflicts with same tags between floating buttons
-                      heroTag: UniqueKey(),
-                      onPressed: () async {
-                        // If user is editing then change use this function
-                        if(isEditing == true){
-                          if(_editFormKey.currentState!.validate()) {
-                            bool? deleteProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
-                            if(deleteProject == true){
-                              ValidResponse? validRes = await projectService.editProject(context: context, project: Project(name: titleController.text, id: widget.project.id, description: descriptionController.text, user_id: widget.project.user_id));
-                              if(validRes?.isSuccess == true){
-                                setState(() {
-                                  isEditing = false;
-                                  widget.project.name = titleController.text;
-                                  widget.project.description = descriptionController.text;
-                                });
-                                showSnackBar(context, jsonDecode(validRes?.body)['msg']);
-                              }
-                            }
-                          }
-                        }else{
-                          setState(() {
-                            isEditing = true;
-                          });
-                        }
-                        
-                      },
-                      tooltip: isEditing ? 'Guardar proyecto' : 'Editar proyecto',
-                      child: isEditing ? const Icon(Icons.save) : const Icon(Icons.edit),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _editFormKey, isEditing: isEditing,),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
