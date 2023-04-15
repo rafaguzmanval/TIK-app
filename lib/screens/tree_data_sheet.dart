@@ -61,29 +61,39 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   void onSaved () async {
     if (_formKey.currentState!.validate())
     {
-      // Save form values
-      _formKey.currentState!.save();
-      bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
-      if(saveDataSheet == true){
-        // Update data sheet or save if does not exists
-        if(widget.treeDataSheet != null)
-        {
-          treeDataSheetService.updateTreeDataSheet(
-            context: context,
-            id: widget.treeDataSheet!.id,
-            project_id: widget.project.id,
-            treeSpecie: widget.selectedSpecie!,
-            treeId: widget.specificTreeIdValue!,
-            description: widget.descriptionValue,
-            latitude: _position.latitude,
-            longitude: _position.longitude
-          );
-        }
-        else{
-          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+      if(isEditing == true){
+        // Save form values
+        _formKey.currentState!.save();
+        bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
+        if(saveDataSheet == true){
+          // Update data sheet or save if does not exists
+          if(widget.treeDataSheet != null)
+          {
+            treeDataSheetService.updateTreeDataSheet(
+              context: context,
+              id: widget.treeDataSheet!.id,
+              project_id: widget.project.id,
+              treeSpecie: widget.selectedSpecie!,
+              treeId: widget.specificTreeIdValue!,
+              description: widget.descriptionValue,
+              latitude: _position.latitude,
+              longitude: _position.longitude
+            );
+          }
+          else{
+            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+          }
+          // Set isEditing to false
+          setState(() {
+            isEditing = false;
+          });
+        }else{
+          return null;
         }
       }else{
-        return null;
+        setState(() {
+          isEditing = true;
+        });
       }
     }
   }
@@ -149,6 +159,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             child: ListView(
               children: [
                 TextFormField(
+                  readOnly: isEditing ? false : true,
                   initialValue: widget.treeDataSheet?.specific_tree_id,
                   decoration: InputDecoration(
                     labelText: 'ID de árbol',
@@ -177,7 +188,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     return null;
                   },
                 ),
-                TextButton(
+                isEditing ? TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                   onPressed: () async {
                     widget.selectedSpecie = await showDialog(
@@ -190,9 +201,10 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                   },
                   child: Text('Seleccionar especie de árbol')
-                ),
+                ) : SizedBox(),
                 SizedBox(height: 20,),
                 TextFormField(
+                  readOnly: isEditing ? false : true,
                   initialValue: widget.treeDataSheet?.description,
                   maxLines: 3,
                   decoration: InputDecoration(
@@ -208,11 +220,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                 SizedBox(height: 20,),
                 Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
                 SizedBox(height: 5,),
-                TextButton(
+                isEditing ? TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                   onPressed: getCurrentLocation,
                   child: Text('Establecer posición actual')
-                ),
+                ) : SizedBox(),
                 SizedBox(height: 10,),
                 CustomMap(key: _customMapKey, currentPosition: _position,),
               ]
