@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 
 class CustomFloatingButtonsBottom extends StatelessWidget {
 
-  const CustomFloatingButtonsBottom({
+  CustomFloatingButtonsBottom({
     super.key,
     required this.parentWidget,
     required this.onSaved,
     required this.onDeleted,
-    required GlobalKey<FormState> formKey,
     required this.isEditing,
-  }) : _formKey = formKey;
+    this.icon1 = const Icon(Icons.delete),
+    this.icon2 = const Icon(Icons.save),
+  });
 
   final Widget parentWidget;
-  final GlobalKey<FormState> _formKey;
   final Function onSaved;
   final Function onDeleted;
   final bool isEditing;
+  Icon? icon1;
+  Icon? icon2;
 
 
   @override
@@ -29,7 +31,7 @@ class CustomFloatingButtonsBottom extends StatelessWidget {
           onPressed: () async {
             onDeleted();
           },
-          child: Icon(Icons.delete),
+          child: icon1,
         ),
         SizedBox(width: 16.0),
         FloatingActionButton(
@@ -38,8 +40,8 @@ class CustomFloatingButtonsBottom extends StatelessWidget {
           onPressed: () async {
             onSaved();
           },
-          tooltip: isEditing ? 'Guardar proyecto' : 'Editar proyecto',
-          child: isEditing ? const Icon(Icons.save) : const Icon(Icons.edit),
+          tooltip: isEditing ? 'Guardar' : 'Editar',
+          child: isEditing ?  icon2 : const Icon(Icons.edit),
         )
       ],
     );

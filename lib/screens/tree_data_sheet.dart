@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -218,6 +219,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
+                TextButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: onSaved,)),
+                  );
+                }, child: Text("Camara")),
+                SizedBox(height: 20,),
                 Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
                 SizedBox(height: 5,),
                 isEditing ? TextButton(
@@ -232,7 +238,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           ),
         ),
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey, isEditing: isEditing,),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

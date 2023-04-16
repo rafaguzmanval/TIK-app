@@ -239,7 +239,7 @@ void onDeleted() async {
           ),
         ],
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _editFormKey, isEditing: isEditing,),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
