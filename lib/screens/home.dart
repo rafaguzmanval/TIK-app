@@ -33,6 +33,12 @@ class _Home extends State<Home>{
   }
 
   @override
+  void initState () {
+    super.initState();
+    authService.getUserData(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     String userName = Provider.of<UserProvider>(context, listen: false).user.name;

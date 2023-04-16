@@ -27,14 +27,7 @@ class TreeTimerApp extends StatefulWidget {
 
 class _TreeTimerApp extends State<TreeTimerApp> {
   // This widget is the root of your application.
-  final AuthService authService = AuthService();
-
-  @override
-  void initState () {
-    super.initState();
-    authService.getUserData(context);
-  }
-
+  
   _asyncMethod() async{
     SharedPreferences s = await SharedPreferences.getInstance();
     String? token = s.getString('auth-token');

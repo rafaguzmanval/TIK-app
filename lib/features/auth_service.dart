@@ -152,7 +152,7 @@ class AuthService{
 
       bool valid = jsonDecode(validTokenRes.body);
       if(valid == true){
-        // Now get user data, using middleware in server
+        // // Now get user data, using middleware in server
         Response response = await get(
           Uri.parse('$url/'),
           headers: <String, String>{
@@ -161,8 +161,8 @@ class AuthService{
           }
         );
 
-        var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(jsonDecode(response.body));
+        // var userProvider = Provider.of<UserProvider>(context, listen: false);
+        // userProvider.setUser(jsonDecode(response.body));
       }
 
     }on SocketException catch (_) {
