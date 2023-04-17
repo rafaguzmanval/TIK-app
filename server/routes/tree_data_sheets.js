@@ -38,10 +38,10 @@ treeDataSheetRouter.put("/update/:id",
     async (req, res) => {
 
         const { id } = req.params;
-        const  { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude } = req.body;
-
+        const  { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, image } = req.body;
+        console.log(image);
         try {
-            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude }, { new: false });
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, image }, { new: false });
 
             if (!treeDataSheet) {
                 return res.status(404).json({ error: 'Ficha de datos no encontrada' });

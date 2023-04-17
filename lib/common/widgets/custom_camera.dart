@@ -10,7 +10,7 @@ class CustomCamera extends StatefulWidget {
 
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
-  Function onSaved;
+  Function(XFile) onSaved;
 
 
   CustomCamera({
@@ -25,6 +25,13 @@ class CustomCamera extends StatefulWidget {
 class CustomCameraState extends State<CustomCamera> {
 
   XFile? imageFile;
+
+  
+  // Save the image on to parents variable
+  void saveImage() {
+    widget.onSaved(imageFile!);
+    Navigator.pop(context);
+  }
 
   @override
   void initState() {
@@ -97,7 +104,7 @@ class CustomCameraState extends State<CustomCamera> {
                       }
                     },
                   ) : SizedBox(),
-                  imageFile != null ? CustomFloatingButtonsBottom(parentWidget: widget, onSaved: widget.onSaved, onDeleted: (){setState(() {imageFile = null;});}, icon1: Icon(Icons.clear), icon2: Icon(Icons.check), isEditing: true) : SizedBox()
+                  imageFile != null ? CustomFloatingButtonsBottom(parentWidget: widget, onSaved: saveImage, onDeleted: (){setState(() {imageFile = null;});}, icon1: Icon(Icons.clear), icon2: Icon(Icons.check), isEditing: true) : SizedBox()
                 ],
               ),
             ),

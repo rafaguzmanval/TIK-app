@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -17,6 +18,7 @@ class TreeDataSheetService{
     String? description,
     double? latitude,
     double? longitude,
+    File?  image,
   })
   async{
 
@@ -28,7 +30,8 @@ class TreeDataSheetService{
         tree_specie_id: treeSpecie.id,
         description: description,
         latitude: latitude,
-        longitude: longitude, 
+        longitude: longitude,
+        image: image, 
       );
 
 
@@ -60,6 +63,7 @@ class TreeDataSheetService{
     String? description,
     double? latitude,
     double? longitude,
+    File? image,
   })
   async{
 
@@ -72,6 +76,7 @@ class TreeDataSheetService{
         description: description,
         latitude: latitude,
         longitude: longitude,
+        image: image
       );
 
       http.Response res = await http.put(

@@ -29,7 +29,11 @@ const treeDataSheetSchema = mongoose.Schema(
        longitude: {
         type: Number,
         required: true
-       }
+       },
+       image: {
+        type: Buffer,
+        required: false
+      },
        
     }
 );

@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
@@ -49,6 +52,12 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
 
+  void _saveImage(XFile file) {
+    setState(() {
+      widget.treeDataSheet?.image = File(file.path);
+    });
+  }
+
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
@@ -78,11 +87,12 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
               treeId: widget.specificTreeIdValue!,
               description: widget.descriptionValue,
               latitude: _position.latitude,
-              longitude: _position.longitude
+              longitude: _position.longitude,
+              image: widget.treeDataSheet!.image,
             );
           }
           else{
-            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude, image: widget.treeDataSheet!.image);
           }
           // Set isEditing to false
           setState(() {
@@ -123,6 +133,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if(widget.treeDataSheet != null)
     {
       initSpecieValue();
+      // Create tmp file to save datasheet img if exists
+      if(widget.treeDataSheet!.image != null)
+      {
+        ;
+      }
     }
     // If new data sheet, isEditing = true
     if(widget.treeDataSheet == null){
@@ -219,17 +234,21 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
-                TextButton(onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: onSaved,)),
-                  );
-                }, child: Text("Camara")),
+                Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                SizedBox(height: 5,),
+                TextButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
+                  child: const Text("Añadir imagen")
+                ),
+                widget.treeDataSheet?.image != null ? Image.file(File(widget.treeDataSheet!.image!.path)) : SizedBox(),
                 SizedBox(height: 20,),
                 Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
                 SizedBox(height: 5,),
                 isEditing ? TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                   onPressed: getCurrentLocation,
-                  child: Text('Establecer posición actual')
+                  child: const Text('Establecer posición actual')
                 ) : SizedBox(),
                 SizedBox(height: 10,),
                 CustomMap(key: _customMapKey, currentPosition: _position,),
