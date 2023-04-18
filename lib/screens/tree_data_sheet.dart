@@ -1,8 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,16 +18,19 @@ import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetScreen extends StatefulWidget{
 
-  TreeDataSheet? treeDataSheet;
   final Project project;
+  TreeDataSheet? treeDataSheet;
+  Directory tmpDir;
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
+  File? image;
 
   TreeDataSheetScreen({
     Key? key,
     required this.treeDataSheet,
     required this.project,
+    required this.tmpDir,
   }) : super(key:key);
 
   @override
@@ -52,9 +54,13 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
 
-  void _saveImage(XFile file) {
+
+  // Callback function to save image when new picture is taken
+  void _saveImage(XFile file) async {
+    List<int> bytes = await file.readAsBytes();
     setState(() {
-      widget.treeDataSheet?.image = File(file.path);
+      // update widget image field
+      widget.image = File(file.path);
     });
   }
 
@@ -79,6 +85,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           // Update data sheet or save if does not exists
           if(widget.treeDataSheet != null)
           {
+            // Get base64 content to pass to the request
+            String imageEncoded64 = base64.encode(widget.image!.readAsBytesSync());
             treeDataSheetService.updateTreeDataSheet(
               context: context,
               id: widget.treeDataSheet!.id,
@@ -88,11 +96,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
               description: widget.descriptionValue,
               latitude: _position.latitude,
               longitude: _position.longitude,
-              image: widget.treeDataSheet!.image,
+              imageBase64: imageEncoded64,
             );
           }
           else{
-            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude, image: widget.treeDataSheet!.image);
+            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
           }
           // Set isEditing to false
           setState(() {
@@ -133,11 +141,6 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if(widget.treeDataSheet != null)
     {
       initSpecieValue();
-      // Create tmp file to save datasheet img if exists
-      if(widget.treeDataSheet!.image != null)
-      {
-        ;
-      }
     }
     // If new data sheet, isEditing = true
     if(widget.treeDataSheet == null){
@@ -145,17 +148,27 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
     super.initState();
 
-    // if data sheet is not null set map position, we do this before init the widget
+    // if data sheet is not null set map position and img, we do this before init the widget
     // to make sure that customMapKey is not null
     if(widget.treeDataSheet != null){
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
+          //Convert imageBase64 to File
+          if(widget.treeDataSheet!.imageBase64 != null)
+          {
+            // Delete file if already exists
+            File tmpFile = File('${widget.tmpDir.path}/tmp.png');
+            if (tmpFile.existsSync()) {
+              tmpFile.deleteSync();
+            }
+            // Create tmp file to show image
+            widget.image =  base64ToFile('${widget.tmpDir.path}/tmp.png', widget.treeDataSheet!.imageBase64 as String);
+          }
           _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
           _customMapKey.currentState!.updateCurrentLocation(_position);
         });
       });
     }
-      
   }
 
   @override
@@ -241,7 +254,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
                   child: const Text("Añadir imagen")
                 ),
-                widget.treeDataSheet?.image != null ? Image.file(File(widget.treeDataSheet!.image!.path)) : SizedBox(),
+                widget.image != null ? Image.file(widget.image as File) : SizedBox(),
                 SizedBox(height: 20,),
                 Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
                 SizedBox(height: 5,),

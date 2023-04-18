@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 
 // Creating user model
 class TreeDataSheet{
@@ -11,12 +9,12 @@ class TreeDataSheet{
   final String? description;
   final double? latitude;
   final double? longitude;
-  File? image;
+  String? imageBase64;
 
 
   TreeDataSheet(
     {required this.id, required this.project_id, required this.specific_tree_id,
-     required this.tree_specie_id, this.description, this.latitude, this.longitude, this.image}
+     required this.tree_specie_id, this.description, this.latitude, this.longitude, this.imageBase64}
   ); 
 
   // Create a object map
@@ -29,20 +27,13 @@ class TreeDataSheet{
       "description": description,
       "latitude": latitude?.toDouble(),
       "longitude": longitude?.toDouble(),
-      'image': image != null ? image!.readAsBytesSync() : null,
+      'image': imageBase64 != null ? imageBase64 : "",
     };
   }
 
   // Factory fucntion to parse from JSON to object
   factory TreeDataSheet.fromJson(Map<String, dynamic> parsedJson){
-    Uint8List? imageBytes;
-    if (parsedJson['image'] != null) {
-      imageBytes = Uint8List.fromList(List<int>.from(parsedJson['image']['data']));
-      // String encoded = base64Encode(imageData);
-      // imageBytes = base64.decode(encoded);
-    }
-    print(imageBytes);
-    TreeDataSheet tree = TreeDataSheet(
+    return TreeDataSheet(
       id: parsedJson["_id"] ?? '',
       project_id: parsedJson["project_id"],
       specific_tree_id: parsedJson["specific_tree_id"] ?? '',
@@ -50,11 +41,8 @@ class TreeDataSheet{
       description: parsedJson["description"] ?? '',
       latitude: parsedJson["latitude"]?.toDouble() ?? 0,
       longitude: parsedJson["longitude"]?.toDouble()?? 0,
-      image: imageBytes != null ? File.fromRawPath(imageBytes) : null,
-
-      // image: parsedJson['image'] != null ? File.fromRawPath(parsedJson['image']) : null,
+      imageBase64: parsedJson["image"] ?? '',
     );
-    return tree;
   }
 
   factory TreeDataSheet.parseTreeDataSheets(String responseBody) {

@@ -1,4 +1,6 @@
 import "dart:convert";
+import "dart:io";
+import "dart:typed_data";
 
 import "package:flutter/material.dart";
 import "package:tree_timer_app/models/valid_response.dart";
@@ -57,3 +59,11 @@ String? mandatoryField(value) {
     }
     return null;
   }
+
+// Function to return a File with the path and base64 content
+File base64ToFile(String path, String base64String) {
+  Uint8List bytes = base64Decode(base64String);
+  File ret = File(path);
+  ret.writeAsBytesSync(bytes);
+  return ret;
+}
