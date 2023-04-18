@@ -17,6 +17,7 @@ class TreeDataSheetService{
     String? description,
     double? latitude,
     double? longitude,
+    String?  imageBase64,
   })
   async{
 
@@ -28,7 +29,8 @@ class TreeDataSheetService{
         tree_specie_id: treeSpecie.id,
         description: description,
         latitude: latitude,
-        longitude: longitude, 
+        longitude: longitude,
+        imageBase64: imageBase64, 
       );
 
 
@@ -60,6 +62,7 @@ class TreeDataSheetService{
     String? description,
     double? latitude,
     double? longitude,
+    String? imageBase64,
   })
   async{
 
@@ -72,6 +75,7 @@ class TreeDataSheetService{
         description: description,
         latitude: latitude,
         longitude: longitude,
+        imageBase64: imageBase64
       );
 
       http.Response res = await http.put(

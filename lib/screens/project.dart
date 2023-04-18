@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -184,12 +185,15 @@ void onDeleted() async {
                                             leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
                                             title: Text(snapshot.data[index]["specific_tree_id"].toString()),
                                             onTap: () async {
+                                              // Get temp directory
+                                              Directory tmpDir = await getTemporaryDirectory();
                                               await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(              
                                                   builder: (context) => TreeDataSheetScreen(
                                                     treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
                                                     project: widget.project,
+                                                    tmpDir: tmpDir,
                                                   ),
                                                 ),
                                               );
@@ -215,10 +219,12 @@ void onDeleted() async {
                             // To avoid conflicts with same tags between floating buttons
                             heroTag: UniqueKey(),
                             onPressed: () async {
+                              // Get temp directory
+                              Directory tmpDir = await getTemporaryDirectory();
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(              
-                                    builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null),
+                                    builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null, tmpDir: tmpDir,),
                                   ),
                               );
                               // Rebuild widget
@@ -239,7 +245,7 @@ void onDeleted() async {
           ),
         ],
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _editFormKey, isEditing: isEditing,),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

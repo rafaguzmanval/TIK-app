@@ -1,9 +1,12 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -15,16 +18,19 @@ import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetScreen extends StatefulWidget{
 
-  TreeDataSheet? treeDataSheet;
   final Project project;
+  TreeDataSheet? treeDataSheet;
+  Directory tmpDir;
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
   String? descriptionValue;
+  File? image;
 
   TreeDataSheetScreen({
     Key? key,
     required this.treeDataSheet,
     required this.project,
+    required this.tmpDir,
   }) : super(key:key);
 
   @override
@@ -48,6 +54,16 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
 
+
+  // Callback function to save image when new picture is taken
+  void _saveImage(XFile file) async {
+    List<int> bytes = await file.readAsBytes();
+    setState(() {
+      // update widget image field
+      widget.image = File(file.path);
+    });
+  }
+
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
@@ -61,29 +77,42 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   void onSaved () async {
     if (_formKey.currentState!.validate())
     {
-      // Save form values
-      _formKey.currentState!.save();
-      bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
-      if(saveDataSheet == true){
-        // Update data sheet or save if does not exists
-        if(widget.treeDataSheet != null)
-        {
-          treeDataSheetService.updateTreeDataSheet(
-            context: context,
-            id: widget.treeDataSheet!.id,
-            project_id: widget.project.id,
-            treeSpecie: widget.selectedSpecie!,
-            treeId: widget.specificTreeIdValue!,
-            description: widget.descriptionValue,
-            latitude: _position.latitude,
-            longitude: _position.longitude
-          );
-        }
-        else{
-          treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+      if(isEditing == true){
+        // Save form values
+        _formKey.currentState!.save();
+        bool? saveDataSheet = await showConfirmDialog(context, "¿Desea guardar la ficha de datos del árbol?", "");
+        if(saveDataSheet == true){
+          // Update data sheet or save if does not exists
+          if(widget.treeDataSheet != null)
+          {
+            // Get base64 content to pass to the request
+            String imageEncoded64 = base64.encode(widget.image!.readAsBytesSync());
+            treeDataSheetService.updateTreeDataSheet(
+              context: context,
+              id: widget.treeDataSheet!.id,
+              project_id: widget.project.id,
+              treeSpecie: widget.selectedSpecie!,
+              treeId: widget.specificTreeIdValue!,
+              description: widget.descriptionValue,
+              latitude: _position.latitude,
+              longitude: _position.longitude,
+              imageBase64: imageEncoded64,
+            );
+          }
+          else{
+            treeDataSheetService.newTreeDataSheet(context: context, project_id: widget.project.id, treeSpecie: widget.selectedSpecie!, treeId: widget.specificTreeIdValue!, description: widget.descriptionValue, latitude: _position.latitude, longitude: _position.longitude);
+          }
+          // Set isEditing to false
+          setState(() {
+            isEditing = false;
+          });
+        }else{
+          return null;
         }
       }else{
-        return null;
+        setState(() {
+          isEditing = true;
+        });
       }
     }
   }
@@ -119,17 +148,27 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
     super.initState();
 
-    // if data sheet is not null set map position, we do this before init the widget
+    // if data sheet is not null set map position and img, we do this before init the widget
     // to make sure that customMapKey is not null
     if(widget.treeDataSheet != null){
       WidgetsBinding.instance!.addPostFrameCallback((_) {
         setState(() {
+          //Convert imageBase64 to File
+          if(widget.treeDataSheet!.imageBase64 != null)
+          {
+            // Delete file if already exists
+            File tmpFile = File('${widget.tmpDir.path}/tmp.png');
+            if (tmpFile.existsSync()) {
+              tmpFile.deleteSync();
+            }
+            // Create tmp file to show image
+            widget.image =  base64ToFile('${widget.tmpDir.path}/tmp.png', widget.treeDataSheet!.imageBase64 as String);
+          }
           _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
           _customMapKey.currentState!.updateCurrentLocation(_position);
         });
       });
     }
-      
   }
 
   @override
@@ -149,6 +188,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             child: ListView(
               children: [
                 TextFormField(
+                  readOnly: isEditing ? false : true,
                   initialValue: widget.treeDataSheet?.specific_tree_id,
                   decoration: InputDecoration(
                     labelText: 'ID de árbol',
@@ -177,7 +217,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     return null;
                   },
                 ),
-                TextButton(
+                isEditing ? TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                   onPressed: () async {
                     widget.selectedSpecie = await showDialog(
@@ -190,9 +230,10 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                   },
                   child: Text('Seleccionar especie de árbol')
-                ),
+                ) : SizedBox(),
                 SizedBox(height: 20,),
                 TextFormField(
+                  readOnly: isEditing ? false : true,
                   initialValue: widget.treeDataSheet?.description,
                   maxLines: 3,
                   decoration: InputDecoration(
@@ -206,13 +247,22 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   },
                 ),
                 SizedBox(height: 20,),
-                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
                 SizedBox(height: 5,),
                 TextButton(
                   style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: getCurrentLocation,
-                  child: Text('Establecer posición actual')
+                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
+                  child: const Text("Añadir imagen")
                 ),
+                widget.image != null ? Image.file(widget.image as File) : SizedBox(),
+                SizedBox(height: 20,),
+                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                SizedBox(height: 5,),
+                isEditing ? TextButton(
+                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                  onPressed: getCurrentLocation,
+                  child: const Text('Establecer posición actual')
+                ) : SizedBox(),
                 SizedBox(height: 10,),
                 CustomMap(key: _customMapKey, currentPosition: _position,),
               ]
@@ -220,7 +270,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           ),
         ),
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, formKey: _formKey, isEditing: isEditing,),
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

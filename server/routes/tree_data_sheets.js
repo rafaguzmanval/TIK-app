@@ -7,7 +7,7 @@ const treeDataSheetRouter = Router();
 treeDataSheetRouter.post("/new",
     async (req, res) => {
         const { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude} = req.body;
-
+        
         try{
             
             if (!project_id || !specific_tree_id) return res.status(400).json({ msg: "Error faltan uno o varios campos obligatorios"});
@@ -38,10 +38,9 @@ treeDataSheetRouter.put("/update/:id",
     async (req, res) => {
 
         const { id } = req.params;
-        const  { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude } = req.body;
-
+        const  { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, image} = req.body;
         try {
-            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude }, { new: false });
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, image: image}, { new: false });
 
             if (!treeDataSheet) {
                 return res.status(404).json({ error: 'Ficha de datos no encontrada' });
@@ -51,7 +50,7 @@ treeDataSheetRouter.put("/update/:id",
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({error: err.message});
+            return res.status(500).json({error: error.message});
         }
 
     }
@@ -91,10 +90,9 @@ treeDataSheetRouter.get("/:id",
 treeDataSheetRouter.get("/project/:project_id",
     async (req, res) => {
         const { project_id } = req.params;
-
+        
         const treeDataSheets = await treeDataSheetSchemaModel.find({project_id: project_id}).exec();
         if(!treeDataSheets) return res.status(404).send("El proyecto no tiene fichas de datos");
-
         return res.send(treeDataSheets);
     }
 );

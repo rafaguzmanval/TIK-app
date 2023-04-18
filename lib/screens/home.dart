@@ -33,6 +33,12 @@ class _Home extends State<Home>{
   }
 
   @override
+  void initState () {
+    super.initState();
+    authService.getUserData(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     String userName = Provider.of<UserProvider>(context, listen: false).user.name;
@@ -97,7 +103,7 @@ class _Home extends State<Home>{
                     children: [
                       new Expanded(
                         flex: 3,
-                        child: const Icon(Icons.create),
+                        child: const Icon(Icons.add),
                       ),
                       //SizedBox(width: 15,),
                       new Expanded(
@@ -192,7 +198,7 @@ class _Home extends State<Home>{
                     //SizedBox(width: 15,),
                     new Expanded(
                         flex: 7,
-                        child: const Text("Obtener especies de arboles")
+                        child: const Text("Especies de arboles disponibles")
                     )
                   ],
                 )
