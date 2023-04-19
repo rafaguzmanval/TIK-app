@@ -6,14 +6,18 @@ import treeSpeciesRouter from './routes/tree_species.js';
 import treeDataSheetRouter from './routes/tree_data_sheets.js';
 import projectRouter from './routes/project.js';
 import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
 
-// Cargamos valores de .env en process
+// Load .env values
 dotenv.config();
 
 const PORT = process.env.PORT;
 const MONGODB_URL = process.env.MONGODB_URL;
 
 const expressApp = express();
+// Add body-paser middleware to establish json limit to 10mb
+expressApp.use(bodyParser.json({limit: '10mb'}));
+
 
 console.clear();
 
@@ -27,7 +31,7 @@ expressApp.use("/treespecies", treeSpeciesRouter);
 expressApp.use("/treedatasheets", treeDataSheetRouter);
 expressApp.use("/projects", projectRouter);
 
-// Esta funcion e spara arrancar la app ya que connect es async
+// We need an async function in order to start the app
 const bootstrap = async () =>{
     // Conectamos a BBDD
     await mongoose.connect(MONGODB_URL);
