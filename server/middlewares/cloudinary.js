@@ -12,13 +12,12 @@ import { v2 as cloudinary } from 'cloudinary';
 
 async function cloudinaryMiddleware(req, res, next) {
     try {
-        const image = req.body.image;
+        const {image, project_id} = req.body;
         // Check if img contains info
         if(image != ''){
             const _id = req.params.id;
-
             // Add the base64 image and the options, public_id is the desired cloudinary image name, in this case _id of the treeDataSheet.
-            const result = await cloudinary.uploader.upload("data:image/png;base64," + image, {public_id: _id, overwrite: true, resource_type: 'image'});
+            const result = await cloudinary.uploader.upload("data:image/png;base64,"  + image, {public_id: project_id + '/' + _id, overwrite: true, resource_type: 'image'});
             console.log(result);
             req.cloudinaryUrl = result.secure_url; // URL into  req.cloudinaryUrl
         }
