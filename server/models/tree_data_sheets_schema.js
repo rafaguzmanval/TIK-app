@@ -30,7 +30,7 @@ const treeDataSheetSchema = mongoose.Schema(
         type: Number,
         required: true
        },
-       image: {
+       imageURL: {
         type: String,
         required: false
       },

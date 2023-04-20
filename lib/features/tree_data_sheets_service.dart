@@ -11,28 +11,11 @@ class TreeDataSheetService{
 
   void newTreeDataSheet({
     required BuildContext context,
-    required String project_id,
-    required TreeSpecie treeSpecie,
-    required String treeId,
-    String? description,
-    double? latitude,
-    double? longitude,
-    String?  imageBase64,
+    required TreeDataSheet treeDataSheet
   })
   async{
 
     try{
-      TreeDataSheet treeDataSheet = TreeDataSheet(
-        id: '',
-        project_id: project_id,
-        specific_tree_id: treeId,
-        tree_specie_id: treeSpecie.id,
-        description: description,
-        latitude: latitude,
-        longitude: longitude,
-        imageBase64: imageBase64, 
-      );
-
 
       http.Response res = await http.post(
         Uri.parse('$url/treedatasheets/new'),
@@ -55,28 +38,11 @@ class TreeDataSheetService{
   
   void updateTreeDataSheet({
     required BuildContext context,
-    required String id,
-    required String project_id,
-    required TreeSpecie treeSpecie,
-    required String treeId,
-    String? description,
-    double? latitude,
-    double? longitude,
-    String? imageBase64,
+    required TreeDataSheet treeDataSheet
   })
   async{
 
     try{
-      TreeDataSheet treeDataSheet = TreeDataSheet(
-        id: id,
-        project_id: project_id,
-        specific_tree_id: treeId,
-        tree_specie_id: treeSpecie.id,
-        description: description,
-        latitude: latitude,
-        longitude: longitude,
-        imageBase64: imageBase64
-      );
 
       http.Response res = await http.put(
         Uri.parse('$url/treedatasheets/update/${treeDataSheet.id}'),
