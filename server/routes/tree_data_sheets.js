@@ -135,7 +135,7 @@ treeDataSheetRouter.get("/project/:project_id",
     async (req, res) => {
         const { project_id } = req.params;
         
-        const treeDataSheets = await treeDataSheetSchemaModel.find({project_id: project_id}).exec();
+        const treeDataSheets = await treeDataSheetSchemaModel.find({project_id: project_id}, null, {sort: {createdAt: -1}}).exec();
         if(!treeDataSheets) return res.status(404).send("El proyecto no tiene fichas de datos");
         return res.send(treeDataSheets);
     }
