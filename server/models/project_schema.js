@@ -21,11 +21,8 @@ const projectSchema = mongoose.Schema(
         type: mongoose.Types.ObjectId,
         ref: "Users"
        }
-    //    tree_data_sheets_id: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "TreeDataSheets"
-    //    }]
-    }
+    },
+    { timestamps: true } 
 );
 
 // Dont allow duplicated projects with same name and user id

@@ -35,8 +35,8 @@ const treeDataSheetSchema = mongoose.Schema(
         type: String,
         required: false
       },
-       
-    }
+    },
+    { timestamps: true } 
 );
 
 treeDataSheetSchema.index({ project_id: 1, specific_tree_id: 1 }, { unique: true });
@@ -47,6 +47,7 @@ treeDataSheetSchema.pre('findOneAndDelete', async function(next) {
     // Get tree data sheet project id
     let doc = await treeDataSheetSchemaModel.findById(this._conditions._id);
     // Delete the cloudinary image associated
+    console.log(doc)
     await deleteCloudinaryImage(doc.project_id + '/' +doc._id);
     next();
   } catch (err) {
