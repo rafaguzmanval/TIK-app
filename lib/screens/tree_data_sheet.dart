@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,6 +11,7 @@ import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart
 import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
+import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
@@ -68,7 +70,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
-      treeDataSheetService.deleteTreeDataSheet(context: context, id: widget.treeDataSheet!.id);
+      Response? res = await treeDataSheetService.deleteTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet!);
+      showResponseMsg(context, res);
       Navigator.pop(context);
     }else{
       return null;

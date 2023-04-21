@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:tree_timer_app/constants/utils.dart';
+import 'package:tree_timer_app/models/valid_response.dart';
 
 void httpErrorHandler({
   required http.Response res,
@@ -26,5 +28,17 @@ void httpErrorHandler({
     default:
       showSnackBar(context, res.body);
       break;
+  }
+}
+
+void showResponseMsg(BuildContext context, Response? res){
+  if(res != null){
+    ValidResponse? validResponse = ValidResponse.fromResponse(res, res.body);
+      if(validResponse.isSuccess == true){
+        httpErrorHandler(res: res, context: context,
+          onSuccess: (){
+            showSnackBar(context, returnResponseMessage(validResponse));
+          });
+      }
   }
 }

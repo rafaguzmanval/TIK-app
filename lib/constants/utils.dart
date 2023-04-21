@@ -47,7 +47,7 @@ String returnResponseMessage(ValidResponse res)
 {
   String ret = "";
   dynamic jsonResponse = jsonDecode(res.body);
-    if(jsonResponse["msg"] != "")
+    if(jsonResponse["msg"] != null)
       ret = jsonResponse["msg"];
 
   return ret;

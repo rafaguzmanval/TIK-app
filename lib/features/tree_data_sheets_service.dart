@@ -91,18 +91,15 @@ class TreeDataSheetService{
     }
   }
 
-  void deleteTreeDataSheet({required BuildContext context, required String id}) async {
+  Future deleteTreeDataSheet({required BuildContext context, required TreeDataSheet treeDataSheet}) async {
     try
     {
       final response = await http.delete(
-        Uri.parse('$url/treedatasheets/delete/${id}'),
+        Uri.parse('$url/treedatasheets/delete/${treeDataSheet.id}'),
+        body: treeDataSheet.toJson(),
       );
 
-      httpErrorHandler(res: response, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Ficha de datos borrada correctamente!");
-        }
-      );
+      return response;
       
     }
     catch(err){
