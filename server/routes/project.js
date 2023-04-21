@@ -24,9 +24,7 @@ projectRouter.post("/new",
             const savedProject = await newProject.save();
             // Add the _id we need to process the folder creation
             req.savedProjectId = savedProject._id;
-            console.log("Entro")
             next();
-            console.log("Salgo")
             
             return res.json({ msg: "Proyecto creado correctamente"});
 
@@ -37,6 +35,7 @@ projectRouter.post("/new",
     // Create project folder on cloudinary to save images
     async (req, res, next) => {
         createCloudinaryFolder(req.savedProjectId);
+        // Back to retrun response
         next();
     },
 );
@@ -44,7 +43,7 @@ projectRouter.post("/new",
 projectRouter.get("/getall",
     async (req, res) => {
 
-        const resultados = await projectSchemaModel.find({})
+        const resultados = await projectSchemaModel.find({}, null, {sort: {createdAt: 1}})
         if(!resultados) return res.status(404).send("No se han podido proyectos");
 
         return res.send(resultados);
@@ -56,7 +55,7 @@ projectRouter.get("/getall/:user_id",
 
         const { user_id } = req.params;
         
-        const resultados = await projectSchemaModel.find({user_id: user_id});
+        const resultados = await projectSchemaModel.find({user_id: user_id}, null, {sort: {createdAt: -1}});
         if(!resultados) return res.status(404).send("No se han podido proyectos");
 
         return res.send(resultados);
