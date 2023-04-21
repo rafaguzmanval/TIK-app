@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import treeDataSheetSchemaModel from "./tree_data_sheets_schema.js";
+import {deleteCloudinaryFolder} from "../middlewares/cloudinary.js";
 
 const projectSchema = mongoose.Schema(
     {
@@ -32,16 +33,18 @@ projectSchema.index({ user_id: 1, name: 1 }, { unique: true });
 
 
 // Delete all the tree data sheets associated
-// IMPORTANT FIX ERROR THAT DELETE ALL USER ASSOCIATED TO THE PROJECT
 projectSchema.pre('findOneAndDelete', async function(next) {
     try {
         const doc = this;
         await treeDataSheetSchemaModel.deleteMany({ project_id: doc._conditions._id });
+
+        // Delete cloudinary folder that contains all the images of the project datasheets
+        await deleteCloudinaryFolder(doc._conditions._id);
         next();
     } catch (err) {
         next(err);
     }
-  });
+});
   
 
 export const projectSchemaModel = mongoose.model("Projects", projectSchema);

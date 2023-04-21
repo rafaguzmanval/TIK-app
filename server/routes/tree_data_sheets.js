@@ -1,13 +1,11 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { treeDataSheetSchemaModel } from "../models/tree_data_sheets_schema.js";
-import cloudinaryMiddleware from "../middlewares/cloudinary.js";
+import {cloudinaryMiddleware} from "../middlewares/cloudinary.js";
 const treeDataSheetRouter = Router();
 
 treeDataSheetRouter.post("/new",
-    //Use cloudinary middleware
-    cloudinaryMiddleware,
-    async (req, res) => {
+    async (req, res, next) => {
         const { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude} = req.body;
         
         try{
@@ -16,15 +14,13 @@ treeDataSheetRouter.post("/new",
             
             const objectProjectId = mongoose.Types.ObjectId(project_id);
 
-            // Save the image url that provides cloudinary middleware (could be empty)
-            let imageURL = req.cloudinaryUrl || '';
-            console.log(imageURL);
-            
-            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description, latitude: latitude, longitude: longitude, imageURL: imageURL});
-
-            await newTreeDataSheet.save();
-
-            return res.json({ msg: "Ficha de datos creada correctamente"});
+            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description, latitude: latitude, longitude: longitude,});
+            const savedTreeDataSheet = await newTreeDataSheet.save();
+            // Add the _id we need to process the image creation
+            req.savedTreeDataSheetId = savedTreeDataSheet._id;
+            // Call middleware
+            next();
+           
 
         } catch(err){
             // 11000 Error code of duplicated index
@@ -37,6 +33,13 @@ treeDataSheetRouter.post("/new",
                 return res.status(500).json({error: err.message});
             }
         }
+    },
+    //Use cloudinary middleware
+    cloudinaryMiddleware,
+    async (req, res) => {
+        // Add the returned cloudinary url to imageURL field
+        await treeDataSheetSchemaModel.findByIdAndUpdate(req.savedTreeDataSheetId, { imageURL: req.cloudinaryUrl })
+        return res.json({ msg: "Ficha de datos creada correctamente"});
     }
 );
 
@@ -86,7 +89,7 @@ treeDataSheetRouter.put("/update/:id",
 treeDataSheetRouter.delete("/delete/:id",
     async (req, res) => {
 
-        const { id } = req.params;
+        const { id} = req.params;
 
         try {
             const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndDelete(id);
@@ -94,11 +97,11 @@ treeDataSheetRouter.delete("/delete/:id",
                 return res.status(404).json({ error: 'Ficha de datos no encontrada' });
             }
 
-            res.json({ mensaje: 'Ficha de datos eliminada correctamente' });
+            res.json({ msg: 'Ficha de datos eliminada correctamente' });
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({error: err.message});
+            return res.status(500).json({error: error.message});
         }
     }
 )

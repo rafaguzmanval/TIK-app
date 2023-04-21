@@ -15,7 +15,9 @@ async function cloudinaryMiddleware(req, res, next) {
         const {image, project_id} = req.body;
         // Check if img contains info
         if(image != ''){
-            const _id = req.params.id;
+            // Get _id from params if it is updating a datasheet or get from req.savedTreeDataSheetId
+            // if it is new datasheet
+            const _id = req.params.id || req.savedTreeDataSheetId;
             // Add the base64 image and the options, public_id is the desired cloudinary image name, in this case _id of the treeDataSheet.
             const result = await cloudinary.uploader.upload("data:image/png;base64,"  + image, {public_id: project_id + '/' + _id, overwrite: true, resource_type: 'image'});
             console.log(result);
@@ -23,12 +25,36 @@ async function cloudinaryMiddleware(req, res, next) {
         }
         next();
         
-        
     }catch (err) {
         console.log(err);
         res.status(500).send('Error al cargar la imagen en Cloudinary');
     }
 }
+
+async function deleteCloudinaryFolder(folderName){
+     
+    await cloudinary.api.delete_resources_by_prefix(folderName + '/', (error, result) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(result);
+        }
+      });
+    await cloudinary.api.delete_folder(folderName, {});
+
+}
+
+async function deleteCloudinaryImage(imageName){
+     
+    await cloudinary.uploader.destroy(imageName, (error, result) => {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log(result);
+        }
+      });
+}
   
-  export default cloudinaryMiddleware;
+export { cloudinaryMiddleware, deleteCloudinaryFolder, deleteCloudinaryImage};
+
 
