@@ -31,16 +31,36 @@ async function cloudinaryMiddleware(req, res, next) {
     }
 }
 
-async function deleteCloudinaryFolder(folderName){
+async function createCloudinaryFolder(folderName){
      
-    await cloudinary.api.delete_resources_by_prefix(folderName + '/', (error, result) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(result);
-        }
-      });
-    await cloudinary.api.delete_folder(folderName, {});
+  await cloudinary.api.create_folder(folderName, (error, result) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log(result);
+      }
+    });
+}
+
+async function deleteCloudinaryFolder(folderName){
+
+  // Delete all folder field in order to delete folder (must be empty)
+  await cloudinary.api.delete_resources_by_prefix(folderName + '/', (error, result) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(result);
+    }
+  });
+
+  //Delete folder
+  await cloudinary.api.delete_folder(folderName, (error, result) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log(result);
+    }
+  });
 
 }
 
@@ -54,7 +74,8 @@ async function deleteCloudinaryImage(imageName){
         }
       });
 }
+
   
-export { cloudinaryMiddleware, deleteCloudinaryFolder, deleteCloudinaryImage};
+export { cloudinaryMiddleware, deleteCloudinaryFolder, deleteCloudinaryImage, createCloudinaryFolder};
 
 

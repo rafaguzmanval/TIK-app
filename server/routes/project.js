@@ -1,11 +1,12 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { projectSchemaModel } from "../models/project_schema.js";
+import { createCloudinaryFolder } from "../middlewares/cloudinary.js";
 
 const projectRouter = Router();
 
 projectRouter.post("/new", 
-    async (req, res) => {
+    async (req, res, next) => {
         const { user_id, name, description } = req.body;
 
         try{
@@ -20,14 +21,24 @@ projectRouter.post("/new",
 
             const newProject = new projectSchemaModel({name, description, user_id: objectUserId});
 
-            await newProject.save();
-
+            const savedProject = await newProject.save();
+            // Add the _id we need to process the folder creation
+            req.savedProjectId = savedProject._id;
+            console.log("Entro")
+            next();
+            console.log("Salgo")
+            
             return res.json({ msg: "Proyecto creado correctamente"});
 
         } catch(error){
             return res.status(500).json({msg: error.message});
         }
-    }
+    },
+    // Create project folder on cloudinary to save images
+    async (req, res, next) => {
+        createCloudinaryFolder(req.savedProjectId);
+        next();
+    },
 );
 
 projectRouter.get("/getall",
