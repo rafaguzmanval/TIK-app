@@ -108,7 +108,16 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             );
           }
           else{
-            treeDataSheetService.newTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet as TreeDataSheet);
+            Response? res = await treeDataSheetService.newTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet as TreeDataSheet);
+            showResponseMsg(context, res);
+            // And if res returns a savedDataTreeSheet then we must to update the widget.treedatasheet
+            if(res != null && res.body.contains('savedTreeDataSheet'))
+            {
+              setState(() {
+                var data = jsonDecode(res.body);
+                widget.treeDataSheet = TreeDataSheet.fromJson(data['savedTreeDataSheet']);
+              });
+            }
           }
           // Set isEditing to false
           setState(() {

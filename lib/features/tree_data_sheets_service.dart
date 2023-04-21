@@ -9,7 +9,7 @@ import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetService{
 
-  void newTreeDataSheet({
+  Future newTreeDataSheet({
     required BuildContext context,
     required TreeDataSheet treeDataSheet
   })
@@ -25,11 +25,7 @@ class TreeDataSheetService{
         body: treeDataSheet.toJson(),
       );
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Nueva ficha de datos creada correctamente!");
-        }
-      );
+      return res;
     } catch(err){
       showSnackBar(context, err.toString());
     }

@@ -37,9 +37,9 @@ treeDataSheetRouter.post("/new",
     //Use cloudinary middleware
     cloudinaryMiddleware,
     async (req, res) => {
-        // Add the returned cloudinary url to imageURL field
-        await treeDataSheetSchemaModel.findByIdAndUpdate(req.savedTreeDataSheetId, { imageURL: req.cloudinaryUrl })
-        return res.json({ msg: "Ficha de datos creada correctamente"});
+        // Add the returned cloudinary url to imageURL field and savedTreeDataSheet too
+        const savedTreeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(req.savedTreeDataSheetId, { imageURL: req.cloudinaryUrl })
+        return res.json({ msg: "Ficha de datos creada correctamente", savedTreeDataSheet});
     }
 );
 

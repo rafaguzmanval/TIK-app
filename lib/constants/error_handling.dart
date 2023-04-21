@@ -34,11 +34,9 @@ void httpErrorHandler({
 void showResponseMsg(BuildContext context, Response? res){
   if(res != null){
     ValidResponse? validResponse = ValidResponse.fromResponse(res, res.body);
-      if(validResponse.isSuccess == true){
-        httpErrorHandler(res: res, context: context,
-          onSuccess: (){
-            showSnackBar(context, returnResponseMessage(validResponse));
-          });
-      }
+    httpErrorHandler(res: res, context: context,
+      onSuccess: (){
+        showSnackBar(context, returnResponseMessage(validResponse));
+      });
   }
 }
