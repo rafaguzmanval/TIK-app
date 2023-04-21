@@ -1,11 +1,12 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { projectSchemaModel } from "../models/project_schema.js";
+import { createCloudinaryFolder } from "../middlewares/cloudinary.js";
 
 const projectRouter = Router();
 
 projectRouter.post("/new", 
-    async (req, res) => {
+    async (req, res, next) => {
         const { user_id, name, description } = req.body;
 
         try{
@@ -20,20 +21,29 @@ projectRouter.post("/new",
 
             const newProject = new projectSchemaModel({name, description, user_id: objectUserId});
 
-            await newProject.save();
-
+            const savedProject = await newProject.save();
+            // Add the _id we need to process the folder creation
+            req.savedProjectId = savedProject._id;
+            next();
+            
             return res.json({ msg: "Proyecto creado correctamente"});
 
-        } catch(err){
-            return res.status(500).json({msg: err.message});
+        } catch(error){
+            return res.status(500).json({msg: error.message});
         }
-    }
+    },
+    // Create project folder on cloudinary to save images
+    async (req, res, next) => {
+        createCloudinaryFolder(req.savedProjectId);
+        // Back to retrun response
+        next();
+    },
 );
 
 projectRouter.get("/getall",
     async (req, res) => {
 
-        const resultados = await projectSchemaModel.find({})
+        const resultados = await projectSchemaModel.find({}, null, {sort: {createdAt: 1}})
         if(!resultados) return res.status(404).send("No se han podido proyectos");
 
         return res.send(resultados);
@@ -45,7 +55,7 @@ projectRouter.get("/getall/:user_id",
 
         const { user_id } = req.params;
         
-        const resultados = await projectSchemaModel.find({user_id: user_id});
+        const resultados = await projectSchemaModel.find({user_id: user_id}, null, {sort: {createdAt: -1}});
         if(!resultados) return res.status(404).send("No se han podido proyectos");
 
         return res.send(resultados);
@@ -66,7 +76,6 @@ projectRouter.delete("/delete/:id",
     async (req, res) => {
 
         const { id } = req.params;
-
         try {
             const project = await projectSchemaModel.findByIdAndDelete(id);
             if (!project) {
@@ -77,7 +86,7 @@ projectRouter.delete("/delete/:id",
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({msg: err.message});
+            return res.status(500).json({msg: error.message});
         }
     }
 )
@@ -99,7 +108,7 @@ projectRouter.put("/edit",
 
         } catch (error) {
             console.error(error);
-            return res.status(500).json({msg: err.message});
+            return res.status(500).json({msg: error.message});
         }
     }
 )

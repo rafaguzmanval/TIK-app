@@ -9,12 +9,12 @@ class TreeDataSheet{
   final String? description;
   final double? latitude;
   final double? longitude;
-  String? imageBase64;
+  String? imageURL;
 
 
   TreeDataSheet(
     {required this.id, required this.project_id, required this.specific_tree_id,
-     required this.tree_specie_id, this.description, this.latitude, this.longitude, this.imageBase64}
+     required this.tree_specie_id, this.description, this.latitude, this.longitude, this.imageURL}
   ); 
 
   // Create a object map
@@ -27,7 +27,7 @@ class TreeDataSheet{
       "description": description,
       "latitude": latitude?.toDouble(),
       "longitude": longitude?.toDouble(),
-      'image': imageBase64 != null ? imageBase64 : "",
+      'image': imageURL != null ? imageURL : null,
     };
   }
 
@@ -41,7 +41,7 @@ class TreeDataSheet{
       description: parsedJson["description"] ?? '',
       latitude: parsedJson["latitude"]?.toDouble() ?? 0,
       longitude: parsedJson["longitude"]?.toDouble()?? 0,
-      imageBase64: parsedJson["image"] ?? '',
+      imageURL: parsedJson["imageURL"] ?? '',
     );
   }
 

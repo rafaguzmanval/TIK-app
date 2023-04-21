@@ -9,30 +9,13 @@ import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetService{
 
-  void newTreeDataSheet({
+  Future newTreeDataSheet({
     required BuildContext context,
-    required String project_id,
-    required TreeSpecie treeSpecie,
-    required String treeId,
-    String? description,
-    double? latitude,
-    double? longitude,
-    String?  imageBase64,
+    required TreeDataSheet treeDataSheet
   })
   async{
 
     try{
-      TreeDataSheet treeDataSheet = TreeDataSheet(
-        id: '',
-        project_id: project_id,
-        specific_tree_id: treeId,
-        tree_specie_id: treeSpecie.id,
-        description: description,
-        latitude: latitude,
-        longitude: longitude,
-        imageBase64: imageBase64, 
-      );
-
 
       http.Response res = await http.post(
         Uri.parse('$url/treedatasheets/new'),
@@ -42,11 +25,7 @@ class TreeDataSheetService{
         body: treeDataSheet.toJson(),
       );
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Nueva ficha de datos creada correctamente!");
-        }
-      );
+      return res;
     } catch(err){
       showSnackBar(context, err.toString());
     }
@@ -55,28 +34,11 @@ class TreeDataSheetService{
   
   void updateTreeDataSheet({
     required BuildContext context,
-    required String id,
-    required String project_id,
-    required TreeSpecie treeSpecie,
-    required String treeId,
-    String? description,
-    double? latitude,
-    double? longitude,
-    String? imageBase64,
+    required TreeDataSheet treeDataSheet
   })
   async{
 
     try{
-      TreeDataSheet treeDataSheet = TreeDataSheet(
-        id: id,
-        project_id: project_id,
-        specific_tree_id: treeId,
-        tree_specie_id: treeSpecie.id,
-        description: description,
-        latitude: latitude,
-        longitude: longitude,
-        imageBase64: imageBase64
-      );
 
       http.Response res = await http.put(
         Uri.parse('$url/treedatasheets/update/${treeDataSheet.id}'),
@@ -125,18 +87,15 @@ class TreeDataSheetService{
     }
   }
 
-  void deleteTreeDataSheet({required BuildContext context, required String id}) async {
+  Future deleteTreeDataSheet({required BuildContext context, required TreeDataSheet treeDataSheet}) async {
     try
     {
       final response = await http.delete(
-        Uri.parse('$url/treedatasheets/delete/${id}'),
+        Uri.parse('$url/treedatasheets/delete/${treeDataSheet.id}'),
+        body: treeDataSheet.toJson(),
       );
 
-      httpErrorHandler(res: response, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Ficha de datos borrada correctamente!");
-        }
-      );
+      return response;
       
     }
     catch(err){

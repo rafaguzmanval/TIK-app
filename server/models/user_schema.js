@@ -4,30 +4,33 @@ import projectSchemaModel from "./project_schema.js";
 
 const SALT_ROUNDS = 10;
 
-const userSchema = mongoose.Schema({
-    name: {
-        required: true,
-        type: String,
-        trim: true,
-    },
-    email: {
-        required: true,
-        type: String,
-        trim: true,
-        index: { unique: true },
-        validate: {
-            validator: (value) =>{
-                const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-                return value.match(re);
-            },
-            message: "Por favor introduce un email válido",
+const userSchema = mongoose.Schema(
+    {
+        name: {
+            required: true,
+            type: String,
+            trim: true,
+        },
+        email: {
+            required: true,
+            type: String,
+            trim: true,
+            index: { unique: true },
+            validate: {
+                validator: (value) =>{
+                    const re = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                    return value.match(re);
+                },
+                message: "Por favor introduce un email válido",
+            }
+        },
+        password: {
+            required: true,
+            type: String
         }
     },
-    password: {
-        required: true,
-        type: String
-    }
-});
+    { timestamps: true }
+);
 
 userSchema.pre("save", function(next) {
     let user = this;
