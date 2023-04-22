@@ -183,105 +183,116 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
       appBar: AppBar(
         title: Text(widget.project.name),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Container(
-            padding: EdgeInsets.all(30.0),
-            // THIS CANNOT BE 800px
-            width: double.infinity,
-            height: 800,
-            child: ListView(
-              children: [
-                TextFormField(
-                  readOnly: isEditing ? false : true,
-                  initialValue: widget.treeDataSheet?.specific_tree_id,
-                  decoration: InputDecoration(
-                    labelText: 'ID de árbol',
-                  ),
-                  onSaved: (value) {
-                    widget.specificTreeIdValue = value!;
-                  },
-                  validator: (value) {
-                    if(value!.isEmpty){
-                      return 'Este campo es obligatorio';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 15,),
-                TextFormField(
-                  readOnly: true,
-                  controller: treeSpecieController,
-                  decoration: InputDecoration(
-                    labelText: 'Especie de árbol',
-                  ),
-                  validator: (value) {
-                    if(value!.isEmpty){
-                      return 'Este campo es obligatorio';
-                    }
-                    return null;
-                  },
-                ),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: () async {
-                    widget.selectedSpecie = await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CustomAlertDialogTreeSpecies();
-                      }
-                    );
-                    // We set the value of tree specie text form field
-                    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
-                  },
-                  child: Text('Seleccionar especie de árbol')
-                ) : SizedBox(),
-                SizedBox(height: 20,),
-                TextFormField(
-                  readOnly: isEditing ? false : true,
-                  initialValue: widget.treeDataSheet?.description,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: 'Notas de árbol',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+      body: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 1.0, // Ancho del borde personalizado
+          ),
+          borderRadius: BorderRadius.circular(5.0), // Borde redondeado personalizado
+        ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              padding: EdgeInsets.all(30.0),
+              // THIS CANNOT BE 800px
+              width: double.infinity,
+              height: 800,
+              child: ListView(
+                // Avoid scrolling on listview
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  TextFormField(
+                    readOnly: isEditing ? false : true,
+                    initialValue: widget.treeDataSheet?.specific_tree_id,
+                    decoration: InputDecoration(
+                      labelText: 'ID de árbol',
                     ),
+                    onSaved: (value) {
+                      widget.specificTreeIdValue = value!;
+                    },
+                    validator: (value) {
+                      if(value!.isEmpty){
+                        return 'Este campo es obligatorio';
+                      }
+                      return null;
+                    },
                   ),
-                  onSaved: (value) {
-                    widget.descriptionValue = value!;
-                  },
-                ),
-                
-                SizedBox(height: 20,),
-                Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                SizedBox(height: 5,),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
-                  child: const Text("Añadir imagen")
-                ) : SizedBox(),
-                // If user loads an image show into screen, if not show url image if is not null or empty
-                widget.image != null ? Image.file(widget.image as File)
-                : 
-                //Show url image if not null or empty
-                (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
-                ? Image.network(
-                  widget.treeDataSheet!.imageURL as String,
-                ) : SizedBox(),
-                SizedBox(height: 20,),
-                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                SizedBox(height: 5,),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: getCurrentLocation,
-                  child: const Text('Establecer posición actual')
-                ) : SizedBox(),
-                SizedBox(height: 10,),
-                CustomMap(key: _customMapKey, currentPosition: _position,),
-                SizedBox(height: 20,),
-
-              ]
+                  SizedBox(height: 15,),
+                  TextFormField(
+                    readOnly: true,
+                    controller: treeSpecieController,
+                    decoration: InputDecoration(
+                      labelText: 'Especie de árbol',
+                    ),
+                    validator: (value) {
+                      if(value!.isEmpty){
+                        return 'Este campo es obligatorio';
+                      }
+                      return null;
+                    },
+                  ),
+                  isEditing ? TextButton(
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                    onPressed: () async {
+                      widget.selectedSpecie = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CustomAlertDialogTreeSpecies();
+                        }
+                      );
+                      // We set the value of tree specie text form field
+                      treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
+                    },
+                    child: Text('Seleccionar especie de árbol')
+                  ) : SizedBox(),
+                  SizedBox(height: 20,),
+                  TextFormField(
+                    readOnly: isEditing ? false : true,
+                    initialValue: widget.treeDataSheet?.description,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Notas de árbol',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    onSaved: (value) {
+                      widget.descriptionValue = value!;
+                    },
+                  ),
+                  
+                  SizedBox(height: 20,),
+                  Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  SizedBox(height: 5,),
+                  isEditing ? TextButton(
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                    onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
+                    child: const Text("Añadir imagen")
+                  ) : SizedBox(),
+                  // If user loads an image show into screen, if not show url image if is not null or empty
+                  widget.image != null ? Image.file(widget.image as File)
+                  : 
+                  //Show url image if not null or empty
+                  (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
+                  ? Image.network(
+                    widget.treeDataSheet!.imageURL as String,
+                  ) : SizedBox(),
+                  SizedBox(height: 20,),
+                  Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
+                  SizedBox(height: 5,),
+                  isEditing ? TextButton(
+                    style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                    onPressed: getCurrentLocation,
+                    child: const Text('Establecer posición actual')
+                  ) : SizedBox(),
+                  SizedBox(height: 10,),
+                  CustomMap(key: _customMapKey, currentPosition: _position,),
+                  SizedBox(height: 50,),
+                ]
+              ),
             ),
           ),
         ),
