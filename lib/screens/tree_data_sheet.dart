@@ -188,9 +188,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey,
-            width: 1.0, // Ancho del borde personalizado
+            width: 1.0, 
           ),
-          borderRadius: BorderRadius.circular(5.0), // Borde redondeado personalizado
+          borderRadius: BorderRadius.circular(5.0), 
         ),
         child: SingleChildScrollView(
           child: Form(

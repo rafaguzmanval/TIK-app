@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/common/widgets/custom_arrow_list_scroll.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
@@ -23,6 +24,24 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
   List<dynamic> filteredSpecies = new List.empty();
   List<dynamic> origSpeciesList = new List.empty();
   final ScrollController scrollController = ScrollController();
+  bool arrowDownWard = true;
+
+  void _scrollListener() {
+      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+        setState(() {
+          arrowDownWard = true;
+        });
+      }
+      if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
+        setState(() {
+          arrowDownWard = false;
+        });
+      }
+  }
+  @override
+  void initState(){
+    scrollController.addListener(_scrollListener);
+  }
   
   Future<void> _refreshList() async {
     // Aquí puedes actualizar la lista de items desde una fuente externa, como una API o una base de datos.
@@ -36,6 +55,14 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
     return  AlertDialog(
       title: Text(widget.title),
       content: Container(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 1.0, 
+          ),
+          borderRadius: BorderRadius.circular(5.0), 
+        ),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -102,7 +129,11 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                           ),
                         ),
                         // Show scroll arrow if number of elements > 8
-                        snapshot.data.length > 8 ? ArrowListScroll(scrollController: scrollController) : SizedBox(),
+                        snapshot.data.length > 8
+                          ? arrowDownWard == true 
+                          ? ArrowDownWardListScroll(scrollController: scrollController)
+                          : ArrowUpWardListScroll(scrollController: scrollController) 
+                        : SizedBox(),
                       ]
                     );
                   }

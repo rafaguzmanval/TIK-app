@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -35,6 +37,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
   final _editFormKey = GlobalKey<FormState>();
   final TextEditingController descriptionController =  TextEditingController();
   final TextEditingController titleController =  TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  bool arrowDownWard = true;
 
 void onDeleted() async {
     bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
@@ -68,13 +72,34 @@ void onDeleted() async {
         isEditing = true;
       });
     }
-  }  
+  } 
+
+  void _scrollListener() {
+      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+        setState(() {
+          arrowDownWard = true;
+        });
+      }
+      if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
+        setState(() {
+          arrowDownWard = false;
+        });
+      }
+  }
+
 
   @override
   void initState(){
     super.initState();
+    scrollController.addListener(_scrollListener);
     titleController.text = widget.project.name.toString();
     descriptionController.text = widget.project.description.toString();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,7 +115,7 @@ void onDeleted() async {
             decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  width: 2.0, // Ancho de borde personalizado
+                  width: 2.0,
                 ),
               ),
               hintText: 'Nombre proyecto',
@@ -180,6 +205,7 @@ void onDeleted() async {
                                       width: 400,
                                       height: 300,
                                       child: ListView.builder(
+                                        controller: scrollController,
                                         itemCount: snapshot.data.length,
                                         itemBuilder: (context, index) {
                                           return ListTile(
@@ -207,6 +233,11 @@ void onDeleted() async {
                                         },
                                       ),
                                     ),
+                                    snapshot.data.length > 5
+                                     ? arrowDownWard == true 
+                                      ? ArrowDownWardListScroll(scrollController: scrollController)
+                                      : ArrowUpWardListScroll(scrollController: scrollController) 
+                                    : SizedBox(),
                                   ]
                                 );
                               }
