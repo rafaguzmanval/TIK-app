@@ -279,6 +279,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                 ) : SizedBox(),
                 SizedBox(height: 10,),
                 CustomMap(key: _customMapKey, currentPosition: _position,),
+                SizedBox(height: 20,),
+
               ]
             ),
           ),

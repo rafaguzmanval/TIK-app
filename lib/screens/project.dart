@@ -87,9 +87,11 @@ void onDeleted() async {
             controller: titleController,
             validator: mandatoryField,
             maxLines: 1,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2.0, // Ancho de borde personalizado
+                ),
               ),
               hintText: 'Nombre proyecto',
             ),
