@@ -49,15 +49,8 @@ class AuthService{
         body: user.toJson(),
       );
       
-
-      // return ValidResponse.fromResponse(res, res.body);
       return res;
 
-      // httpErrorHandler(res: res, context: context,
-      //   onSuccess: (){
-      //     showSnackBar(context, "¡Cuenta creada correctamente!");
-      //   }
-      // );
     }on SocketException catch (_) {
       showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
     }catch(err){

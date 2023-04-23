@@ -44,17 +44,26 @@ class TreeDataSheetScreen extends StatefulWidget{
 
 class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
+  // Services variables
   TreeSpecieService treeSpecieService = new TreeSpecieService();
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
+
+  // TextEditingController variable
   final treeSpecieController = TextEditingController();
+
+  // GlobalKey variables
   final _formKey = GlobalKey<FormState>();
-  // Map variables
   final _customMapKey = GlobalKey<CustomMapState>();
+
+  // Map variables
   LatLng _position = LatLng(0.0, 0.0);
-  // Edit boolean
+
+  // Boolean variable
   bool isEditing = false;
 
+
   Future<dynamic> initSpecieValue() async {
+    // Get selected specie from value and init it
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
@@ -67,6 +76,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     });
   }
 
+  // Function which is executed when a data sheet is going to be deleted
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
@@ -78,6 +88,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
   }
 
+  // Function which is executed when a project is going to be saved or updated
   void onSaved () async {
     if (_formKey.currentState!.validate())
     {
@@ -197,16 +208,14 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             key: _formKey,
             child: Container(
               padding: EdgeInsets.all(30.0),
-              // THIS CANNOT BE 800px
               width: double.infinity,
-              height: 800,
+              height: MediaQuery.of(context).size.height,
               child: ListView(
-                // Avoid scrolling on listview
                 children: [
                   TextFormField(
                     readOnly: isEditing ? false : true,
                     initialValue: widget.treeDataSheet?.specific_tree_id,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'ID de árbol',
                     ),
                     onSaved: (value) {
@@ -223,7 +232,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   TextFormField(
                     readOnly: true,
                     controller: treeSpecieController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Especie de árbol',
                     ),
                     validator: (value) {
@@ -245,9 +254,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       // We set the value of tree specie text form field
                       treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                     },
-                    child: Text('Seleccionar especie de árbol')
-                  ) : SizedBox(),
-                  SizedBox(height: 20,),
+                    child: const Text('Seleccionar especie de árbol')
+                  ) : const SizedBox(),
+                  const SizedBox(height: 20,),
                   TextFormField(
                     readOnly: isEditing ? false : true,
                     initialValue: widget.treeDataSheet?.description,
@@ -262,39 +271,42 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       widget.descriptionValue = value!;
                     },
                   ),
-                  SizedBox(height: 20,),
-                  Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                  SizedBox(height: 5,),
+                  const SizedBox(height: 20,),
+                  const Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),)),
+                  const SizedBox(height: 5,),
                   isEditing ? TextButton(
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                    // If button pressed then open camera
                     onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
                     child: const Text("Añadir imagen")
                   ) : SizedBox(),
                   // If user loads an image show into screen, if not show url image if is not null or empty
                   widget.image != null ? Image.file(widget.image as File)
                   : 
-                  //Show url image if not null or empty
+                  //Show image if not null or empty
                   (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
                   ? Image.network(
                     widget.treeDataSheet!.imageURL as String,
-                  ) : SizedBox(),
-                  SizedBox(height: 20,),
-                  Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                  SizedBox(height: 5,),
+                  ) : const SizedBox(),
+                  const SizedBox(height: 20,),
+                  const Center(child: Text("Localización", style: TextStyle(fontWeight: FontWeight.bold),)),
+                  const SizedBox(height: 5,),
                   isEditing ? TextButton(
                     style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                     onPressed: getCurrentLocation,
                     child: const Text('Establecer posición actual')
-                  ) : SizedBox(),
-                  SizedBox(height: 10,),
+                  ) : const SizedBox(),
+                  const SizedBox(height: 10,),
+                  // Show map widget
                   CustomMap(key: _customMapKey, currentPosition: _position,),
-                  SizedBox(height: 50,),
+                  const SizedBox(height: 50,),
                 ]
               ),
             ),
           ),
         ),
       ),
+      // Create floating buttons at the screen bottom
       floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

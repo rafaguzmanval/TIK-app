@@ -27,7 +27,7 @@ class TreeDataSheet{
       "description": description,
       "latitude": latitude?.toDouble(),
       "longitude": longitude?.toDouble(),
-      'image': imageURL != null ? imageURL : null,
+      'image': imageURL,
     };
   }
 

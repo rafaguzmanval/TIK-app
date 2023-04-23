@@ -13,7 +13,6 @@ import '../providers/user_provider.dart';
 
 class Home extends StatefulWidget{
   const Home({super.key, required this.title});
-  static const String route = '/home';
 
   final String title;
 
@@ -28,23 +27,22 @@ class _Home extends State<Home>{
   final AuthService authService = AuthService();
   final TreeSpecieService treeSpecieService = TreeSpecieService();
 
-  void userLogOut(){
-    authService.logoutUser(context);
-  }
-
   @override
   void initState () {
     super.initState();
+    // Get user data to show name and get his user_id to create projects and datasheets in future
     authService.getUserData(context);
   }
 
   @override
   Widget build(BuildContext context) {
 
+    // User provider to get users name
     String userName = Provider.of<UserProvider>(context, listen: false).user.name;
 
     return Scaffold(
       key:_scaffoldKey,
+      // Create a drawer to show user log out and other options
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -61,7 +59,7 @@ class _Home extends State<Home>{
             const SizedBox(height: 15),
             Center(
               child: GestureDetector(
-                onTap: () => userLogOut(),
+                onTap: () => authService.logoutUser(context),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: const [
@@ -75,6 +73,7 @@ class _Home extends State<Home>{
           ],
         ),
       ),
+      // App bar to show drawer icon and screen title
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -91,7 +90,8 @@ class _Home extends State<Home>{
             children: [
               ElevatedButton(
                   onPressed: () async {
-                    String? name = await showDialog(
+                    // Show dialog to create new Project
+                    await showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return NewProjectCustomAlertDialog(title: 'Crear nuevo proyecto');
@@ -100,15 +100,14 @@ class _Home extends State<Home>{
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      new Expanded(
+                    children: const [
+                      Expanded(
                         flex: 3,
-                        child: const Icon(Icons.add),
+                        child: Icon(Icons.add),
                       ),
-                      //SizedBox(width: 15,),
-                      new Expanded(
+                      Expanded(
                           flex: 7,
-                          child: const Text("Nuevo proyecto")
+                          child: Text("Nuevo proyecto")
                       )
                     ],
                   )
@@ -116,7 +115,8 @@ class _Home extends State<Home>{
               const SizedBox(height: 15),
               ElevatedButton(
                   onPressed: () async {
-                    String? name = await showDialog(
+                    // Show open project dialog
+                    await showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return OpenProjectCustomAlertDialog();
@@ -125,15 +125,14 @@ class _Home extends State<Home>{
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      new Expanded(
+                    children: const [
+                      Expanded(
                         flex: 3,
-                        child: const Icon(Icons.folder),
+                        child: Icon(Icons.folder),
                       ),
-                      //SizedBox(width: 15,),
-                      new Expanded(
+                      Expanded(
                           flex: 7,
-                          child: const Text("Abrir proyecto")
+                          child: Text("Abrir proyecto")
                       )
                     ],
                   )
@@ -143,15 +142,14 @@ class _Home extends State<Home>{
                   onPressed: (){},
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      new Expanded(
+                    children: const [
+                      Expanded(
                         flex: 3,
-                        child: const Icon(Icons.share),
+                        child: Icon(Icons.share),
                       ),
-                      //SizedBox(width: 15,),
-                      new Expanded(
+                      Expanded(
                           flex: 7,
-                          child: const Text("Compartir proyecto")
+                          child: Text("Compartir proyecto")
                       )
                     ],
                   )
@@ -161,15 +159,14 @@ class _Home extends State<Home>{
                   onPressed: (){},
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      new Expanded(
+                    children: const [
+                      Expanded(
                         flex: 3,
-                        child: const Icon(Icons.book),
+                        child: Icon(Icons.book),
                       ),
-                      //SizedBox(width: 15,),
-                      new Expanded(
+                      Expanded(
                           flex: 7,
-                          child: const Text("Abrir manual")
+                          child: Text("Abrir manual")
                       )
                     ],
                   )
@@ -183,22 +180,17 @@ class _Home extends State<Home>{
                       return CustomAlertDialogTreeSpecies();
                     }
                   );
-                  // Navigator.push(
-                  //   context, 
-                  //   MaterialPageRoute(builder: (context) => TreeSpecies())
-                  // );
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    new Expanded(
+                  children: const [
+                    Expanded(
                       flex: 3,
-                      child: const Icon(Icons.book),
+                      child: Icon(Icons.book),
                     ),
-                    //SizedBox(width: 15,),
-                    new Expanded(
+                    Expanded(
                         flex: 7,
-                        child: const Text("Especies de arboles disponibles")
+                        child: Text("Especies de arboles disponibles")
                     )
                   ],
                 )
