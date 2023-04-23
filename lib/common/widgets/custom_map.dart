@@ -36,15 +36,19 @@ class CustomMapState extends State<CustomMap> {
           Container(
             height: 300,
             child: GoogleMap(
+              // This gestures allow us to move around the map using screen touchs
               gestureRecognizers: Set()
                 ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()))
                 ..add(Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer())),
+              // Marker of current position
               markers: {Marker(
                   markerId: MarkerId('CurrentPosition'),
                   position: LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude),
                   infoWindow: InfoWindow(title: 'Árbol'),
               )},
+              // Satelital type map
               mapType: MapType.hybrid,
+              // Init position
               initialCameraPosition: CameraPosition(target: LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude), zoom: widget.zoom),
               onMapCreated: (GoogleMapController controller) {
                 mapController.complete(controller);
