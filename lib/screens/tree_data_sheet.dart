@@ -4,13 +4,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
-import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
+import 'package:tree_timer_app/common/widgets/custom_map.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
@@ -153,10 +152,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if (permissionStatus.isGranted) {
       final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
-        _position.latitude = position.latitude;
-        _position.longitude = position.longitude;
+        _position = LatLng(position.latitude, position.longitude);
         // We call the child widget and update the map
-        _customMapKey.currentState!.updateCurrentLocation( _position);
+        _customMapKey.currentState!.updateCurrentLocation(_position);
       });
     } else {// Show error permission
       showSnackBar(context, "Ha denegado el permiso de localización");
