@@ -202,7 +202,6 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
               height: 800,
               child: ListView(
                 // Avoid scrolling on listview
-                physics: NeverScrollableScrollPhysics(),
                 children: [
                   TextFormField(
                     readOnly: isEditing ? false : true,
@@ -263,7 +262,6 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       widget.descriptionValue = value!;
                     },
                   ),
-                  
                   SizedBox(height: 20,),
                   Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
                   SizedBox(height: 5,),
