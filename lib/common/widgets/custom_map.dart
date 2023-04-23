@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -34,6 +36,9 @@ class CustomMapState extends State<CustomMap> {
           Container(
             height: 300,
             child: GoogleMap(
+              gestureRecognizers: Set()
+                ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer()))
+                ..add(Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer())),
               markers: {Marker(
                   markerId: MarkerId('CurrentPosition'),
                   position: LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude),
