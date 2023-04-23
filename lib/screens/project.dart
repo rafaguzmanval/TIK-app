@@ -39,6 +39,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   final TextEditingController titleController =  TextEditingController();
   final ScrollController scrollController = ScrollController();
   bool arrowDownWard = true;
+  final arrowDownWardNotifier = ValueNotifier<bool>(true);
 
 void onDeleted() async {
     bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
@@ -74,24 +75,13 @@ void onDeleted() async {
     }
   } 
 
-  void _scrollListener() {
-      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
-        setState(() {
-          arrowDownWard = true;
-        });
-      }
-      if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
-        setState(() {
-          arrowDownWard = false;
-        });
-      }
-  }
-
-
   @override
   void initState(){
     super.initState();
-    scrollController.addListener(_scrollListener);
+    // Add scroll listener
+    scrollController.addListener(() {
+      ScrollControllerUtils.scrollListener(scrollController, arrowDownWardNotifier);
+    });
     titleController.text = widget.project.name.toString();
     descriptionController.text = widget.project.description.toString();
   }
@@ -234,9 +224,14 @@ void onDeleted() async {
                                       ),
                                     ),
                                     snapshot.data.length > 5
-                                     ? arrowDownWard == true 
-                                      ? ArrowDownWardListScroll(scrollController: scrollController)
-                                      : ArrowUpWardListScroll(scrollController: scrollController) 
+                                    ? ValueListenableBuilder<bool>(
+                                        valueListenable: arrowDownWardNotifier,
+                                        builder: (context, arrowDownWard, child) {
+                                          return arrowDownWard 
+                                            ? ArrowDownWardListScroll(scrollController: scrollController) 
+                                            : ArrowUpWardListScroll(scrollController: scrollController);
+                                        },
+                                      )
                                     : SizedBox(),
                                   ]
                                 );

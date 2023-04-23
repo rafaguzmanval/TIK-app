@@ -25,28 +25,13 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
   List<dynamic> origSpeciesList = new List.empty();
   final ScrollController scrollController = ScrollController();
   bool arrowDownWard = true;
+  final arrowDownWardNotifier = ValueNotifier<bool>(true);
 
-  void _scrollListener() {
-      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
-        setState(() {
-          arrowDownWard = true;
-        });
-      }
-      if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
-        setState(() {
-          arrowDownWard = false;
-        });
-      }
-  }
   @override
   void initState(){
-    scrollController.addListener(_scrollListener);
-  }
-  
-  Future<void> _refreshList() async {
-    // Aquí puedes actualizar la lista de items desde una fuente externa, como una API o una base de datos.
-    setState(() {
-      // filteredSpecies?.clear();
+    // Add scroll listener
+    scrollController.addListener(() {
+      ScrollControllerUtils.scrollListener(scrollController, arrowDownWardNotifier);
     });
   }
 
@@ -100,7 +85,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                             width: 400,
                             height: 400,
                             child: RefreshIndicator(
-                              onRefresh: _refreshList,
+                              onRefresh: ()async{},
                               child: ListView.builder(
                                 // itemCount: snapshot.data.length,
                                 itemCount: filteredSpecies.length,
@@ -130,9 +115,14 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                         ),
                         // Show scroll arrow if number of elements > 8
                         snapshot.data.length > 8
-                          ? arrowDownWard == true 
-                          ? ArrowDownWardListScroll(scrollController: scrollController)
-                          : ArrowUpWardListScroll(scrollController: scrollController) 
+                        ? ValueListenableBuilder<bool>(
+                            valueListenable: arrowDownWardNotifier,
+                            builder: (context, arrowDownWard, child) {
+                              return arrowDownWard 
+                                ? ArrowDownWardListScroll(scrollController: scrollController) 
+                                : ArrowUpWardListScroll(scrollController: scrollController);
+                            },
+                          )
                         : SizedBox(),
                       ]
                     );

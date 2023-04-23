@@ -25,22 +25,13 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
   final ProjectService projectService = ProjectService();
   final ScrollController scrollController = ScrollController();
   bool arrowDownWard = true;
+  final arrowDownWardNotifier = ValueNotifier<bool>(true);
 
-  void _scrollListener() {
-      if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
-        setState(() {
-          arrowDownWard = true;
-        });
-      }
-      if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
-        setState(() {
-          arrowDownWard = false;
-        });
-      }
-  }
   @override
   void initState(){
-    scrollController.addListener(_scrollListener);
+    scrollController.addListener((){
+      ScrollControllerUtils.scrollListener(scrollController, arrowDownWardNotifier);
+    });
   }
 
   @override
@@ -115,9 +106,14 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                             ),
                             // Show scroll arrow if number of elements > 8
                             snapshot.data.length > 5
-                              ? arrowDownWard == true 
-                              ? ArrowDownWardListScroll(scrollController: scrollController)
-                              : ArrowUpWardListScroll(scrollController: scrollController) 
+                            ? ValueListenableBuilder<bool>(
+                              valueListenable: arrowDownWardNotifier,
+                              builder: (context, arrowDownWard, child) {
+                                return arrowDownWard 
+                                  ? ArrowDownWardListScroll(scrollController: scrollController) 
+                                  : ArrowUpWardListScroll(scrollController: scrollController);
+                              },
+                            )
                             : SizedBox(),
                           ]
                         );
