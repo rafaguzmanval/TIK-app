@@ -9,6 +9,10 @@
         android:label="tree_timer_app"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyCGAovog94J5-D7myw2wu-BqUb9FMO6eKM"/>
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"

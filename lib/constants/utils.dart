@@ -67,3 +67,15 @@ File base64ToFile(String path, String base64String) {
   ret.writeAsBytesSync(bytes);
   return ret;
 }
+
+// Class to manage the arrow scrolls of the lists
+class ScrollControllerUtils {
+  static void scrollListener(ScrollController scrollController, ValueNotifier<bool> arrowDownWardNotifier) {
+    if (scrollController.position.pixels == scrollController.position.minScrollExtent) {
+      arrowDownWardNotifier.value = true;
+    }
+    if(scrollController.position.pixels > scrollController.position.minScrollExtent && scrollController.position.pixels < scrollController.position.maxScrollExtent){
+      arrowDownWardNotifier.value = false;
+    }
+  }
+}

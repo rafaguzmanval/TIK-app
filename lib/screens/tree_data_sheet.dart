@@ -4,13 +4,12 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
-import 'package:tree_timer_app/common/widgets/custom_flutter_map.dart';
+import 'package:tree_timer_app/common/widgets/custom_map.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
@@ -44,17 +43,26 @@ class TreeDataSheetScreen extends StatefulWidget{
 
 class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
+  // Services variables
   TreeSpecieService treeSpecieService = new TreeSpecieService();
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
+
+  // TextEditingController variable
   final treeSpecieController = TextEditingController();
+
+  // GlobalKey variables
   final _formKey = GlobalKey<FormState>();
-  // Map variables
   final _customMapKey = GlobalKey<CustomMapState>();
+
+  // Map variables
   LatLng _position = LatLng(0.0, 0.0);
-  // Edit boolean
+
+  // Boolean variable
   bool isEditing = false;
 
+
   Future<dynamic> initSpecieValue() async {
+    // Get selected specie from value and init it
     widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
     treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
   }
@@ -67,6 +75,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     });
   }
 
+  // Function which is executed when a data sheet is going to be deleted
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
@@ -78,6 +87,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
   }
 
+  // Function which is executed when a project is going to be saved or updated
   void onSaved () async {
     if (_formKey.currentState!.validate())
     {
@@ -142,10 +152,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     if (permissionStatus.isGranted) {
       final position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       setState(() {
-        _position.latitude = position.latitude;
-        _position.longitude = position.longitude;
+        _position = LatLng(position.latitude, position.longitude);
         // We call the child widget and update the map
-        _customMapKey.currentState!.updateCurrentLocation( _position);
+        _customMapKey.currentState!.updateCurrentLocation(_position);
       });
     } else {// Show error permission
       showSnackBar(context, "Ha denegado el permiso de localización");
@@ -183,107 +192,127 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
       appBar: AppBar(
         title: Text(widget.project.name),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Container(
-            padding: EdgeInsets.all(30.0),
-            // THIS CANNOT BE 800px
-            width: double.infinity,
-            height: 800,
-            child: ListView(
-              children: [
-                TextFormField(
-                  readOnly: isEditing ? false : true,
-                  initialValue: widget.treeDataSheet?.specific_tree_id,
-                  decoration: InputDecoration(
-                    labelText: 'ID de árbol',
-                  ),
-                  onSaved: (value) {
-                    widget.specificTreeIdValue = value!;
-                  },
-                  validator: (value) {
-                    if(value!.isEmpty){
-                      return 'Este campo es obligatorio';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 15,),
-                TextFormField(
-                  readOnly: true,
-                  controller: treeSpecieController,
-                  decoration: InputDecoration(
-                    labelText: 'Especie de árbol',
-                  ),
-                  validator: (value) {
-                    if(value!.isEmpty){
-                      return 'Este campo es obligatorio';
-                    }
-                    return null;
-                  },
-                ),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: () async {
-                    widget.selectedSpecie = await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CustomAlertDialogTreeSpecies();
-                      }
-                    );
-                    // We set the value of tree specie text form field
-                    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
-                  },
-                  child: Text('Seleccionar especie de árbol')
-                ) : SizedBox(),
-                SizedBox(height: 20,),
-                TextFormField(
-                  readOnly: isEditing ? false : true,
-                  initialValue: widget.treeDataSheet?.description,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: 'Notas de árbol',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+      body: Container(
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey,
+            width: 1.0, 
+          ),
+          borderRadius: BorderRadius.circular(5.0), 
+        ),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              padding: EdgeInsets.all(30.0),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                children: [
+                  TextFormField(
+                    readOnly: isEditing ? false : true,
+                    initialValue: widget.treeDataSheet?.specific_tree_id,
+                    decoration: const InputDecoration(
+                      labelText: 'ID de árbol',
                     ),
+                    onSaved: (value) {
+                      widget.specificTreeIdValue = value!;
+                    },
+                    validator: (value) {
+                      if(value!.isEmpty){
+                        return 'Este campo es obligatorio';
+                      }
+                      return null;
+                    },
                   ),
-                  onSaved: (value) {
-                    widget.descriptionValue = value!;
-                  },
-                ),
-                
-                SizedBox(height: 20,),
-                Center(child: const Text("Imagen", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                SizedBox(height: 5,),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
-                  child: const Text("Añadir imagen")
-                ) : SizedBox(),
-                // If user loads an image show into screen, if not show url image if is not null or empty
-                widget.image != null ? Image.file(widget.image as File)
-                : 
-                //Show url image if not null or empty
-                (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
-                ? Image.network(
-                  widget.treeDataSheet!.imageURL as String,
-                ) : SizedBox(),
-                SizedBox(height: 20,),
-                Center(child: const Text("Localización", style: const TextStyle(fontWeight: FontWeight.bold),)),
-                SizedBox(height: 5,),
-                isEditing ? TextButton(
-                  style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                  onPressed: getCurrentLocation,
-                  child: const Text('Establecer posición actual')
-                ) : SizedBox(),
-                SizedBox(height: 10,),
-                CustomMap(key: _customMapKey, currentPosition: _position,),
-              ]
+                  SizedBox(height: 15,),
+                  TextFormField(
+                    readOnly: true,
+                    controller: treeSpecieController,
+                    decoration: const InputDecoration(
+                      labelText: 'Especie de árbol',
+                    ),
+                    validator: (value) {
+                      if(value!.isEmpty){
+                        return 'Este campo es obligatorio';
+                      }
+                      return null;
+                    },
+                  ),
+                  isEditing ? Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      onPressed: () async {
+                        widget.selectedSpecie = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomAlertDialogTreeSpecies();
+                          }
+                        );
+                        // We set the value of tree specie text form field
+                        treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
+                      },
+                      child: const Text('Seleccionar especie de árbol')
+                    ),
+                  ) : const SizedBox(),
+                  const SizedBox(height: 20,),
+                  TextFormField(
+                    readOnly: isEditing ? false : true,
+                    initialValue: widget.treeDataSheet?.description,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Notas de árbol',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    onSaved: (value) {
+                      widget.descriptionValue = value!;
+                    },
+                  ),
+                  const SizedBox(height: 20,),
+                  const Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),)),
+                  const SizedBox(height: 5,),
+                  isEditing ? Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      // If button pressed then open camera
+                      onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
+                      child: const Text("Añadir imagen")
+                    ),
+                  ) : SizedBox(),
+                  // If user loads an image show into screen, if not show url image if is not null or empty
+                  widget.image != null ? Image.file(widget.image as File)
+                  : //Show image if not null or empty
+                    (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
+                      ? Image.network(
+                        widget.treeDataSheet!.imageURL as String,
+                      ) : const SizedBox(),
+                  const SizedBox(height: 20,),
+                  const Center(child: Text("Localización", style: TextStyle(fontWeight: FontWeight.bold),)),
+                  const SizedBox(height: 5,),
+                  isEditing ? Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      onPressed: getCurrentLocation,
+                      child: const Text('Establecer posición actual')
+                    ),
+                  ) : const SizedBox(),
+                  const SizedBox(height: 10,),
+                  // Show map widget
+                  CustomMap(key: _customMapKey, currentPosition: _position,),
+
+                ]
+              ),
             ),
           ),
         ),
       ),
+      // Create floating buttons at the screen bottom
       floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

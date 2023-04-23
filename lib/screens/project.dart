@@ -1,7 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
+import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
@@ -29,29 +33,44 @@ class ProjectScreen extends StatefulWidget {
 
 class _ProjectScreenState extends State<ProjectScreen> {
 
+  // Services variables
   TreeDataSheetService treeDataSheetService = new TreeDataSheetService();
-  ProjectService       projectService       = new ProjectService();
-  bool                 isEditing            = false;
+  ProjectService projectService = new ProjectService();
+
+  // Booleans variables
+  bool isEditing = false;
+  bool arrowDownWard = true;
+
+  // GlobalKey variable
   final _editFormKey = GlobalKey<FormState>();
-  final TextEditingController descriptionController =  TextEditingController();
-  final TextEditingController titleController =  TextEditingController();
 
-void onDeleted() async {
-    bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
-    if(deleteProject == true && widget.project != null){
-      await projectService.deleteProject(context: context, id: widget.project.id);
-      Navigator.pop(context);
-    }else{
-      return null;
+  // TextEditingController variables
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController titleController = TextEditingController();
+
+  // ScrollController varibale
+  final ScrollController scrollController = ScrollController();
+
+  // ValueNotifier variable
+  final arrowDownWardNotifier = ValueNotifier<bool>(true);
+
+  // Function which is executed when a project is going to be deleted
+  void onDeleted() async {
+      bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
+      if(deleteProject == true && widget.project != null){
+        await projectService.deleteProject(context: context, id: widget.project.id);
+        Navigator.pop(context);
+      }else{
+        return null;
+      }
     }
-  }
 
-  void onSaved () async {
-    // If user is editing then change use this function
+  // Function which is executed when a project is going to be updated
+  void onUpdated () async {
     if(isEditing == true){
       if(_editFormKey.currentState!.validate()) {
-        bool? deleteProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
-        if(deleteProject == true){
+        bool? updateProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
+        if(updateProject == true){
           ValidResponse? validRes = await projectService.editProject(context: context, project: Project(name: titleController.text, id: widget.project.id, description: descriptionController.text, user_id: widget.project.user_id));
           if(validRes?.isSuccess == true){
             setState(() {
@@ -68,13 +87,24 @@ void onDeleted() async {
         isEditing = true;
       });
     }
-  }  
+  } 
 
   @override
   void initState(){
     super.initState();
+    // Add scroll listener
+    scrollController.addListener(() {
+      ScrollControllerUtils.scrollListener(scrollController, arrowDownWardNotifier);
+    });
+    // Set text controllers values
     titleController.text = widget.project.name.toString();
     descriptionController.text = widget.project.description.toString();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,9 +117,11 @@ void onDeleted() async {
             controller: titleController,
             validator: mandatoryField,
             maxLines: 1,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(
+                  width: 2.0,
+                ),
               ),
               hintText: 'Nombre proyecto',
             ),
@@ -156,14 +188,14 @@ void onDeleted() async {
                               //first paramerter of offset is left-right
                               //second parameter is top to down
                           ),
-                          //you can set more BoxShadow() here
-                          ],
+                        ],
                       ),
                       margin: const EdgeInsets.all(30),
                       padding: const EdgeInsets.fromLTRB(20, 25, 20, 15),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          // List data sheets of a project
                           FutureBuilder(
                             future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
                             builder: (context, snapshot) {
@@ -178,6 +210,7 @@ void onDeleted() async {
                                       width: 400,
                                       height: 300,
                                       child: ListView.builder(
+                                        controller: scrollController,
                                         itemCount: snapshot.data.length,
                                         itemBuilder: (context, index) {
                                           return ListTile(
@@ -185,7 +218,7 @@ void onDeleted() async {
                                             leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
                                             title: Text(snapshot.data[index]["specific_tree_id"].toString()),
                                             onTap: () async {
-                                              // Get temp directory
+                                              // Get temp directory to show data sheet image (if exists) on tree data sheet screen
                                               Directory tmpDir = await getTemporaryDirectory();
                                               await Navigator.push(
                                                 context,
@@ -205,12 +238,24 @@ void onDeleted() async {
                                         },
                                       ),
                                     ),
+                                    // If there are more than 5 elements then show arrows to scroll up and down
+                                    snapshot.data.length > 5
+                                    ? ValueListenableBuilder<bool>(
+                                        valueListenable: arrowDownWardNotifier,
+                                        builder: (context, arrowDownWard, child) {
+                                          return arrowDownWard 
+                                            ? ArrowDownWardListScroll(scrollController: scrollController) 
+                                            : ArrowUpWardListScroll(scrollController: scrollController);
+                                        },
+                                      )
+                                    : SizedBox(),
                                   ]
                                 );
                               }
                               else if(snapshot.hasError){
                                 showSnackBar(context, snapshot.error.toString());
                               }
+                              // Show circular progress while no info is received
                               return CircularProgressIndicator();
                             }
                           ),
@@ -245,7 +290,8 @@ void onDeleted() async {
           ),
         ],
       ),
-      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onSaved, onDeleted: onDeleted, isEditing: isEditing,),
+      // Create floating buttons at the screen bottom
+      floatingActionButton: CustomFloatingButtonsBottom(parentWidget: widget, onSaved: onUpdated, onDeleted: onDeleted, isEditing: isEditing,),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }

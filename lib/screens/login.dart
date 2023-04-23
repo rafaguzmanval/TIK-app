@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:tree_timer_app/common/widgets/custom_button.dart';
-import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/common/widgets/login_form.dart';
 import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
 import 'package:rive/rive.dart';
 
 
 class Login extends StatefulWidget {
   const Login({super.key});
-  static const String route = '/';
   static const String title = "Login";
 
   @override
@@ -22,20 +15,30 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  // Create services variables
   final AuthService authService = AuthService();
   final _loginFormKey = GlobalKey<FormState>();
 
+  // Create controllers variables
   final TextEditingController _emailController =  TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  // Create animations variable
   late RiveAnimationController _controller;
   SMIInput<bool>? _hidePassword;
 
+
   void _onRiveInit(Artboard artboard) {
-    final controller = StateMachineController.fromArtboard(artboard, 'StateMachine');
-    artboard.addController(controller!);
-    _hidePassword = controller.findInput<bool>('pressed') as SMIBool ;
-  }
+  // Create a StateMachineController from the provided artboard and state machine name
+  final controller = StateMachineController.fromArtboard(artboard, 'StateMachine');
+
+  // Add the controller to the artboard so it can start managing animations
+  artboard.addController(controller!);
+
+  // Find the SMIBool input with the name 'pressed' in the state machine and store it 
+  _hidePassword = controller.findInput<bool>('pressed') as SMIBool;
+}
 
   void _hitHidePassword(bool hideText) {
     if(hideText == false)
@@ -47,18 +50,10 @@ class _LoginState extends State<Login> {
     }
   } 
 
-  void loginUser(){
-    authService.loginUser(
-      context: context,
-      email: _emailController.text,
-      password: _passwordController.text
-    );
-  }
-
-
   @override
   void initState() {
     super.initState();
+    // Establish idle animation in init state
     _controller = SimpleAnimation('idle');
   }
 
@@ -78,15 +73,18 @@ class _LoginState extends State<Login> {
                   SizedBox(
                     width: 250,
                     height: 250,
+                    // Create widget animation for user login
                     child: RiveAnimation.asset("assets/rive/tree_v3.riv", fit: BoxFit.cover, controllers: [_controller], onInit: _onRiveInit))
                 ],
               ),
+              // Login form with callback function in order to change boolean value
               LoginForm(authService: authService, onVisibilityPressed: (value) => {
                 _hitHidePassword(value)
               }, ),
               SizedBox(height: 35),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+                // Register form which returns response message
                 children: [
                   const Text("¿Nuevo usuario?"),
                   Container(
@@ -94,7 +92,6 @@ class _LoginState extends State<Login> {
                     child: ElevatedButton(
                       onPressed: () {
                         Future.delayed(Duration(milliseconds: 100), (){
-                          // Navigator.pushNamed(context, '/register');
                           showGeneralDialog(context: context,
                             barrierDismissible: true,
                             barrierLabel: "",

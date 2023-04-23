@@ -47,14 +47,5 @@ class User{
   // Create toJson method
   String toJson() => json.encode(toMap());
 
-  // Factory fucntion to parse from map to object
-  // factory User.fromMap(Map<String, dynamic> map){
-  //   return User(
-  //     id: map["_id"] ?? '',
-  //     name: map["name"] ?? '',
-  //     password: map["password"] ?? '',
-  //     token: map["token"] ?? '',
-  //   );
-  // }
 }
 
