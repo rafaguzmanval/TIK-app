@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 import {deleteCloudinaryImage} from "../middlewares/cloudinary.js";
 
+// Create measurement schem but with no id associated
+const measurementSchema = new mongoose.Schema({
+  _id: false,
+  distance: { type: Number, required: true },
+  time: { type: Number, required: true },
+  avgVelocity: { type: Number, required: true },
+});
+
 const treeDataSheetSchema = mongoose.Schema(
     {
        project_id: {
@@ -35,6 +43,7 @@ const treeDataSheetSchema = mongoose.Schema(
         type: String,
         required: false
       },
+      measurements: [measurementSchema],
     },
     { timestamps: true } 
 );
