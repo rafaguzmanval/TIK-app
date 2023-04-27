@@ -89,7 +89,7 @@ class _CustomMeasurementTableState extends State<CustomMeasurementTable>{
   @override
   Widget build(BuildContext context) {
     return DataTable(
-      columnSpacing: 30,
+      columnSpacing: 25,
             decoration: BoxDecoration(
               border: Border.all(
                 color: Colors.grey,
