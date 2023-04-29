@@ -319,12 +319,17 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                       onPressed: () async {
-                        widget.selectedSpecie = await showDialog(
+                        TreeSpecie? selectedSpecie = await showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return CustomAlertDialogTreeSpecies();
                           }
                         );
+                        // If it is a valid selected specie, then assign to widget
+                        if(selectedSpecie != null)
+                        {
+                          widget.selectedSpecie = selectedSpecie;
+                        }
                         // We set the value of tree specie text form field
                         treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                       },
