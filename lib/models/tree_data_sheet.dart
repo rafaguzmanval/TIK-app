@@ -21,7 +21,7 @@ class TreeDataSheet{
   );
 
   // Create an empty TreeDataSheet constructor
-  TreeDataSheet.empty({required this.project_id, this.id = '', this.specific_tree_id = '', this.tree_specie_id = "", this.description = "", this.latitude = 0.0, this.longitude = 0.0, this.imageURL = "", this.measurements = const[]});
+  TreeDataSheet.empty({required this.project_id, this.id = '', this.specific_tree_id = '', this.tree_specie_id = "", this.description = "", this.latitude = 0.0, this.longitude = 0.0, this.imageURL = "", this.measurements});
  
 
   // Create a object map

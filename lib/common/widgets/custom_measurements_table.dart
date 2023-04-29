@@ -81,13 +81,15 @@ class _CustomMeasurementTableState extends State<CustomMeasurementTable>{
 
   @override
   void initState(){
+    super.initState();
     setColumns(widget.isEditing);
     setRows(widget.isEditing);
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Set rows first
+    setRows(widget.isEditing);
     return DataTable(
       columnSpacing: 25,
             decoration: BoxDecoration(

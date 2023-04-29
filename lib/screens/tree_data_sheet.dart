@@ -181,68 +181,68 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     double distance = 0;
 
     showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (BuildContext context) {
-          return SingleChildScrollView(
-            // This line allows the widget to move up when keyboard appears
-            padding: MediaQuery.of(context).viewInsets,
-            child: Container(
-              padding: EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextFormField(
-                    // Decimal keyboard type
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Distancia',
-                    ),
-                    onChanged: (value) {
-                      // We need to parse the value string to double type
-                      distance = double.tryParse(value) ?? 0.0;
-                    },
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          // This line allows the widget to move up when keyboard appears
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  // Decimal keyboard type
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Distancia',
                   ),
-                  SizedBox(height: 20.0),
-                  TextFormField(
-                    // Decimal keyboard type
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      labelText: 'Tiempo',
-                    ),
-                    onChanged: (value) {
-                      // We need to parse the value string to double type
-                      time = double.tryParse(value) ?? 0.0;
-                    },
+                  onChanged: (value) {
+                    // We need to parse the value string to double type
+                    distance = double.tryParse(value) ?? 0.0;
+                  },
+                ),
+                SizedBox(height: 20.0),
+                TextFormField(
+                  // Decimal keyboard type
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Tiempo',
                   ),
-                  SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () {
+                  onChanged: (value) {
+                    // We need to parse the value string to double type
+                    time = double.tryParse(value) ?? 0.0;
+                  },
+                ),
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
                       double _avgVelocity = (distance/time)*10000;
-                      setState(() {
-                        // Only show 2 decimals
-                        widget.treeDataSheet.measurements?.add(Measurement(time: time, distance: distance, avgVelocity: double.parse(_avgVelocity.toStringAsFixed(2))));
-                      });
+                      // Only show 2 decimals
+                      widget.treeDataSheet.measurements = List.from(widget.treeDataSheet.measurements ?? [])..add(Measurement(time: time, distance: distance, avgVelocity: double.parse(_avgVelocity.toStringAsFixed(2))));
                       Navigator.pop(context);
-                    },
-                    child: Text('Agregar'),
-                  )
-                ],
-              ),
+                    });
+                  }  ,
+                  child: Text('Agregar'),
+                )
+              ],
             ),
-          );
-        });
-  }  
+          ),
+        );
+      }
+    );
+  }
 
   @override
   void initState() {
+    // If the measurements list is null or empty, it creates an empty list.
+    widget.treeDataSheet.measurements ??= List.from(widget.treeDataSheet.measurements ?? []);
 
     // Initialize value of controller if it is valid
-    if(widget.treeDataSheet != null)
-    {
-      initSpecieValue();
-    }
+    initSpecieValue();
     // If new data sheet, isEditing = true
     if(widget.treeDataSheet.id == ''){
       isEditing = true;
@@ -282,8 +282,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             child: Container(
               padding: EdgeInsets.all(30.0),
               width: double.infinity,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
+              child: Wrap(
                 children: [
                   TextFormField(
                     readOnly: isEditing ? false : true,
@@ -331,42 +330,42 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       },
                       child: const Text('Seleccionar especie de árbol')
                     ),
-                  ) : const SizedBox(),
-                  const SizedBox(height: 20,),
+                  ) : const SizedBox(height: 80,),
+                  const SizedBox(height: 70,),
                   const Center(child: Text("Mediciones", style:  TextStyle(fontWeight: FontWeight.bold),)),
-                  const SizedBox(height: 5,),
+                  const SizedBox(height: 25,),
                   isEditing ? Container(
                     width: double.infinity,
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
-                      // If button pressed then open camera
                       onPressed: _showAddItemDialog,
                       child: const Text("Añadir medición")
                     ),
                   ) : SizedBox(),
-                  widget.treeDataSheet.measurements != null
-                    ? CustomMeasurementTable(list: widget.treeDataSheet.measurements!, onDelete: onDeletedMeasurement, isEditing: isEditing,)
+                  widget.treeDataSheet.measurements != null && widget.treeDataSheet.measurements!.isNotEmpty
+                    ? Center(child: CustomMeasurementTable(list: widget.treeDataSheet.measurements!, onDelete: onDeletedMeasurement, isEditing: isEditing,))
                     : SizedBox(),
-                  const SizedBox(height: 5,),
-                  const SizedBox(height: 20,),
-                  TextFormField(
-                    readOnly: isEditing ? false : true,
-                    initialValue: widget.treeDataSheet.description,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      labelText: 'Notas de árbol',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
+                  Container(
+                    padding: EdgeInsets.only(top: 25, bottom: 25),
+                    child: TextFormField(
+                      readOnly: isEditing ? false : true,
+                      initialValue: widget.treeDataSheet.description,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Notas de árbol',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
                       ),
+                      onSaved: (value) {
+                        widget.descriptionValue = value!;
+                      },
                     ),
-                    onSaved: (value) {
-                      widget.descriptionValue = value!;
-                    },
                   ),
                   const SizedBox(height: 20,),
-                  const Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),)),
-                  const SizedBox(height: 5,),
+                  Container( child: Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),))),
                   isEditing ? Container(
+                    padding: EdgeInsets.only(bottom: 20),
                     width: double.infinity,
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
@@ -374,13 +373,18 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
                       child: const Text("Añadir imagen")
                     ),
-                  ) : SizedBox(),
+                  ) : Container(padding: EdgeInsets.only(bottom: 25),),
                   // If user loads an image show into screen, if not show url image if is not null or empty
-                  widget.image != null ? Image.file(widget.image as File)
+                  widget.image != null ? Container(padding: EdgeInsets.only(bottom: 25) , child: Center(child: Image.file(widget.image as File)))
                   : //Show image if not null or empty
                     (widget.treeDataSheet.imageURL != null && widget.treeDataSheet.imageURL != "")
-                      ? Image.network(
-                        widget.treeDataSheet.imageURL as String,
+                      ? Container(
+                          padding: EdgeInsets.only(bottom: 25),
+                          child: Center(
+                            child:  Image.network(
+                                      widget.treeDataSheet.imageURL as String,
+                            )
+                          )
                       ) : const SizedBox(),
                   const SizedBox(height: 20,),
                   const Center(child: Text("Localización", style: TextStyle(fontWeight: FontWeight.bold),)),
