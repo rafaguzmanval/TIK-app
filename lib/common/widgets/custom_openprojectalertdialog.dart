@@ -89,7 +89,6 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                           name: snapshot.data[index]["name"],
                                           description: snapshot.data[index]["description"] ?? '',
                                           user_id:  Provider.of<UserProvider>(context, listen: false).user.id,
-                                          // listTreeSheetsId: snapshot.data[index]["listTreeSheetsId"] ?? []
                                       );
                                       await Navigator.push(
                                           context,

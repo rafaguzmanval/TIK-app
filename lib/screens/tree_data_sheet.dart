@@ -10,10 +10,12 @@ import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart
 import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_map.dart';
+import 'package:tree_timer_app/common/widgets/custom_measurements_table.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
+import 'package:tree_timer_app/models/measurement.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
@@ -23,7 +25,7 @@ import 'package:http/http.dart' as http;
 class TreeDataSheetScreen extends StatefulWidget{
 
   final Project project;
-  TreeDataSheet? treeDataSheet;
+  TreeDataSheet treeDataSheet;
   Directory tmpDir;
   String? specificTreeIdValue;
   TreeSpecie? selectedSpecie;
@@ -63,8 +65,20 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
   Future<dynamic> initSpecieValue() async {
     // Get selected specie from value and init it
-    widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet!.tree_specie_id));
-    treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
+    if(widget.treeDataSheet.tree_specie_id != '')
+    {
+      widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet.tree_specie_id));
+      treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
+    }
+    
+  }
+
+  // Callback function to delete a measurement from list
+  void onDeletedMeasurement(Measurement _measurement){
+    if(widget.treeDataSheet.measurements != null)
+    {
+      widget.treeDataSheet.measurements!.remove(_measurement);
+    }
   }
 
   // Callback function to save image when new picture is taken
@@ -79,7 +93,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   void onDeleted() async {
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
-      Response? res = await treeDataSheetService.deleteTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet!);
+      Response? res = await treeDataSheetService.deleteTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet);
       showResponseMsg(context, res);
       Navigator.pop(context);
     }else{
@@ -99,7 +113,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           // Save onto treeDataSheet variable the form values
           widget.treeDataSheet = TreeDataSheet(
             // if new data sheet then empty id
-            id: widget.treeDataSheet?.id != null ? widget.treeDataSheet!.id : '',
+            id: widget.treeDataSheet.id != null ? widget.treeDataSheet.id : '',
             project_id: widget.project.id,
             specific_tree_id: widget.specificTreeIdValue!,
             tree_specie_id: widget.selectedSpecie!.id,
@@ -108,9 +122,10 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             longitude: _position.longitude,
             // Get base64 content to pass to the request if it is not null
             imageURL: widget.image != null ? base64.encode(widget.image!.readAsBytesSync()) : "",
+            measurements: widget.treeDataSheet.measurements,
           );
           // Update data sheet or save if does not exists
-          if(widget.treeDataSheet?.id != '')
+          if(widget.treeDataSheet.id != '')
           {
             treeDataSheetService.updateTreeDataSheet(
               context: context,
@@ -159,17 +174,77 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     } else {// Show error permission
       showSnackBar(context, "Ha denegado el permiso de localización");
     }
-  }  
+  }
+
+  void _showAddItemDialog() {
+    double time = 0;
+    double distance = 0;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          // This line allows the widget to move up when keyboard appears
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  // Decimal keyboard type
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Distancia',
+                  ),
+                  onChanged: (value) {
+                    // We need to parse the value string to double type
+                    distance = double.tryParse(value) ?? 0.0;
+                  },
+                ),
+                SizedBox(height: 20.0),
+                TextFormField(
+                  // Decimal keyboard type
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  decoration: InputDecoration(
+                    labelText: 'Tiempo',
+                  ),
+                  onChanged: (value) {
+                    // We need to parse the value string to double type
+                    time = double.tryParse(value) ?? 0.0;
+                  },
+                ),
+                SizedBox(height: 20.0),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      double _avgVelocity = (distance/time)*10000;
+                      // Only show 2 decimals
+                      widget.treeDataSheet.measurements = List.from(widget.treeDataSheet.measurements ?? [])..add(Measurement(time: time, distance: distance, avgVelocity: double.parse(_avgVelocity.toStringAsFixed(2))));
+                      Navigator.pop(context);
+                    });
+                  }  ,
+                  child: Text('Agregar'),
+                )
+              ],
+            ),
+          ),
+        );
+      }
+    );
+  }
 
   @override
   void initState() {
+    // If the measurements list is null or empty, it creates an empty list.
+    widget.treeDataSheet.measurements ??= List.from(widget.treeDataSheet.measurements ?? []);
+
     // Initialize value of controller if it is valid
-    if(widget.treeDataSheet != null)
-    {
-      initSpecieValue();
-    }
+    initSpecieValue();
     // If new data sheet, isEditing = true
-    if(widget.treeDataSheet == null){
+    if(widget.treeDataSheet.id == ''){
       isEditing = true;
     }
     super.initState();
@@ -177,9 +252,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     // if data sheet is not null set map position and img, we do this before init the widget
     // to make sure that customMapKey is not null
     if(widget.treeDataSheet != null){
-      WidgetsBinding.instance!.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          _position = LatLng(widget.treeDataSheet!.latitude!, widget.treeDataSheet!.longitude!); 
+          _position = LatLng(widget.treeDataSheet.latitude!, widget.treeDataSheet.longitude!); 
           _customMapKey.currentState!.updateCurrentLocation(_position);
         });
       });
@@ -207,12 +282,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
             child: Container(
               padding: EdgeInsets.all(30.0),
               width: double.infinity,
-              height: MediaQuery.of(context).size.height,
-              child: Column(
+              child: Wrap(
                 children: [
                   TextFormField(
                     readOnly: isEditing ? false : true,
-                    initialValue: widget.treeDataSheet?.specific_tree_id,
+                    initialValue: widget.treeDataSheet.specific_tree_id,
                     decoration: const InputDecoration(
                       labelText: 'ID de árbol',
                     ),
@@ -245,37 +319,58 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
                       onPressed: () async {
-                        widget.selectedSpecie = await showDialog(
+                        TreeSpecie? selectedSpecie = await showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return CustomAlertDialogTreeSpecies();
                           }
                         );
+                        // If it is a valid selected specie, then assign to widget
+                        if(selectedSpecie != null)
+                        {
+                          widget.selectedSpecie = selectedSpecie;
+                        }
                         // We set the value of tree specie text form field
                         treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie?.name ?? '');
                       },
                       child: const Text('Seleccionar especie de árbol')
                     ),
-                  ) : const SizedBox(),
-                  const SizedBox(height: 20,),
-                  TextFormField(
-                    readOnly: isEditing ? false : true,
-                    initialValue: widget.treeDataSheet?.description,
-                    maxLines: 3,
-                    decoration: InputDecoration(
-                      labelText: 'Notas de árbol',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
+                  ) : const SizedBox(height: 80,),
+                  const SizedBox(height: 70,),
+                  const Center(child: Text("Mediciones", style:  TextStyle(fontWeight: FontWeight.bold),)),
+                  const SizedBox(height: 25,),
+                  isEditing ? Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      onPressed: _showAddItemDialog,
+                      child: const Text("Añadir medición")
                     ),
-                    onSaved: (value) {
-                      widget.descriptionValue = value!;
-                    },
+                  ) : SizedBox(),
+                  widget.treeDataSheet.measurements != null && widget.treeDataSheet.measurements!.isNotEmpty
+                    ? Center(child: CustomMeasurementTable(list: widget.treeDataSheet.measurements!, onDelete: onDeletedMeasurement, isEditing: isEditing,))
+                    : SizedBox(),
+                  Container(
+                    padding: EdgeInsets.only(top: 25, bottom: 25),
+                    child: TextFormField(
+                      readOnly: isEditing ? false : true,
+                      initialValue: widget.treeDataSheet.description,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        labelText: 'Notas de árbol',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      onSaved: (value) {
+                        widget.descriptionValue = value!;
+                      },
+                    ),
                   ),
                   const SizedBox(height: 20,),
-                  const Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),)),
-                  const SizedBox(height: 5,),
+                  Container( child: Center(child: Text("Imagen", style:  TextStyle(fontWeight: FontWeight.bold),))),
                   isEditing ? Container(
+                    padding: EdgeInsets.only(bottom: 20),
                     width: double.infinity,
                     child: TextButton(
                       style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
@@ -283,13 +378,18 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => CustomCamera(onSaved: _saveImage,)),);},
                       child: const Text("Añadir imagen")
                     ),
-                  ) : SizedBox(),
+                  ) : Container(padding: EdgeInsets.only(bottom: 25),),
                   // If user loads an image show into screen, if not show url image if is not null or empty
-                  widget.image != null ? Image.file(widget.image as File)
+                  widget.image != null ? Container(padding: EdgeInsets.only(bottom: 25) , child: Center(child: Image.file(widget.image as File)))
                   : //Show image if not null or empty
-                    (widget.treeDataSheet?.imageURL != null && widget.treeDataSheet?.imageURL != "")
-                      ? Image.network(
-                        widget.treeDataSheet!.imageURL as String,
+                    (widget.treeDataSheet.imageURL != null && widget.treeDataSheet.imageURL != "")
+                      ? Container(
+                          padding: EdgeInsets.only(bottom: 25),
+                          child: Center(
+                            child:  Image.network(
+                                      widget.treeDataSheet.imageURL as String,
+                            )
+                          )
                       ) : const SizedBox(),
                   const SizedBox(height: 20,),
                   const Center(child: Text("Localización", style: TextStyle(fontWeight: FontWeight.bold),)),

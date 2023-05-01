@@ -6,15 +6,16 @@ const treeDataSheetRouter = Router();
 
 treeDataSheetRouter.post("/new",
     async (req, res, next) => {
-        const { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude} = req.body;
+        const { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, measurements} = req.body;
         
         try{
             
             if (!project_id || !specific_tree_id) return res.status(400).json({ msg: "Error faltan uno o varios campos obligatorios"});
             
             const objectProjectId = mongoose.Types.ObjectId(project_id);
-
-            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description, latitude: latitude, longitude: longitude,});
+            // We have to parse the measurements in order to save into mongodb
+            const parsedMeasurements = measurements.map(measurement => JSON.parse(measurement));
+            const newTreeDataSheet = new treeDataSheetSchemaModel({project_id: objectProjectId, specific_tree_id: specific_tree_id, tree_specie_id: tree_specie_id, description: description, latitude: latitude, longitude: longitude, measurements: parsedMeasurements});
             const savedTreeDataSheet = await newTreeDataSheet.save();
             // Add the _id we need to process the image creation
             req.savedTreeDataSheetId = savedTreeDataSheet._id;
@@ -57,13 +58,14 @@ treeDataSheetRouter.put("/update/:id",
     async (req, res) => {
 
         const { id } = req.params;
-        const  { _id, project_id, specific_tree_id, tree_specie_id, description, latitude, longitude} = req.body;
-
+        const  { _id, project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, measurements} = req.body;
         try {
             // Save the image url that provides cloudinary middleware (could be empty)
             let imageURL = req.cloudinaryUrl || '';
             console.log(imageURL);
-            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, imageURL: imageURL}, { new: false });
+            // We have to parse the measurements in order to save into mongodb
+            const parsedMeasurements = measurements.map(measurement => JSON.parse(measurement));
+            const treeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(id, { project_id, specific_tree_id, tree_specie_id, description, latitude, longitude, imageURL: imageURL, measurements: parsedMeasurements}, { new: false });
 
             if (!treeDataSheet) {
                 return res.status(404).json({ error: 'Ficha de datos no encontrada' });

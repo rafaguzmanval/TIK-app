@@ -269,7 +269,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(              
-                                    builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: null, tmpDir: tmpDir,),
+                                    builder: (context) => TreeDataSheetScreen(project: widget.project, treeDataSheet: TreeDataSheet.empty(project_id: widget.project.id), tmpDir: tmpDir,),
                                   ),
                               );
                               // Rebuild widget
