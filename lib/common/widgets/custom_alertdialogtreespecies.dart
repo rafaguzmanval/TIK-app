@@ -27,6 +27,9 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
   bool arrowDownWard = true;
   final arrowDownWardNotifier = ValueNotifier<bool>(true);
 
+  // Add list height variable
+  double listHeight = 400;
+
   @override
   void initState(){
     // Add scroll listener
@@ -50,7 +53,6 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
         ),
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FutureBuilder(
                 future: treeSpecieService.getSpecies(),
@@ -70,6 +72,12 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                           decoration: InputDecoration(
                             labelText: 'Buscar...',
                           ),
+                          // When user tap, adjust size of species list
+                          onTap: (){
+                            setState(() {
+                              listHeight = 150;
+                            });
+                          },
                           // Filter tree species while introducing letters
                           onChanged: (value) {
                             // Using lowercase to find if contained word exists regardless if its cap o lower
@@ -78,38 +86,37 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                             this.setState(() {});
                           },
                         ),
-                        SingleChildScrollView(
-                          child: Container(
-                            // We must to set height and width in order to prevent errors
-                            // with listView dimensions
-                            width: 400,
-                            height: 400,
-                            child: RefreshIndicator(
-                              onRefresh: ()async{},
-                              child: ListView.builder(
-                                // itemCount: snapshot.data.length,
-                                itemCount: filteredSpecies.length,
-                                controller: scrollController,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    leading: Icon(Icons.book, color: Colors.green,),
-                                    // title: Text(snapshot.data[index]["name"]),
-                                    title: Text(filteredSpecies[index]["name"]),
-                                    onTap: (){
-                                      TreeSpecie treeSpecie = TreeSpecie(
-                                        // name: snapshot.data[index]["name"],
-                                        // id: snapshot.data[index]["_id"],
-                                        // description: snapshot.data[index]["description"] ?? ''
-                                        name: filteredSpecies[index]["name"],
-                                        id: filteredSpecies[index]["_id"],
-                                        description: filteredSpecies[index]["description"] ?? ''
-                                      );
-                                      
-                                      Navigator.pop(context, treeSpecie);
-                                    }
-                                  );
-                                },
-                              ),
+                        Container(
+                          // We must to set height and width in order to prevent errors
+                          // with listView dimensions
+                          width: 400,
+                          height: listHeight,
+                          // height: MediaQuery.of(context).viewInsets.top,
+                          child: RefreshIndicator(
+                            onRefresh: ()async{},
+                            child: ListView.builder(
+                              padding: MediaQuery.of(context).viewInsets,
+                              itemCount: filteredSpecies.length,
+                              controller: scrollController,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: Icon(Icons.book, color: Colors.green,),
+                                  // title: Text(snapshot.data[index]["name"]),
+                                  title: Text(filteredSpecies[index]["name"]),
+                                  onTap: (){
+                                    TreeSpecie treeSpecie = TreeSpecie(
+                                      // name: snapshot.data[index]["name"],
+                                      // id: snapshot.data[index]["_id"],
+                                      // description: snapshot.data[index]["description"] ?? ''
+                                      name: filteredSpecies[index]["name"],
+                                      id: filteredSpecies[index]["_id"],
+                                      description: filteredSpecies[index]["description"] ?? ''
+                                    );
+                                    
+                                    Navigator.pop(context, treeSpecie);
+                                  }
+                                );
+                              },
                             ),
                           ),
                         ),
