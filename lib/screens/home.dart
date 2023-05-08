@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_timer_app/screens/project.dart';
 import 'package:tree_timer_app/screens/tree_species.dart';
 import '../common/widgets/custom_newprojectalertdialog.dart';
 
@@ -26,6 +28,16 @@ class _Home extends State<Home>{
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthService authService = AuthService();
   final TreeSpecieService treeSpecieService = TreeSpecieService();
+
+   void openProjectDialog(bool isExport) async
+   {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return OpenProjectCustomAlertDialog(title: isExport ? "Seleccione el proyecto a exportar" : "Seleccione el proyecto", isExport: isExport,);
+        },
+      );
+   }
 
   @override
   void initState () {
@@ -115,13 +127,7 @@ class _Home extends State<Home>{
               const SizedBox(height: 15),
               ElevatedButton(
                   onPressed: () async {
-                    // Show open project dialog
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return OpenProjectCustomAlertDialog();
-                      },
-                    );
+                    openProjectDialog(false);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -139,7 +145,9 @@ class _Home extends State<Home>{
               ),
               const SizedBox(height: 15),
               ElevatedButton(
-                  onPressed: (){},
+                   onPressed: () async {
+                    openProjectDialog(true);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [

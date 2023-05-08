@@ -101,5 +101,25 @@ class ProjectService{
       showSnackBar(context, err.toString());
     } 
   }
+
+  Future exportProject({required BuildContext context, required Project project}) async
+  {
+    try
+    {
+
+      final res = await http.get(
+        Uri.parse('$url/projects/export/${project.id}'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      return res;
+      
+    }
+    catch(err){
+      showSnackBar(context, err.toString());
+    }
+  }
   
 }

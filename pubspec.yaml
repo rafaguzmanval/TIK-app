@@ -46,6 +46,7 @@ dependencies:
   camera: ^0.10.4
   path_provider: ^2.0.14
   google_maps_flutter: ^2.2.5
+  share_plus: ^4.5.3
 
 dev_dependencies:
   flutter_test:
