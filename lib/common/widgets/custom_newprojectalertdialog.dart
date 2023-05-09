@@ -11,7 +11,7 @@ import 'package:tree_timer_app/providers/user_provider.dart';
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
   final String title;
-  String hintText = DateFormat('yyyy_MM_dd_HH:mm:ss').format(DateTime.now()).toString();
+  String hintText = DateFormat('yyyy_MM_dd_HH_mm_ss').format(DateTime.now()).toString();
 
   NewProjectCustomAlertDialog({
     Key? key,
