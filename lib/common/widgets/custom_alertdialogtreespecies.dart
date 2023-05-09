@@ -101,13 +101,10 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
-                                  // title: Text(snapshot.data[index]["name"]),
                                   title: Text(filteredSpecies[index]["name"]),
+                                  subtitle: Text(filteredSpecies[index]["description"]),
                                   onTap: (){
                                     TreeSpecie treeSpecie = TreeSpecie(
-                                      // name: snapshot.data[index]["name"],
-                                      // id: snapshot.data[index]["_id"],
-                                      // description: snapshot.data[index]["description"] ?? ''
                                       name: filteredSpecies[index]["name"],
                                       id: filteredSpecies[index]["_id"],
                                       description: filteredSpecies[index]["description"] ?? ''
