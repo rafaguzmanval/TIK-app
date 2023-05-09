@@ -70,7 +70,32 @@ class _Home extends State<Home>{
                 child: Text('¡Bienvenid@ $userName!'),
               ),
             ),
-            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ElevatedButton(
+                onPressed: (){
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return CustomAlertDialogTreeSpecies();
+                    }
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Expanded(
+                      flex: 3,
+                      child: Icon(Icons.book),
+                    ),
+                    Expanded(
+                        flex: 7,
+                        child: Text("Especies de arboles disponibles")
+                    )
+                  ],
+                )
+              ),
+            ),
             Center(
               child: GestureDetector(
                 onTap: () => authService.logoutUser(context),
@@ -186,29 +211,7 @@ class _Home extends State<Home>{
                   )
               ),
               const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: (){
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CustomAlertDialogTreeSpecies();
-                    }
-                  );
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(
-                      flex: 3,
-                      child: Icon(Icons.book),
-                    ),
-                    Expanded(
-                        flex: 7,
-                        child: Text("Especies de arboles disponibles")
-                    )
-                  ],
-                )
-              ),
+              
             ],
           ),
         ),
