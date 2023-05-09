@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
@@ -54,6 +55,7 @@ class _Home extends State<Home>{
 
     return Scaffold(
       key:_scaffoldKey,
+      resizeToAvoidBottomInset: false,
       // Create a drawer to show user log out and other options
       drawer: Drawer(
         child: ListView(
@@ -95,11 +97,15 @@ class _Home extends State<Home>{
       ),
       
       body: Container(
-        margin: const EdgeInsets.all(70),
+        margin: const EdgeInsets.fromLTRB(70, 10, 70, 70),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SvgPicture.asset(
+                'assets/app_logo.svg',
+                semanticsLabel: 'Tree Inspection Kit logo'
+              ),
               ElevatedButton(
                   onPressed: () async {
                     // Show dialog to create new Project
