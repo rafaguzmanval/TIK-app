@@ -170,4 +170,31 @@ authUserRouter.get('/', auth, async (req, res) =>{
 //   return res.status(200).send("El usuario ha sido eliminado correctamente");
 // });
 
+// Edit user user info
+authUserRouter.put('/editprofile', async (req, res) => {
+
+  const { id, name, email, password, confirmpassword } = req.body;
+
+  try{
+    
+      if (!id) return res.status(400).json({ msg: "Error falta por recibir el id del usuario"});
+      if (password != '' && confirmpassword != '' && password != confirmpassword) return res.status(400).json({ msg: "Las contraseñas no coinciden"});
+      let user = await userModel.findById(id);
+      if (user != null) {
+          user.name = name;
+          user.email = email;
+          if(user.password != password && password != '')
+          {
+            user.password = password;
+          }
+          await user.save();
+      }
+      res.json({ msg: 'Perfil de usuario actualizado correctamente' });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({msg: error.message});
+    }
+
+});
 export default authUserRouter;
