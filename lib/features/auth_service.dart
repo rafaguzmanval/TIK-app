@@ -167,4 +167,32 @@ class AuthService{
     }
   }
 
+  // Edit user profile
+  Future editUserProfile({
+    required BuildContext context,
+    required User user,
+  })
+  async{
+    final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
+    try{
+
+      Response res = await client.put(
+        Uri.parse('$url/accounts/editprofile'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: user.toJson(),
+      );
+      return res;
+
+    }on SocketException catch (_) {
+      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+    }catch(err){
+      showSnackBar(context, err.toString());
+    }finally {
+      client.close();
+    }
+
+  }
+
 }

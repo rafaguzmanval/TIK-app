@@ -4,6 +4,7 @@ import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:rive/rive.dart';
+import 'package:tree_timer_app/providers/user_provider.dart';
 
 
 class Login extends StatefulWidget {
@@ -97,10 +98,12 @@ class _LoginState extends State<Login> {
                             barrierDismissible: true,
                             barrierLabel: "",
                             pageBuilder: (context, _, __) => Center(
-                              child: RegisterForm(authService: authService,
-                              onDispose: (result){
-                                  returnResponseMessage(result);
-                                }),
+                              child: RegisterForm(
+                                onDispose: (result){
+                                    returnResponseMessage(result);
+                                },
+                                editingProfile: false,
+                              ),
                             )
                           );
                         });

@@ -109,6 +109,7 @@ class _LoginFormState extends State<LoginForm>{
                 onVisibilityPressed: (isPasswordVisible) {
                   widget.onVisibilityPressed!(isPasswordVisible);
                 },
+                editing: false,
               ),
               SizedBox(height: 35),
               Container(

@@ -3,7 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/register_form.dart';
+import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_timer_app/models/user.dart';
 import 'package:tree_timer_app/screens/project.dart';
 import 'package:tree_timer_app/screens/tree_species.dart';
 import '../common/widgets/custom_newprojectalertdialog.dart';
@@ -51,7 +54,7 @@ class _Home extends State<Home>{
   Widget build(BuildContext context) {
 
     // User provider to get users name
-    String userName = Provider.of<UserProvider>(context, listen: false).user.name;
+    User userLogged = Provider.of<UserProvider>(context, listen: false).user;
 
     return Scaffold(
       key:_scaffoldKey,
@@ -67,8 +70,41 @@ class _Home extends State<Home>{
                 decoration: const BoxDecoration(
                   color: Colors.green,
                 ),
-                child: Text('¡Bienvenid@ $userName!'),
+                child: Row(
+                  children: [
+                    Text('¡Bienvenid@ ${userLogged.name}!'),
+                    Expanded(child: SizedBox()),
+                    GestureDetector(
+                      onTap: () {
+                        Future.delayed(Duration(milliseconds: 100), (){
+                          showGeneralDialog(context: context,
+                            barrierDismissible: true,
+                            barrierLabel: "",
+                            pageBuilder: (context, _, __) => Center(
+                              child: RegisterForm(
+                                onDispose: (result){
+                                    returnResponseMessage(result);
+                                },
+                                editingProfile: true,
+                                userLogged: userLogged,
+                              ),
+                            )
+                          );
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
+                          SizedBox(width: 5),
+                          Text("Editar perfil"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
