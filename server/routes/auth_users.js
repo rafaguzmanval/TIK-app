@@ -189,7 +189,7 @@ authUserRouter.put('/editprofile', async (req, res) => {
           }
           await user.save();
       }
-      res.json({ msg: 'Perfil de usuario actualizado correctamente' });
+      res.json({user: user, msg: 'Perfil de usuario actualizado correctamente' });
 
     } catch (error) {
       console.error(error);
