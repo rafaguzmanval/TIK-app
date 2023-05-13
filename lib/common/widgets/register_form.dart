@@ -3,9 +3,7 @@ import 'package:http/http.dart';
 import 'package:tree_timer_app/common/widgets/check_animation.dart';
 import 'package:tree_timer_app/common/widgets/custom_button.dart';
 import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
-import 'package:tree_timer_app/common/widgets/custom_positioned_login_animations.dart';
 import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/models/user.dart';
@@ -61,16 +59,18 @@ class _RegisterFormState extends State<RegisterForm>{
     }
   }
 
-  void checkRequest(Response _res){
-    // If successful request then successful animation
+  void handleRequest(Response _res){
+    // If resquest is not null then show animation
     if(_res != null){
-      ValidResponse? validResponse = ValidResponse.fromResponse(_res, _res.body);
-      showAnimation(validResponse);
+      showAnimation(_res);
     }
   }
 
 
-  void showAnimation(ValidResponse validResponse){
+  void showAnimation(Response response){
+
+    ValidResponse validResponse = ValidResponse(response);
+
     // Trigger animation
     if(validResponse.isSuccess)
     {
@@ -85,7 +85,7 @@ class _RegisterFormState extends State<RegisterForm>{
         setState(() {
           isShowLoading = false;
         });
-        showSnackBar(context, returnResponseMessage(validResponse));
+        showFlutterToastFromResponse(res: response);
       }  
       setState(() {
         isShowLoading = false;
@@ -100,15 +100,15 @@ class _RegisterFormState extends State<RegisterForm>{
   void RegisterUser() async{
     Response? res = await widget.authService.registerUser(context: context,name: _nameController.text,
     email: _emailController.text,password: _passwordController.text, confirmpassword: _confirmPasswordController.text);
-    checkRequest(res!);
+    handleRequest(res!);
   }
 
   void EditUserProfile() async{
     User userEdited = User(id: widget.userLogged!.id, name: _nameController.text, email: _emailController.text, password: _passwordController.text, confirmpassword: _confirmPasswordController.text, token: '');
     Response? res = await widget.authService.editUserProfile(context: context, user: userEdited);
-    checkRequest(res!);
+    handleRequest(res!);
     // Update user provider
-    widget.onDispose!(ValidResponse.fromResponse(res, res.body));
+    widget.onDispose!(ValidResponse(res));
   }
 
   @override
@@ -151,7 +151,7 @@ class _RegisterFormState extends State<RegisterForm>{
                             if(_registrationFormKey.currentState!.validate()) {
                               if((_passwordController.text == '' && _confirmPasswordController.text != '') || (_passwordController.text != '' && _confirmPasswordController.text == ''))
                               {
-                                showSnackBar(context, 'Las contraseñas no coinciden');
+                                showFlutterToast(msg: 'Las contraseñas no coinciden', isSuccess: false);
                               }
                               else{
                                 setState(() {

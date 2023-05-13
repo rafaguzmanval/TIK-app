@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
-import 'package:tree_timer_app/screens/home.dart';
-import 'package:tree_timer_app/screens/login.dart';
 
 class TreeSpecieService{
 
@@ -32,14 +29,11 @@ class TreeSpecieService{
         },
         body: treeSpecie.toJson(),
       );
+      
+      showFlutterToast(msg: "¡Nueva especie creada correctamente!", isSuccess: true);
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Nueva especie creada correctamente!");
-        }
-      );
     } catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg:  err.toString(), isSuccess: false);
     }
   }
 

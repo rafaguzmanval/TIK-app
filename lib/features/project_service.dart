@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:http/http.dart' as http;
@@ -40,9 +39,9 @@ class ProjectService{
       return res;
 
     }on SocketException catch (_) {
-      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
     }catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
@@ -69,15 +68,11 @@ class ProjectService{
         Uri.parse('$url/projects/delete/${id}'),
       );
 
-      httpErrorHandler(res: response, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Proyecto borrado correctamente!");
-        }
-      );
+      showFlutterToast(msg: "¡Proyecto borrado correctamente!", isSuccess: true);
       
     }
     catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     } 
   }
 
@@ -93,11 +88,11 @@ class ProjectService{
         body: project.toJson(),
       );
 
-      return ValidResponse.fromResponse(res, res.body);
+      return ValidResponse(res);
       
     }
     catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     } 
   }
 
@@ -117,7 +112,7 @@ class ProjectService{
       
     }
     catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }
   }
   

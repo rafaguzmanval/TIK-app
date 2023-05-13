@@ -5,14 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/user.dart';
 import 'package:http/http.dart';
 import 'package:tree_timer_app/constants/global_variables.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/screens/home.dart';
 import 'package:tree_timer_app/screens/login.dart';
 
 class AuthService{
@@ -52,9 +50,9 @@ class AuthService{
       return res;
 
     }on SocketException catch (_) {
-      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
     }catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
@@ -87,12 +85,12 @@ class AuthService{
         body: user.toJson(),
       );
 
-      return ValidResponse.fromResponse(res, res.body);
+      return ValidResponse(res);
   
     }on SocketException catch (_) {
-      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
     }catch(err){
-      return ValidResponse(isSuccess: false, body: err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
@@ -102,8 +100,6 @@ class AuthService{
   async {
     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
-      if(context == null) return showSnackBar(context, "Erro al cerrar sesión");
-
       // We need to delete the token in order to close session
       SharedPreferences preferences = await SharedPreferences.getInstance();
       await preferences.remove('auth-token');
@@ -114,7 +110,7 @@ class AuthService{
         (route) => false
       );
     }catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
@@ -159,9 +155,9 @@ class AuthService{
       }
 
     }on SocketException catch (_) {
-      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
     } catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
@@ -191,9 +187,9 @@ class AuthService{
       }
       return res;
     }on SocketException catch (_) {
-      showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
+      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
     }catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }finally {
       client.close();
     }
