@@ -87,6 +87,18 @@ class _ProjectScreenState extends State<ProjectScreen> {
         isEditing = true;
       });
     }
+  }
+
+  void onPressedLeading(){
+    if(!isEditing)
+    {
+      Navigator.pop(context);
+    }
+    else{
+      setState(() {
+        isEditing = false;
+      });
+    }
   } 
 
   @override
@@ -111,6 +123,10 @@ class _ProjectScreenState extends State<ProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: isEditing ? Icon(Icons.close) : Icon(Icons.arrow_back),
+          onPressed: onPressedLeading,
+        ),
         title: isEditing ? Form(
           key: _editFormKey,
           child: TextFormField(
