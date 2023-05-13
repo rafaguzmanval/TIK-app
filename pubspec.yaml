@@ -46,6 +46,8 @@ dependencies:
   camera: ^0.10.4
   path_provider: ^2.0.14
   google_maps_flutter: ^2.2.5
+  share_plus: ^4.5.3
+  flutter_svg: ^2.0.5
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +83,7 @@ flutter:
     - assets/rive/checkerror.riv
     - assets/rive/confetti.riv
     - assets/app_title.svg
+    - assets/app_logo.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

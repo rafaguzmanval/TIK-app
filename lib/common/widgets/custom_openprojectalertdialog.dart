@@ -1,19 +1,28 @@
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
 import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
-  import 'package:tree_timer_app/screens/project.dart';
+import 'package:tree_timer_app/screens/project.dart';
 import '../../constants/utils.dart';
 
 class OpenProjectCustomAlertDialog extends StatefulWidget
 {
-  final String title = "Seleccione el proyecto";
+  final String title;
+  final bool isExport;
 
   OpenProjectCustomAlertDialog({
     Key? key,
+    required this.title,
+    required this.isExport,
   }) : super(key:key);
 
   @override
@@ -26,6 +35,42 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
   final ScrollController scrollController = ScrollController();
   bool arrowDownWard = true;
   final arrowDownWardNotifier = ValueNotifier<bool>(true);
+
+  void onTapProjectScreen (Project project) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(              
+          builder: (context) => ProjectScreen(project: project),
+        ),
+    );
+    // Rebuild widget
+    setState(() {});
+  }
+
+  void onTapProjectExport(Project project) async {
+    try {
+      // Call to projectService to retrieve excel file
+      Response res = await projectService.exportProject(context: context, project: project);
+      if(res.statusCode == HttpStatus.ok)
+      {
+         // Get app documents directory
+        final documentsDirectory = await getApplicationDocumentsDirectory();
+        // Create file with project name
+        var file = await File('${documentsDirectory!.path}/${res.headers['filename']}').create();
+        // Write data into file
+        await file.writeAsBytes(res.bodyBytes);
+        // Share file
+        Share.shareXFiles([XFile('${file.path}')],
+            subject: 'Fichero excel - Projecto: ${project.name}', text: '¡Proyecto importado correctamente!');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al importar el archivo: ${e.toString()}'),
+        ),
+      );
+    }
+  }
 
   @override
   void initState(){
@@ -83,21 +128,23 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                   return ListTile(
                                     leading: Icon(Icons.book, color: Colors.green,),
                                     title: Text(snapshot.data[index]["name"]),
-                                    onTap: () async {
+                                    onTap: () async{
                                       Project project = Project(
                                           id: snapshot.data[index]["_id"],
                                           name: snapshot.data[index]["name"],
                                           description: snapshot.data[index]["description"] ?? '',
                                           user_id:  Provider.of<UserProvider>(context, listen: false).user.id,
                                       );
-                                      await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(              
-                                            builder: (context) => ProjectScreen(project: project),
-                                          ),
-                                      );
-                                      // Rebuild widget
-                                      setState(() {});
+
+                                      // Si no estamos exportando datos, abrimos página de proyecto
+                                      if(!widget.isExport)
+                                      {
+                                        onTapProjectScreen(project);
+                                      }
+                                      else
+                                      {
+                                        onTapProjectExport(project);
+                                      }
                                     },
                                   );
                                 },

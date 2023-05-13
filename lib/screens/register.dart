@@ -62,9 +62,9 @@ class _RegisterState extends State<Register>
                 SizedBox(height: 15),
                 CustomTextField(controller: _emailController, labelText: "Email"),
                 SizedBox(height: 15),
-                CustomPasswordFormField(controller: _passwordController),
+                CustomPasswordFormField(controller: _passwordController, editing: false),
                 SizedBox(height: 15),
-                CustomPasswordFormField(controller: _confirmPasswordController),
+                CustomPasswordFormField(controller: _confirmPasswordController, editing: false),
                 SizedBox(height: 35),
                 Container(
                     width: 200,

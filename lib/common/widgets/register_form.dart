@@ -8,17 +8,19 @@ import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
+import 'package:tree_timer_app/models/user.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 
 class RegisterForm extends StatefulWidget{
 
-  final AuthService authService;
+  final AuthService authService =  AuthService();
   final ValueChanged<ValidResponse>? onDispose;
+  final bool editingProfile;
+  final User? userLogged;
   
   RegisterForm({
     Key? key,
-    required this.authService,
-    this.onDispose,
+    this.onDispose, required this.editingProfile, this.userLogged,
   }) : super(key:key);
 
   @override
@@ -40,49 +42,73 @@ class _RegisterFormState extends State<RegisterForm>{
 
   bool isShowLoading =  false;
 
-  void RegisterUser() async{
-    // ValidResponse result = await widget.authService.registerUser(context: context,name: _nameController.text,
-    // email: _emailController.text,password: _passwordController.text);
-    Response? res = await widget.authService.registerUser(context: context,name: _nameController.text,
-    email: _emailController.text,password: _passwordController.text, confirmpassword: _confirmPasswordController.text);
-    // If successful login then successful animation
-    if(res != null){
-      ValidResponse? validResponse = ValidResponse.fromResponse(res, res.body);
-      if(validResponse.isSuccess == true){
-        // Trigger check animation
-        _CheckAnimationKey.currentState?.triggerCheckFire();
-        Future.delayed(Duration(seconds: 2), () async {
-          if(mounted)
-          {
-            setState(() {
-              isShowLoading = false;
-            });
-            httpErrorHandler(res: res, context: context,
-            onSuccess: (){
-              showSnackBar(context, returnResponseMessage(validResponse));
-            });
-          }  
-          setState(() {
-            isShowLoading = false;
-          });
-          
-          Navigator.pop(context);
-        });
-        
-      }else{ // Error animation
-        _CheckAnimationKey.currentState?.triggerErrorFire();
-        Future.delayed(Duration(seconds: 2), () async {
-          if(mounted){
-            setState(() {
-              isShowLoading = false;
-            });
-            showSnackBar(context, returnResponseMessage(validResponse));
-          }
-        }
-        );
+  // If user is editing profile, we must to initialize username and user email
+  @override
+  void initState(){
+
+    if(widget.userLogged != null)
+    {
+
+      if(widget.userLogged!.name != '')
+      {
+        _nameController.text = widget.userLogged!.name;
+      }
+
+      if(widget.userLogged!.email != '')
+      {
+        _emailController.text = widget.userLogged!.email;
       }
     }
-    
+  }
+
+  void checkRequest(Response _res){
+    // If successful request then successful animation
+    if(_res != null){
+      ValidResponse? validResponse = ValidResponse.fromResponse(_res, _res.body);
+      showAnimation(validResponse);
+    }
+  }
+
+
+  void showAnimation(ValidResponse validResponse){
+    // Trigger animation
+    if(validResponse.isSuccess)
+    {
+      _CheckAnimationKey.currentState?.triggerCheckFire();
+    }
+    else{
+      _CheckAnimationKey.currentState?.triggerErrorFire();
+    }
+    Future.delayed(Duration(seconds: 2), () async {
+      if(mounted)
+      {
+        setState(() {
+          isShowLoading = false;
+        });
+        showSnackBar(context, returnResponseMessage(validResponse));
+      }  
+      setState(() {
+        isShowLoading = false;
+      });
+      if(validResponse.isSuccess)
+      {
+        Navigator.pop(context);
+      }
+    });
+  }  
+
+  void RegisterUser() async{
+    Response? res = await widget.authService.registerUser(context: context,name: _nameController.text,
+    email: _emailController.text,password: _passwordController.text, confirmpassword: _confirmPasswordController.text);
+    checkRequest(res!);
+  }
+
+  void EditUserProfile() async{
+    User userEdited = User(id: widget.userLogged!.id, name: _nameController.text, email: _emailController.text, password: _passwordController.text, confirmpassword: _confirmPasswordController.text, token: '');
+    Response? res = await widget.authService.editUserProfile(context: context, user: userEdited);
+    checkRequest(res!);
+    // Update user provider
+    widget.onDispose!(ValidResponse.fromResponse(res, res.body));
   }
 
   @override
@@ -102,15 +128,15 @@ class _RegisterFormState extends State<RegisterForm>{
                   child: ListView(
                     padding: EdgeInsets.all(20),
                     children: [
-                      Center(child: Text("Registro", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                      Center(child: Text(widget.editingProfile ? "Perfil" : "Registro", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
                       SizedBox(height: 15),
                       CustomTextField(controller: _nameController, labelText: "Nombre"),
                       SizedBox(height: 15),
                       CustomTextField(controller: _emailController, labelText: "Email"),
                       SizedBox(height: 15),
-                      CustomPasswordFormField(controller: _passwordController),
+                      CustomPasswordFormField(controller: _passwordController, editing: widget.editingProfile),
                       SizedBox(height: 15),
-                      CustomPasswordFormField(controller: _confirmPasswordController),
+                      CustomPasswordFormField(controller: _confirmPasswordController, editing:  widget.editingProfile),
                       SizedBox(height: 35),
                       Container(
                           width: 200,
@@ -119,14 +145,27 @@ class _RegisterFormState extends State<RegisterForm>{
                           ),
                         // ignore: prefer_const_constructors
                         child: CustomButton(
-                          text: "Crear cuenta",
+                          text: widget.editingProfile ? "Actualizar perfil" : "Crear cuenta",
                           textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           onTap: (){
                             if(_registrationFormKey.currentState!.validate()) {
-                              setState(() {
-                                isShowLoading = true;
-                              });
-                              RegisterUser();
+                              if((_passwordController.text == '' && _confirmPasswordController.text != '') || (_passwordController.text != '' && _confirmPasswordController.text == ''))
+                              {
+                                showSnackBar(context, 'Las contraseñas no coinciden');
+                              }
+                              else{
+                                setState(() {
+                                  isShowLoading = true;
+                                });
+                                // If we are not editing, then register user
+                                if(!widget.editingProfile)
+                                {
+                                  RegisterUser();
+                                }
+                                else{ // Update user profile
+                                  EditUserProfile();
+                                }
+                              }
                             } 
                           }
                         ),
