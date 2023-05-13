@@ -40,7 +40,7 @@ class User{
       confirmpassword: parsedJson["confirmpassword"] != null && parsedJson["confirmpassword"].isNotEmpty
       ? parsedJson["confirmpassword"]
       : '',
-      token: parsedJson["token"]
+      token: parsedJson["token"] ?? '',
     );
   }
 

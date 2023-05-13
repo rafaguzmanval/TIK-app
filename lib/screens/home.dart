@@ -28,33 +28,39 @@ class Home extends StatefulWidget{
 
 class _Home extends State<Home>{
 
+  //Logged user variable
+  late User loggedUser;
+
   // Create key to interact with drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final AuthService authService = AuthService();
   final TreeSpecieService treeSpecieService = TreeSpecieService();
 
-   void openProjectDialog(bool isExport) async
-   {
-      await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return OpenProjectCustomAlertDialog(title: isExport ? "Seleccione el proyecto a exportar" : "Seleccione el proyecto", isExport: isExport,);
-        },
-      );
-   }
+  void setLoggedUser(){
+    loggedUser = Provider.of<UserProvider>(context, listen: false).user;
+  }
+
+  void openProjectDialog(bool isExport) async
+  {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return OpenProjectCustomAlertDialog(title: isExport ? "Seleccione el proyecto a exportar" : "Seleccione el proyecto", isExport: isExport,);
+      },
+    );
+  }
 
   @override
   void initState () {
     super.initState();
     // Get user data to show name and get his user_id to create projects and datasheets in future
     authService.getUserData(context);
+    // Set logged user variable
+    setLoggedUser();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    // User provider to get users name
-    User userLogged = Provider.of<UserProvider>(context, listen: false).user;
 
     return Scaffold(
       key:_scaffoldKey,
@@ -72,7 +78,7 @@ class _Home extends State<Home>{
                 ),
                 child: Row(
                   children: [
-                    Text('¡Bienvenid@ ${userLogged.name}!'),
+                    Text('¡Bienvenid@ ${loggedUser.name}!'),
                     Expanded(child: SizedBox()),
                     GestureDetector(
                       onTap: () {
@@ -82,11 +88,17 @@ class _Home extends State<Home>{
                             barrierLabel: "",
                             pageBuilder: (context, _, __) => Center(
                               child: RegisterForm(
-                                onDispose: (result){
-                                    returnResponseMessage(result);
-                                },
                                 editingProfile: true,
-                                userLogged: userLogged,
+                                userLogged: loggedUser,
+                                onDispose: (validResponse){
+                                  // If edit profile is successful, then update users info
+                                  if(validResponse.isSuccess)
+                                  {
+                                    setState(() {
+                                      setLoggedUser();
+                                    });
+                                  }
+                                },
                               ),
                             )
                           );

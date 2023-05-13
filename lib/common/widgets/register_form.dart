@@ -65,41 +65,37 @@ class _RegisterFormState extends State<RegisterForm>{
     // If successful request then successful animation
     if(_res != null){
       ValidResponse? validResponse = ValidResponse.fromResponse(_res, _res.body);
-      if(validResponse.isSuccess == true){
-        // Trigger check animation
-        _CheckAnimationKey.currentState?.triggerCheckFire();
-        Future.delayed(Duration(seconds: 2), () async {
-          if(mounted)
-          {
-            setState(() {
-              isShowLoading = false;
-            });
-            httpErrorHandler(res: _res, context: context,
-            onSuccess: (){
-              showSnackBar(context, returnResponseMessage(validResponse));
-            });
-          }  
-          setState(() {
-            isShowLoading = false;
-          });
-          
-          Navigator.pop(context);
-        });
-        
-      }else{ // Error animation
-        _CheckAnimationKey.currentState?.triggerErrorFire();
-        Future.delayed(Duration(seconds: 2), () async {
-          if(mounted){
-            setState(() {
-              isShowLoading = false;
-            });
-            showSnackBar(context, returnResponseMessage(validResponse));
-          }
-        }
-        );
-      }
+      showAnimation(validResponse);
     }
-  } 
+  }
+
+
+  void showAnimation(ValidResponse validResponse){
+    // Trigger animation
+    if(validResponse.isSuccess)
+    {
+      _CheckAnimationKey.currentState?.triggerCheckFire();
+    }
+    else{
+      _CheckAnimationKey.currentState?.triggerErrorFire();
+    }
+    Future.delayed(Duration(seconds: 2), () async {
+      if(mounted)
+      {
+        setState(() {
+          isShowLoading = false;
+        });
+        showSnackBar(context, returnResponseMessage(validResponse));
+      }  
+      setState(() {
+        isShowLoading = false;
+      });
+      if(validResponse.isSuccess)
+      {
+        Navigator.pop(context);
+      }
+    });
+  }  
 
   void RegisterUser() async{
     Response? res = await widget.authService.registerUser(context: context,name: _nameController.text,
@@ -111,6 +107,8 @@ class _RegisterFormState extends State<RegisterForm>{
     User userEdited = User(id: widget.userLogged!.id, name: _nameController.text, email: _emailController.text, password: _passwordController.text, confirmpassword: _confirmPasswordController.text, token: '');
     Response? res = await widget.authService.editUserProfile(context: context, user: userEdited);
     checkRequest(res!);
+    // Update user provider
+    widget.onDispose!(ValidResponse.fromResponse(res, res.body));
   }
 
   @override

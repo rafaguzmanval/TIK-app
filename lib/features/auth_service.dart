@@ -183,8 +183,13 @@ class AuthService{
         },
         body: user.toJson(),
       );
-      return res;
 
+      if(res.statusCode == 200)
+      {
+        print(jsonDecode(res.body)['user']);
+        Provider.of<UserProvider>(context, listen: false).setUser(jsonDecode(res.body)['user']);
+      }
+      return res;
     }on SocketException catch (_) {
       showSnackBar(context, 'Se ha excedido el tiempo límite de la solicitud');
     }catch(err){
