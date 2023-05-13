@@ -260,50 +260,32 @@ async function createNewTreeDataSheetWorkSheet(workbook, treeDataSheet){
     });
 
     // Add image if is not empty
-    // if(treeDataSheet.imageURL)
-    // {
-    //     const response = await fetch(treeDataSheet.imageURL);
-    //     const blob = await response.blob();
-    //     const arrayBuffer = await blob.arrayBuffer();
-    //     const buffer = Buffer.from(arrayBuffer);
-    //     const base64 = buffer.toString('base64');
+    if(treeDataSheet.imageURL)
+    {
+        const response = await fetch(treeDataSheet.imageURL);
+        const blob = await response.blob();
+        const arrayBuffer = await blob.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64 = buffer.toString('base64');
 
-    //     if(base64)
-    //     {
-    //         // Add image to workbook by base64
-    //         // const imageId = workbook.addImage({
-    //         //     base64: 'data:image/jpg;base64,'+base64,
-    //         //     extension: 'jpg',
-    //         // });
-    //         const imgId = workbook.addImage({ buffer, extension: "jpg" });
-    //         const imgId2 = workbook.addImage({ buffer, extension: "jpg" });
-    //         // const imageId = workbook.addImage({
-    //         //     filename: 'imagen.jpg',
-    //         //     extension: 'jpg',
-    //         // });
-    //         console.log(imgId)
-    //         console.log(imgId2)
-    //         worksheet.addBackgroundImage(imgId);
-    //         worksheet.addImage(imgId, {
-    //             tl: { col: 10, row: 10 },
-    //             ext: { width: 500, height: 200 },
-    //             hyperlinks: {
-    //                 hyperlink: treeDataSheet.imageURL,
-    //                 tooltip: treeDataSheet.imageURL
-    //             }
-    //         });
+        // ExcelJS addImage function does not work
+        // if(base64)
+        // {
+        //     // Add image to workbook by base64
+        //     // const imageId = workbook.addImage({
+        //     //     base64: 'data:image/jpg;base64,'+base64,
+        //     //     extension: 'jpg',
+        //     // });
 
-    //         const logoBase64 = 'data:image/png;base64,' + base64
-    //         const logo = workbook.addImage({
-    //             base64: logoBase64,
-    //             extension: 'png',
-    //           });
-    //           worksheet.addImage(logo, 'B2:D6');
-            
-
-    //         worksheet.addImage(imgId, 'H2:H6');
-    //     }
-    // }
+        //     worksheet.addImage(imageId, {
+        //         tl: { col: 10, row: 10 },
+        //         ext: { width: 500, height: 200 },
+        //         hyperlinks: {
+        //             hyperlink: treeDataSheet.imageURL,
+        //             tooltip: treeDataSheet.imageURL
+        //         }
+        //     });
+    }
 }
 
 function setColumnsWidth(worksheet){
