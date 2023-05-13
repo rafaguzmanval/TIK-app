@@ -26,7 +26,6 @@ class ProjectService{
         name: name,
         description: '',
         user_id: user_id
-        // listTreeSheetsId: []
       );
 
 
