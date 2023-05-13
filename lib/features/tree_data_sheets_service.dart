@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:http/http.dart' as http;
 import 'package:tree_timer_app/constants/global_variables.dart';
-import 'package:tree_timer_app/models/tree_specie.dart';
 
 class TreeDataSheetService{
 
@@ -27,7 +25,7 @@ class TreeDataSheetService{
 
       return res;
     } catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg: err.toString(), isSuccess: false);
     }
   }
 
@@ -48,13 +46,9 @@ class TreeDataSheetService{
         body: treeDataSheet.toJson(),
       );
 
-      httpErrorHandler(res: res, context: context,
-        onSuccess: (){
-          showSnackBar(context, "¡Ficha de datos actualizada correctamente!");
-        }
-      );
+      showFlutterToast(msg: "¡Ficha de datos actualizada correctamente!", isSuccess: true);
     } catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg:  err.toString(), isSuccess: false);
     }
   }
 
@@ -99,7 +93,7 @@ class TreeDataSheetService{
       
     }
     catch(err){
-      showSnackBar(context, err.toString());
+      showFlutterToast(msg:  err.toString(), isSuccess: false);
     } 
   }
 

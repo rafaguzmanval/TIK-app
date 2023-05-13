@@ -67,7 +67,7 @@ class _LoginFormState extends State<LoginForm>{
         Future.delayed(Duration(seconds: 1), () async {
 
           // Call user provider
-          Map<String, dynamic> infoRes = json.decode(result?.body);
+          Map<String, dynamic> infoRes = json.decode(result!.response.body);
           String name = infoRes['name'];
           
           SharedPreferences preferences = await SharedPreferences.getInstance();

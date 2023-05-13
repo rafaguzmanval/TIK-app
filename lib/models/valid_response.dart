@@ -1,21 +1,39 @@
-// Class to check if a http response it is valid, if not, return msg too
+// Class to check if a http response it is valid, and return msg too
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class ValidResponse{
-  final bool isSuccess;
-  final dynamic body;
+  bool isSuccess = false;
+  late http.Response response;
+  String responseMsg = '';
 
   // Public constructor
-  ValidResponse({required this.isSuccess, this.body});
-  // Private constructor
-  ValidResponse._({required this.isSuccess, this.body});
-
-  factory ValidResponse.fromResponse(http.Response res, String string){
-    if(res.statusCode == 200){
-      return ValidResponse._(isSuccess: true, body: res.body);
+  ValidResponse(http.Response res){
+    response = res;
+    if(response.statusCode == 200){
+      isSuccess = true;
     }else{
-      return ValidResponse._(isSuccess: false, body: res.body);
-
+      isSuccess = false;
     }
+    responseMsg = _returnResponseMessage();
+  }
+
+  String _returnResponseMessage()
+  {
+    String ret = '';
+    dynamic jsonResponse = jsonDecode(response.body);
+    if(jsonResponse["msg"] != null)
+    {
+      ret = jsonResponse["msg"];
+    }
+    if(jsonResponse["error"] != null)
+    {
+      ret = jsonResponse["error"];
+    }
+
+    return ret;
   }
 }
+
+

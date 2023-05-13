@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
                             pageBuilder: (context, _, __) => Center(
                               child: RegisterForm(
                                 onDispose: (result){
-                                    returnResponseMessage(result);
+                                  result.responseMsg;
                                 },
                                 editingProfile: false,
                               ),

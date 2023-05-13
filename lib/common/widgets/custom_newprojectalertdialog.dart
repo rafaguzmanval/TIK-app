@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
@@ -82,13 +81,7 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                       );
 
                       if(res != null){
-                        ValidResponse? validResponse = ValidResponse.fromResponse(res, res.body);
-                          if(validResponse.isSuccess == true){
-                            httpErrorHandler(res: res, context: context,
-                              onSuccess: (){
-                                showSnackBar(context, returnResponseMessage(validResponse));
-                              });
-                          }
+                        showFlutterToastFromResponse(res: res);
                       }
                       
                       Navigator.of(context).pop();

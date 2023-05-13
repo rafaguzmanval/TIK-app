@@ -11,7 +11,6 @@ import 'package:tree_timer_app/common/widgets/custom_camera.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
 import 'package:tree_timer_app/common/widgets/custom_map.dart';
 import 'package:tree_timer_app/common/widgets/custom_measurements_table.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
@@ -19,7 +18,7 @@ import 'package:tree_timer_app/models/measurement.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
-import 'package:http/http.dart' as http;
+import 'package:tree_timer_app/models/valid_response.dart';
 
 
 class TreeDataSheetScreen extends StatefulWidget{
@@ -94,7 +93,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     bool? deleteDataSheet = await showConfirmDialog(context, "¿Desea borrar la ficha de datos del árbol?", "");
     if(deleteDataSheet == true && widget.treeDataSheet != null){
       Response? res = await treeDataSheetService.deleteTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet);
-      showResponseMsg(context, res);
+      ValidResponse validResponse = ValidResponse(res!);
+      showFlutterToast(msg: validResponse.responseMsg, isSuccess: validResponse.isSuccess);
       Navigator.pop(context);
     }else{
       return null;
@@ -134,14 +134,17 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
           }
           else{
             Response? res = await treeDataSheetService.newTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet as TreeDataSheet);
-            showResponseMsg(context, res);
             // And if res returns a savedDataTreeSheet then we must to update the widget.treedatasheet
-            if(res != null && res.body.contains('savedTreeDataSheet'))
+            if(res != null)
             {
-              setState(() {
-                var data = jsonDecode(res.body);
-                widget.treeDataSheet = TreeDataSheet.fromJson(data['savedTreeDataSheet']);
-              });
+              showFlutterToastFromResponse(res: res);
+              if(res.body.contains('savedTreeDataSheet'))
+              {
+                setState(() {
+                  var data = jsonDecode(res.body);
+                  widget.treeDataSheet = TreeDataSheet.fromJson(data['savedTreeDataSheet']);
+                });
+              }
             }
           }
           // Set isEditing to false
@@ -171,8 +174,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
         // We call the child widget and update the map
         _customMapKey.currentState!.updateCurrentLocation(_position);
       });
-    } else {// Show error permission
-      showSnackBar(context, "Ha denegado el permiso de localización");
+    } else {
+      // Show error permission
+      showFlutterToast(msg: "Ha denegado el permiso de localización", isSuccess: false);
     }
   }
 

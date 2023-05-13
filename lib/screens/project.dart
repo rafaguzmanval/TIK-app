@@ -7,14 +7,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
 import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
 import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
-import 'package:tree_timer_app/constants/error_handling.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/features/tree_data_sheets_service.dart';
-import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
-import 'package:tree_timer_app/models/tree_specie.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/screens/tree_data_sheet.dart';
 
@@ -78,7 +75,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
               widget.project.name = titleController.text;
               widget.project.description = descriptionController.text;
             });
-            showSnackBar(context, jsonDecode(validRes?.body)['msg']);
+            showFlutterToast(msg: validRes!.responseMsg, isSuccess: validRes.isSuccess);
           }
         }
       }
@@ -269,7 +266,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 );
                               }
                               else if(snapshot.hasError){
-                                showSnackBar(context, snapshot.error.toString());
+                                showFlutterToast(msg: snapshot.error.toString(), isSuccess: false);
                               }
                               // Show circular progress while no info is received
                               return CircularProgressIndicator();

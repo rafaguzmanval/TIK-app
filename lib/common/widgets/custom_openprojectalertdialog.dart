@@ -165,7 +165,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                         );
                       }
                       else if(snapshot.hasError){
-                        showSnackBar(context, snapshot.error.toString());
+                        showFlutterToast(msg: snapshot.error.toString(), isSuccess: false);
                       }
                       return CircularProgressIndicator();
                     }
