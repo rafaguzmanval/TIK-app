@@ -40,6 +40,9 @@ post_install do |installer|
     # Start of the permission_handler configuration
     target.build_configurations.each do |config|
 
+        # Add this line to setup the minimum version of IPHONEOS DEPLOYMENT TARGET
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+
         # You can enable the permissions needed here. For example to enable camera
         # permission, just remove the `#` character in front so it looks like this:
         #
