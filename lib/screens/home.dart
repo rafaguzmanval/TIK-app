@@ -157,18 +157,27 @@ class _Home extends State<Home>{
                 )
               ),
             ),
-            Center(
-              child: GestureDetector(
-                onTap: () => _showBluetoothDialog(context),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: ElevatedButton(
+                onPressed: (){
+                  _showBluetoothDialog(context);
+                },
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    SizedBox(width: 5),
-                    Text("Buscar dispositivos Bluetooth"),
+                    Expanded(
+                      flex: 3,
+                      child: Icon(Icons.bluetooth),
+                    ),
+                    Expanded(
+                        flex: 7,
+                        child: Text("Buscar dispositivos Bluetooth")
+                    )
                   ],
-                ),
+                )
               ),
-            ),
+  ),
             const SizedBox(height: 60),
             Center(
               child: GestureDetector(
