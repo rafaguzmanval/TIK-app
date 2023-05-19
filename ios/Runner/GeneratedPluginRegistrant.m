@@ -44,8 +44,28 @@
 
 #if __has_include(<shared_preferences_ios/FLTSharedPreferencesPlugin.h>)
 #import <shared_preferences_ios/FLTSharedPreferencesPlugin.h>
+#if __has_include(<flutter_blue_plus/FlutterBluePlusPlugin.h>)
+#import <flutter_blue_plus/FlutterBluePlusPlugin.h>
 #else
-@import shared_preferences_ios;
+@import flutter_blue_plus;
+#endif
+
+#if __has_include(<permission_handler/PermissionHandlerPlugin.h>)
+#import <permission_handler/PermissionHandlerPlugin.h>
+#else
+@import permission_handler;
+#endif
+
+#if __has_include(<reactive_ble_mobile/ReactiveBlePlugin.h>)
+#import <reactive_ble_mobile/ReactiveBlePlugin.h>
+#else
+@import reactive_ble_mobile;
+#endif
+
+#if __has_include(<shared_preferences_foundation/SharedPreferencesPlugin.h>)
+#import <shared_preferences_foundation/SharedPreferencesPlugin.h>
+#else
+@import shared_preferences_foundation;
 #endif
 
 @implementation GeneratedPluginRegistrant
@@ -58,6 +78,9 @@
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [RivePlugin registerWithRegistrar:[registry registrarForPlugin:@"RivePlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
+  [FlutterBluePlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterBluePlusPlugin"]];
+  [ReactiveBlePlugin registerWithRegistrar:[registry registrarForPlugin:@"ReactiveBlePlugin"]];
+  [SharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"SharedPreferencesPlugin"]];
 }
 
 @end
