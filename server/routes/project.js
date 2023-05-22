@@ -48,9 +48,25 @@ projectRouter.get("/getall",
     async (req, res) => {
 
         const resultados = await projectSchemaModel.find({}, null, {sort: {createdAt: 1}})
-        if(!resultados) return res.status(404).send("No se han podido proyectos");
+        if(!resultados) return res.status(404).send("No se han podido recuperar los proyectos");
 
         return res.send(resultados);
+    }
+);
+
+projectRouter.get("/getUserProject/:user_id",
+    async (req, res) => {
+
+        const { user_id } = req.params;
+        const project_name = req.query.project_name;
+
+        console.log(user_id, project_name);
+        
+        const results = await projectSchemaModel.find({user_id: user_id, name: project_name});
+        console.log(results)
+        if(!results) return res.status(404).send("No se ha podido recuperar el proyecto");
+
+        return res.send(results);
     }
 );
 

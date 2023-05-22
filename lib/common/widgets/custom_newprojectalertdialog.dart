@@ -4,8 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/project_service.dart';
+import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
+import 'package:tree_timer_app/screens/project.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
@@ -82,9 +84,21 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
 
                       if(res != null){
                         showFlutterToastFromResponse(res: res);
+
+                        if(ValidResponse(res).isSuccess)
+                        {
+                          // Exist from dialog
+                          Navigator.of(context).pop();
+                          // Push to new project
+                          Project createdProject = Project.fromJson(await ProjectService().getUserProject(Provider.of<UserProvider>(context, listen: false).user.id, _textController.text));
+                          await Navigator.push(
+                              context,
+                              MaterialPageRoute(              
+                                builder: (context) => ProjectScreen(project: createdProject),
+                              ),
+                          );
+                        }
                       }
-                      
-                      Navigator.of(context).pop();
                     },
                     child: Text("Crear")
                   ),
