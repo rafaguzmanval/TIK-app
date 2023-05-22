@@ -335,7 +335,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                           widget.selectedSpecie = selectedSpecie;
                         }
                         // We set the value of tree specie text form field
-                        treeSpecieController.value = TextEditingValue(text: '${widget.selectedSpecie?.name} (${widget.selectedSpecie?.description})');
+                        treeSpecieController.value = widget.selectedSpecie != null ? TextEditingValue(text: '${widget.selectedSpecie?.name} (${widget.selectedSpecie?.description})') : const TextEditingValue(text: '');
                       },
                       child: const Text('Seleccionar especie de árbol')
                     ),
