@@ -180,6 +180,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
   }
 
+  // Changes the map type
+  void changeMapType() async {
+      _customMapKey.currentState!.changeMapType();
+  }
+
   void _showAddItemDialog() {
     double time = 0;
     double distance = 0;
@@ -409,7 +414,14 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   const SizedBox(height: 10,),
                   // Show map widget
                   CustomMap(key: _customMapKey, currentPosition: _position,),
-
+                  Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      onPressed: changeMapType,
+                      child: const Text('Cambiar tipo de mapa')
+                    ),
+                  ),
                 ]
               ),
             ),
