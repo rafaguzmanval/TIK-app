@@ -201,7 +201,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   // Decimal keyboard type
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Distancia',
+                    labelText: 'Distancia (cm)',
                   ),
                   onChanged: (value) {
                     // We need to parse the value string to double type
@@ -213,7 +213,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   // Decimal keyboard type
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Tiempo',
+                    labelText: 'Tiempo (µs)',
                   ),
                   onChanged: (value) {
                     // We need to parse the value string to double type
