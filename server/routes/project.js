@@ -48,9 +48,25 @@ projectRouter.get("/getall",
     async (req, res) => {
 
         const resultados = await projectSchemaModel.find({}, null, {sort: {createdAt: 1}})
-        if(!resultados) return res.status(404).send("No se han podido proyectos");
+        if(!resultados) return res.status(404).send("No se han podido recuperar los proyectos");
 
         return res.send(resultados);
+    }
+);
+
+projectRouter.get("/getUserProject/:user_id",
+    async (req, res) => {
+
+        const { user_id } = req.params;
+        const project_name = req.query.project_name;
+
+        console.log(user_id, project_name);
+        
+        const results = await projectSchemaModel.find({user_id: user_id, name: project_name});
+        console.log(results)
+        if(!results) return res.status(404).send("No se ha podido recuperar el proyecto");
+
+        return res.send(results);
     }
 );
 
@@ -124,6 +140,13 @@ projectRouter.get("/export/:project_id",
         const treeDataSheets = await treeDataSheetSchemaModel.find({project_id})
         .populate('project_id')
         .populate('tree_specie_id')
+        .populate({
+            path: 'project_id',
+            populate: {
+              path: 'user_id',
+              model: 'Users'
+            }
+          })
         .lean();
 
         // Create excel with tree data sheets
@@ -143,12 +166,10 @@ async function createExcel(treeDataSheets, res)
 
     // Create a first worksheet that contains project information
     createNewProjectWorkSheet(workbook, "Proyecto - "+treeDataSheets[0].project_id.name, treeDataSheets);
-
     // Create data sheets work sheets
     treeDataSheets.forEach((treeDataSheet) => {
        
         createNewTreeDataSheetWorkSheet(workbook, treeDataSheet);
-       
     });
     console.log(treeDataSheets)
 
@@ -175,6 +196,8 @@ function createNewProjectWorkSheet(workbook, workSheetTitle, treeDataSheets){
 
     // Create project columns
     worksheet.columns = [
+        { header: 'Fecha generación informe: ', key: 'reportGeneratedDate',},
+        { header: 'Info. Usuario', key: 'userInfo',},
         { header: 'Nombre del proyecto', key: 'projectName',},
         { header: 'Descripcion de proyecto', key: 'projectDescription'},
     ];
@@ -184,6 +207,8 @@ function createNewProjectWorkSheet(workbook, workSheetTitle, treeDataSheets){
     
     // Generate data
     const data = [{
+        reportGeneratedDate: new Date().toLocaleString(),
+        userInfo: treeDataSheets[0].project_id.user_id.name + ' - ' + treeDataSheets[0].project_id.user_id.email,
         projectName: treeDataSheets[0].project_id.name,
         projectDescription:treeDataSheets[0].project_id.description,
     }];

@@ -180,6 +180,11 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
     }
   }
 
+  // Changes the map type
+  void changeMapType() async {
+      _customMapKey.currentState!.changeMapType();
+  }
+
   void _showAddItemDialog() {
     double time = 0;
     double distance = 0;
@@ -201,7 +206,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   // Decimal keyboard type
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Distancia',
+                    labelText: 'Distancia (cm)',
                   ),
                   onChanged: (value) {
                     // We need to parse the value string to double type
@@ -213,7 +218,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   // Decimal keyboard type
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   decoration: InputDecoration(
-                    labelText: 'Tiempo',
+                    labelText: 'Tiempo (µs)',
                   ),
                   onChanged: (value) {
                     // We need to parse the value string to double type
@@ -269,7 +274,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.project.name),
+        title: widget.treeDataSheet.id.isNotEmpty ? Text(widget.project.name + ' - ' + widget.treeDataSheet.specific_tree_id) : Text(widget.project.name),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
@@ -335,7 +340,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                           widget.selectedSpecie = selectedSpecie;
                         }
                         // We set the value of tree specie text form field
-                        treeSpecieController.value = TextEditingValue(text: '${widget.selectedSpecie?.name} (${widget.selectedSpecie?.description})');
+                        treeSpecieController.value = widget.selectedSpecie != null ? TextEditingValue(text: '${widget.selectedSpecie?.name} (${widget.selectedSpecie?.description})') : const TextEditingValue(text: '');
                       },
                       child: const Text('Seleccionar especie de árbol')
                     ),
@@ -409,7 +414,14 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   const SizedBox(height: 10,),
                   // Show map widget
                   CustomMap(key: _customMapKey, currentPosition: _position,),
-
+                  Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey.shade200)),
+                      onPressed: changeMapType,
+                      child: const Text('Cambiar tipo de mapa')
+                    ),
+                  ),
                 ]
               ),
             ),

@@ -61,6 +61,26 @@ class ProjectService{
     }
   }
 
+  Future<dynamic> getUserProject(String user_id, String project_name) async {
+    try
+    {
+      final response = await http.get(
+        Uri.parse('$url/projects/getUserProject/$user_id?project_name=$project_name'),
+      );
+
+      if (ValidResponse(response).isSuccess) {
+        List<dynamic> listJson = json.decode(response.body);
+        showFlutterToast(msg: "Abriendo proyecto...", isSuccess: true);
+        return listJson[0];
+      }else{
+        showFlutterToast(msg: 'Error al obtener proyecto', isSuccess: false);
+      }
+    }
+    catch(err){
+      showFlutterToast(msg: err.toString(), isSuccess: false);
+    } 
+  }
+
   Future deleteProject({required BuildContext context, required String id}) async {
     try
     {
@@ -68,8 +88,13 @@ class ProjectService{
         Uri.parse('$url/projects/delete/${id}'),
       );
 
-      showFlutterToast(msg: "¡Proyecto borrado correctamente!", isSuccess: true);
-      
+      if (ValidResponse(response).isSuccess) {
+        dynamic listJson = json.decode(response.body);
+        showFlutterToast(msg: "¡Proyecto borrado correctamente!", isSuccess: true);
+        return listJson;
+      }else{
+        showFlutterToast(msg: 'Error al intentar borrar proyecto', isSuccess: false);
+      }
     }
     catch(err){
       showFlutterToast(msg: err.toString(), isSuccess: false);

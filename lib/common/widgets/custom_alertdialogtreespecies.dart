@@ -102,7 +102,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
                                   title: Text(filteredSpecies[index]["name"]),
-                                  subtitle: Text(filteredSpecies[index]["description"]),
+                                  subtitle: Text("Vel. propagación: " + filteredSpecies[index]["description"]),
                                   onTap: (){
                                     TreeSpecie treeSpecie = TreeSpecie(
                                       name: filteredSpecies[index]["name"],

@@ -8,6 +8,7 @@ class CustomMap extends StatefulWidget {
 
   LatLng currentPosition;
   final double zoom = 18;
+  MapType mapType = MapType.hybrid;
 
   CustomMap({
     super.key,
@@ -29,6 +30,20 @@ class CustomMapState extends State<CustomMap> {
     await controller.animateCamera(CameraUpdate.newLatLng(LatLng(currentPosition.latitude, currentPosition.longitude)));
   }
 
+  // Changes the map type between hybrid and normal
+  void changeMapType() {
+    setState(() {
+      // Check the current map type
+      if (widget.mapType == MapType.hybrid) {
+        // If it's hybrid, change it to normal
+        widget.mapType = MapType.normal;
+      } else if (widget.mapType == MapType.normal) {
+        // If it's normal, change it to hybrid
+        widget.mapType = MapType.hybrid;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
       return Column(
@@ -47,7 +62,7 @@ class CustomMapState extends State<CustomMap> {
                   infoWindow: InfoWindow(title: 'Árbol'),
               )},
               // Satelital type map
-              mapType: MapType.hybrid,
+              mapType: widget.mapType,
               // Init position
               initialCameraPosition: CameraPosition(target: LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude), zoom: widget.zoom),
               onMapCreated: (GoogleMapController controller) {
