@@ -269,7 +269,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.project.name),
+        title: widget.treeDataSheet.id.isNotEmpty ? Text(widget.project.name + ' - ' + widget.treeDataSheet.specific_tree_id) : Text(widget.project.name),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
