@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +13,12 @@ import 'package:tree_timer_app/screens/tree_species.dart';
 import '../common/widgets/custom_newprojectalertdialog.dart';
 
 import '../common/widgets/custom_openprojectalertdialog.dart';
+import '../common/widgets/bluetooth_simpledialog.dart';
 import '../features/auth_service.dart';
 import '../features/tree_specie_service.dart';
 import '../providers/user_provider.dart';
+import '../common/widgets/custom_alertdialog.dart';
+
 
 
 class Home extends StatefulWidget{
@@ -57,6 +61,15 @@ class _Home extends State<Home>{
     authService.getUserData(context);
     // Set logged user variable
     setLoggedUser();
+  }
+
+  Future<void> _showBluetoothDialog(BuildContext context){
+    return showDialog(
+      context: context,
+      builder: (context){
+        return BluetoothSimpleDialog();
+      },
+    );
   }
 
   @override
@@ -144,6 +157,28 @@ class _Home extends State<Home>{
                 )
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: ElevatedButton(
+                onPressed: (){
+                  _showBluetoothDialog(context);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Expanded(
+                      flex: 3,
+                      child: Icon(Icons.bluetooth),
+                    ),
+                    Expanded(
+                        flex: 7,
+                        child: Text("Buscar dispositivos Bluetooth")
+                    )
+                  ],
+                )
+              ),
+  ),
+            const SizedBox(height: 60),
             Center(
               child: GestureDetector(
                 onTap: () => authService.logoutUser(context),
@@ -259,7 +294,6 @@ class _Home extends State<Home>{
                   )
               ),
               const SizedBox(height: 40),
-              
             ],
           ),
         ),
