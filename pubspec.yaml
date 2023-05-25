@@ -40,7 +40,7 @@ dependencies:
   shared_preferences: ^2.0.15
   provider: ^6.0.4
   intl: ^0.18.0
-  rive: ^0.10.3
+  rive: ^0.11.0
   geolocator: ^9.0.2
   permission_handler: ^10.2.0
   camera: ^0.10.4

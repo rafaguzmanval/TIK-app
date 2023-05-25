@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_timer_app/common/widgets/custom_elevated_button.dart';
 import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/models/project.dart';
@@ -214,7 +215,10 @@ class _Home extends State<Home>{
                 'assets/app_logo.svg',
                 semanticsLabel: 'Tree Inspection Kit logo'
               ),
-              ElevatedButton(
+              SizedBox(
+                width: 300,
+                child: CustomElevatedButton(
+                  title: "Nuevo proyecto",
                   onPressed: () async {
                     // Show dialog to create new Project
                     await showDialog(
@@ -224,74 +228,43 @@ class _Home extends State<Home>{
                       },
                     );
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Expanded(
-                        flex: 3,
-                        child: Icon(Icons.add),
-                      ),
-                      Expanded(
-                          flex: 7,
-                          child: Text("Nuevo proyecto")
-                      )
-                    ],
-                  )
+                  icon: const Icon(Icons.add),
+                ),
               ),
               const SizedBox(height: 15),
-              ElevatedButton(
-                  onPressed: () async {
+              SizedBox(
+                width: 300,
+                child: CustomElevatedButton(
+                  title: "Abrir proyecto",
+                  onPressed: () async 
+                  {
                     openProjectDialog(false);
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Expanded(
-                        flex: 3,
-                        child: Icon(Icons.folder),
-                      ),
-                      Expanded(
-                          flex: 7,
-                          child: Text("Abrir proyecto")
-                      )
-                    ],
-                  )
-              ),
+                  icon: const Icon(Icons.folder),
+                ),
+              ),        
               const SizedBox(height: 15),
-              ElevatedButton(
-                   onPressed: () async {
+              SizedBox(
+                width: 300,
+                child: CustomElevatedButton(
+                  title: "Compartir proyecto",
+                  onPressed: () async 
+                  {
                     openProjectDialog(true);
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Expanded(
-                        flex: 3,
-                        child: Icon(Icons.share),
-                      ),
-                      Expanded(
-                          flex: 7,
-                          child: Text("Compartir proyecto")
-                      )
-                    ],
-                  )
+                  icon: const Icon(Icons.share),
+                ),
               ),
               const SizedBox(height: 40),
-              ElevatedButton(
-                  onPressed: (){},
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Expanded(
-                        flex: 3,
-                        child: Icon(Icons.book),
-                      ),
-                      Expanded(
-                          flex: 7,
-                          child: Text("Abrir manual")
-                      )
-                    ],
-                  )
+              SizedBox(
+                width: 300,
+                child: CustomElevatedButton(
+                  title: "Abrir manual",
+                  onPressed: () async 
+                  {
+                  },
+                  icon: const Icon(Icons.book),
+                ),
               ),
               const SizedBox(height: 40),
             ],
