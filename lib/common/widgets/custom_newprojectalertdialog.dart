@@ -88,7 +88,6 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                         if(ValidResponse(res).isSuccess)
                         {
                           // Exist from dialog
-                          Navigator.of(context).pop();
                           // Push to new project
                           Project createdProject = Project.fromJson(await ProjectService().getUserProject(Provider.of<UserProvider>(context, listen: false).user.id, _textController.text));
                           await Navigator.push(
@@ -97,6 +96,7 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                                 builder: (context) => ProjectScreen(project: createdProject),
                               ),
                           );
+                          Navigator.of(context).pop();
                         }
                       }
                     },
