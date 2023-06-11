@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tree_timer_app/models/measurement.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomMeasurementTable extends StatefulWidget{
 
@@ -29,17 +30,17 @@ class _CustomMeasurementTableState extends State<CustomMeasurementTable>{
     if(_isEditing)
     {
       columnsList = [
-              const DataColumn(label: Text('Dist.\n(cm)')),
-              const DataColumn(label: Text('Tiempo\n(µs)')),
-              const DataColumn(label: Text('Vel.\nmedia\n(m/s)')),
-              const DataColumn(label: Text('¿Borrar?')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.dist}\n(cm)')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.time}\n(µs)')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.avgVel}\n(m/s)')),
+              DataColumn(label: Text(AppLocalizations.of(context)!.deleteQuestion)),
             ];
     }
     else{
       columnsList = [
-              const DataColumn(label: Text('Dist.\n(cm)')),
-              const DataColumn(label: Text('Tiempo\n(µs)')),
-              const DataColumn(label: Text('Vel.\nmedia\n(m/s)')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.dist}\n(cm)')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.time}\n(µs)')),
+              DataColumn(label: Text('${AppLocalizations.of(context)!.avgVel}\n(m/s)')),
             ];
     }
   }
@@ -82,8 +83,15 @@ class _CustomMeasurementTableState extends State<CustomMeasurementTable>{
   @override
   void initState(){
     super.initState();
-    setColumns(widget.isEditing);
+    // setColumns(widget.isEditing);
     setRows(widget.isEditing);
+  }
+
+  // Init columns
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    setColumns(widget.isEditing);
   }
 
   @override

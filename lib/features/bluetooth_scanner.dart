@@ -87,10 +87,10 @@ class BluetoothScanner{
   }
 
   void connectToDevice( _foundDeviceId){
-    Stream<ConnectionStateUpdate> _currentConnectionStream = _flutterReactiveBle.connectToAdvertisingDevice(
+    Stream<ConnectionStateUpdate> _currentConnectionStream = _flutterReactiveBle.connectToDevice(
       id: _foundDeviceId,
-      withServices: [],
-      prescanDuration: const Duration(seconds: 10),
+      servicesWithCharacteristicsToDiscover: {},
+      // prescanDuration: const Duration(seconds: 10),
       connectionTimeout: const Duration(seconds:  2),
     );
     _currentConnectionStream.listen((event) {

@@ -3,10 +3,11 @@ import "dart:io";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:http/http.dart";
 import "package:tree_timer_app/models/valid_response.dart";
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool compareStr(String text1, String Text2){
   return text1 == Text2 ? true : false;
@@ -21,13 +22,13 @@ Future<bool?> showConfirmDialog(BuildContext context, String title, String conte
         content: Text(content),
         actions: <Widget>[
           TextButton(
-            child: Text('Aceptar'),
+            child: Text(AppLocalizations.of(context)!.accept),
             onPressed: () {
               Navigator.of(context).pop(true);
             },
           ),
           TextButton(
-            child: Text('Cancelar'),
+            child: Text(AppLocalizations.of(context)!.cancel),
             onPressed: () {
               Navigator.of(context).pop(false);
             },
@@ -91,4 +92,59 @@ void showFlutterToastFromResponse({required Response res})
     textColor: Colors.white,
     fontSize: 16.0
   );
+}
+
+Map<String, String> getLanguagesMap(BuildContext context)
+{
+  Map<String, String> languageNames = {
+    AppLocalizations.of(context)!.spanish: 'es',
+    AppLocalizations.of(context)!.english: 'en',
+  };
+  
+  return languageNames;
+}
+
+Map<String, String> getLanguagesCodeMap(BuildContext context)
+{
+  Map<String, String> languageNames = {
+    'es': AppLocalizations.of(context)!.spanish ,
+    'en': AppLocalizations.of(context)!.english,
+  };
+  
+  return languageNames;
+}
+
+String? getLanguageCode(BuildContext context, String language){
+  Map<String, String> languageNames = getLanguagesMap(context);
+  if(languageNames.containsKey(language))
+  {
+    return languageNames[language];
+  }
+}
+
+String? getLanguageStr(BuildContext context, String languageCode){
+  Map<String, String> languageCodes = getLanguagesCodeMap(context);
+  if(languageCodes.containsKey(languageCode))
+  {
+    return languageCodes[languageCode];
+  }
+}
+
+String getPdfManualRoot(String languageCode)
+{
+  String ret = '';
+  if(languageCode == 'en')
+  {
+    ret = 'assets/manuals/TIK_Software_Manual__English_.pdf';
+  }
+  if(languageCode == 'es')
+  {
+    ret = 'assets/manuals/TIK_Software_Manual__Spanish_.pdf';
+  }
+  return ret;
+}
+
+Future<Uint8List> loadPdfFromAsset({String languageCode = 'en'}) async {
+  final pdfData = await rootBundle.load(getPdfManualRoot(languageCode));
+  return pdfData.buffer.asUint8List();
 }

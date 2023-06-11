@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomFloatingButtonsBottom extends StatelessWidget {
 
@@ -40,7 +41,7 @@ class CustomFloatingButtonsBottom extends StatelessWidget {
           onPressed: () async {
             onSaved();
           },
-          tooltip: isEditing ? 'Guardar' : 'Editar',
+          tooltip: isEditing ? AppLocalizations.of(context)!.save : AppLocalizations.of(context)!.edit,
           child: isEditing ?  icon2 : const Icon(Icons.edit),
         )
       ],

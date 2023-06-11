@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomPasswordFormField extends StatefulWidget
 {
@@ -28,7 +29,7 @@ class _CustomPasswordFormField extends State<CustomPasswordFormField>
       controller: widget.controller,
       obscureText: hideText,
       decoration: InputDecoration(
-        labelText: widget.editing ? 'Nueva contraseña' :'Contraseña',
+        labelText: widget.editing ? AppLocalizations.of(context)!.newPassword : AppLocalizations.of(context)!.password,
         suffixIcon: IconButton(
           icon: Icon(
             hideText ? Icons.visibility_off : Icons.visibility,

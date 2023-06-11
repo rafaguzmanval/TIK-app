@@ -2,15 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_elevated_button.dart';
 import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/user.dart';
-import 'package:tree_timer_app/screens/project.dart';
-import 'package:tree_timer_app/screens/tree_species.dart';
+import 'package:tree_timer_app/providers/language_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:printing/printing.dart';
+
 import '../common/widgets/custom_newprojectalertdialog.dart';
 
 import '../common/widgets/custom_openprojectalertdialog.dart';
@@ -18,14 +18,11 @@ import '../common/widgets/bluetooth_simpledialog.dart';
 import '../features/auth_service.dart';
 import '../features/tree_specie_service.dart';
 import '../providers/user_provider.dart';
-import '../common/widgets/custom_alertdialog.dart';
 
 
 
 class Home extends StatefulWidget{
-  const Home({super.key, required this.title});
-
-  final String title;
+  const Home({super.key});
 
   @override
   State<Home> createState() => _Home();
@@ -35,6 +32,7 @@ class _Home extends State<Home>{
 
   //Logged user variable
   late User loggedUser;
+  late String title;
 
   // Create key to interact with drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -50,7 +48,9 @@ class _Home extends State<Home>{
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return OpenProjectCustomAlertDialog(title: isExport ? "Seleccione el proyecto a exportar" : "Seleccione el proyecto", isExport: isExport,);
+        return OpenProjectCustomAlertDialog(
+          title: isExport ? AppLocalizations.of(context)!.selectProjectToExport : AppLocalizations.of(context)!.selectProject, isExport: isExport,
+        );
       },
     );
   }
@@ -62,6 +62,13 @@ class _Home extends State<Home>{
     authService.getUserData(context);
     // Set logged user variable
     setLoggedUser();
+  }
+
+  // Init the app name in screens title
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    title = AppLocalizations.of(context)!.appName;
   }
 
   Future<void> _showBluetoothDialog(BuildContext context){
@@ -81,8 +88,7 @@ class _Home extends State<Home>{
       resizeToAvoidBottomInset: false,
       // Create a drawer to show user log out and other options
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
             SizedBox(
               height: 125,
@@ -92,7 +98,7 @@ class _Home extends State<Home>{
                 ),
                 child: Row(
                   children: [
-                    Text('¡Bienvenid@ ${loggedUser.name}!'),
+                    Text('${AppLocalizations.of(context)!.welcome} ${loggedUser.name}!'),
                     Expanded(child: SizedBox()),
                     GestureDetector(
                       onTap: () {
@@ -120,10 +126,10 @@ class _Home extends State<Home>{
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
+                        children: [
                           Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
                           SizedBox(width: 5),
-                          Text("Editar perfil"),
+                          Text(AppLocalizations.of(context)!.editProfile),
                         ],
                       ),
                     ),
@@ -145,14 +151,14 @@ class _Home extends State<Home>{
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(
+                  children: [
+                    const Expanded(
                       flex: 3,
                       child: Icon(Icons.book),
                     ),
                     Expanded(
                         flex: 7,
-                        child: Text("Especies de arboles disponibles")
+                        child: Text(AppLocalizations.of(context)!.availableTreeSpecies)
                     )
                   ],
                 )
@@ -166,31 +172,57 @@ class _Home extends State<Home>{
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Expanded(
+                  children: [
+                    const Expanded(
                       flex: 3,
                       child: Icon(Icons.bluetooth),
                     ),
                     Expanded(
                         flex: 7,
-                        child: Text("Buscar dispositivos Bluetooth")
+                        child: Text(AppLocalizations.of(context)!.findBluetoothDevices)
                     )
                   ],
                 )
               ),
-  ),
+            ),
             const SizedBox(height: 60),
             Center(
               child: GestureDetector(
                 onTap: () => authService.logoutUser(context),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.logout_rounded, color: Colors.red,),
-                    SizedBox(width: 5),
-                    Text("Cerrar sesión"),
+                  children:  [
+                    const Icon(Icons.logout_rounded, color: Colors.red,),
+                    const SizedBox(width: 5),
+                    Text(AppLocalizations.of(context)!.logout),
                   ],
                 ),
+              ),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ListTile(
+                    leading: Localizations.localeOf(context).languageCode == 'es' ? Image.asset('assets/languages/spanish.png', width: 25, height: 25,) : Image.asset('assets/languages/english.png', width: 30, height: 30,),
+                    title: DropdownButton<String>(
+                      value: getLanguageStr(context, Localizations.localeOf(context).languageCode),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          String _value = getLanguageCode(context, newValue!) as String;
+                          Provider.of<LanguageProvider>(context, listen: false).changeLanguage(Locale(_value, ''));
+                        });
+                      },
+                      items: <String>[AppLocalizations.of(context)!.spanish, AppLocalizations.of(context)!.english]
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -202,7 +234,7 @@ class _Home extends State<Home>{
           icon: const Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState!.openDrawer(),
         ),
-        title: Text(widget.title),
+        title: Text(title),
       ),
       
       body: Container(
@@ -218,13 +250,13 @@ class _Home extends State<Home>{
               SizedBox(
                 width: 300,
                 child: CustomElevatedButton(
-                  title: "Nuevo proyecto",
+                  title:AppLocalizations.of(context)!.newProject,
                   onPressed: () async {
                     // Show dialog to create new Project
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return NewProjectCustomAlertDialog(title: 'Crear nuevo proyecto');
+                        return NewProjectCustomAlertDialog(title: AppLocalizations.of(context)!.createNewProject);
                       },
                     );
                   },
@@ -235,7 +267,7 @@ class _Home extends State<Home>{
               SizedBox(
                 width: 300,
                 child: CustomElevatedButton(
-                  title: "Abrir proyecto",
+                  title: AppLocalizations.of(context)!.openProject,
                   onPressed: () async 
                   {
                     openProjectDialog(false);
@@ -247,7 +279,7 @@ class _Home extends State<Home>{
               SizedBox(
                 width: 300,
                 child: CustomElevatedButton(
-                  title: "Compartir proyecto",
+                  title: AppLocalizations.of(context)!.shareProject,
                   onPressed: () async 
                   {
                     openProjectDialog(true);
@@ -259,9 +291,15 @@ class _Home extends State<Home>{
               SizedBox(
                 width: 300,
                 child: CustomElevatedButton(
-                  title: "Abrir manual",
+                  title: AppLocalizations.of(context)!.openManual,
                   onPressed: () async 
                   {
+                    // Load pdf bytes from asset (version depends on user selected language)
+                    final pdfData = await loadPdfFromAsset(languageCode: Localizations.localeOf(context).languageCode);
+                    // Using printing library, open pdf and visualize
+                    Printing.layoutPdf(
+                     onLayout: (format) => pdfData,
+                    );
                   },
                   icon: const Icon(Icons.book),
                 ),

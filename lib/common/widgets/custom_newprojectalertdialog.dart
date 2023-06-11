@@ -8,6 +8,7 @@ import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/screens/project.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
@@ -60,7 +61,7 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cancelar")
+                    child: Text(AppLocalizations.of(context)!.exit)
                   ),
                 ],
               ),
@@ -88,7 +89,6 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                         if(ValidResponse(res).isSuccess)
                         {
                           // Exist from dialog
-                          Navigator.of(context).pop();
                           // Push to new project
                           Project createdProject = Project.fromJson(await ProjectService().getUserProject(Provider.of<UserProvider>(context, listen: false).user.id, _textController.text));
                           await Navigator.push(
@@ -97,10 +97,11 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                                 builder: (context) => ProjectScreen(project: createdProject),
                               ),
                           );
+                          Navigator.of(context).pop();
                         }
                       }
                     },
-                    child: Text("Crear")
+                    child: Text(AppLocalizations.of(context)!.create)
                   ),
                 ],
               ),

@@ -14,6 +14,7 @@ import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/screens/home.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class LoginForm extends StatefulWidget{
@@ -76,7 +77,7 @@ class _LoginFormState extends State<LoginForm>{
           // Navigate to home
           Navigator.pushAndRemoveUntil(
                 context, 
-                MaterialPageRoute(builder: (context) => const Home(title: 'Tree Timer App')),
+                MaterialPageRoute(builder: (context) => Home()),
                 (route) => false
           );
         });

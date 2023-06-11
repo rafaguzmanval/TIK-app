@@ -21,3 +21,4 @@ Contains the model classes and their methods which allow us to operate with exis
 #### Screens Folder
 
 Here are contained the widget collections that create our flutter app. We have our Login screen, Register screen, Projects screen...
+

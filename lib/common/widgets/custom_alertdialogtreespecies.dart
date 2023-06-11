@@ -4,9 +4,10 @@ import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.da
 import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/tree_specie_service.dart';
 import 'package:tree_timer_app/models/tree_specie.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomAlertDialogTreeSpecies extends StatefulWidget {
-  final String title = "Especies de arboles";
+  late String title;
   
 
   CustomAlertDialogTreeSpecies({super.key});
@@ -36,6 +37,13 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
     scrollController.addListener(() {
       ScrollControllerUtils.scrollListener(scrollController, arrowDownWardNotifier);
     });
+  }
+
+  // Init the app name in screens title
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    widget.title = AppLocalizations.of(context)!.treeSpecies;
   }
 
   @override
@@ -70,7 +78,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                         TextFormField(
                           controller: searchController,
                           decoration: InputDecoration(
-                            labelText: 'Buscar...',
+                            labelText: AppLocalizations.of(context)!.search,
                           ),
                           // When user tap, adjust size of species list
                           onTap: (){
@@ -102,7 +110,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
                                   title: Text(filteredSpecies[index]["name"]),
-                                  subtitle: Text("Vel. propagación: " + filteredSpecies[index]["description"]),
+                                  subtitle: Text("${AppLocalizations.of(context)!.propagationVelocity}: " + filteredSpecies[index]["description"]),
                                   onTap: (){
                                     TreeSpecie treeSpecie = TreeSpecie(
                                       name: filteredSpecies[index]["name"],
@@ -146,7 +154,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
           onPressed: (){
             Navigator.pop(context);
           },
-          child: Text("Salir")
+          child: Text(AppLocalizations.of(context)!.exit)
         )
       ],
     );
