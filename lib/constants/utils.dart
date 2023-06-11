@@ -3,6 +3,7 @@ import "dart:io";
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:http/http.dart";
 import "package:tree_timer_app/models/valid_response.dart";
 import 'package:fluttertoast/fluttertoast.dart';
@@ -127,4 +128,23 @@ String? getLanguageStr(BuildContext context, String languageCode){
   {
     return languageCodes[languageCode];
   }
+}
+
+String getPdfManualRoot(String languageCode)
+{
+  String ret = '';
+  if(languageCode == 'en')
+  {
+    ret = 'assets/manuals/TIK_Software_Manual__English_.pdf';
+  }
+  if(languageCode == 'es')
+  {
+    ret = 'assets/manuals/TIK_Software_Manual__Spanish_.pdf';
+  }
+  return ret;
+}
+
+Future<Uint8List> loadPdfFromAsset({String languageCode = 'en'}) async {
+  final pdfData = await rootBundle.load(getPdfManualRoot(languageCode));
+  return pdfData.buffer.asUint8List();
 }

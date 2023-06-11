@@ -2,17 +2,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
 import 'package:tree_timer_app/common/widgets/custom_elevated_button.dart';
 import 'package:tree_timer_app/common/widgets/register_form.dart';
 import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/user.dart';
 import 'package:tree_timer_app/providers/language_provider.dart';
-import 'package:tree_timer_app/screens/project.dart';
-import 'package:tree_timer_app/screens/tree_species.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:printing/printing.dart';
 
 import '../common/widgets/custom_newprojectalertdialog.dart';
 
@@ -21,7 +18,6 @@ import '../common/widgets/bluetooth_simpledialog.dart';
 import '../features/auth_service.dart';
 import '../features/tree_specie_service.dart';
 import '../providers/user_provider.dart';
-import '../common/widgets/custom_alertdialog.dart';
 
 
 
@@ -298,6 +294,12 @@ class _Home extends State<Home>{
                   title: AppLocalizations.of(context)!.openManual,
                   onPressed: () async 
                   {
+                    // Load pdf bytes from asset (version depends on user selected language)
+                    final pdfData = await loadPdfFromAsset(languageCode: Localizations.localeOf(context).languageCode);
+                    // Using printing library, open pdf and visualize
+                    Printing.layoutPdf(
+                     onLayout: (format) => pdfData,
+                    );
                   },
                   icon: const Icon(Icons.book),
                 ),
