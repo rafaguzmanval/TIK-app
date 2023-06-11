@@ -45,7 +45,7 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
         // DEBUG
         for(var device in bluetoothScanner.devicesList)
         {
-          print('${bluetoothScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoothScanner.getMacIfLocalNameIsEmpty(device)}');
+          // print('${bluetoothScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoothScanner.getMacIfLocalNameIsEmpty(device)}');
         }
         //
         return Column(
