@@ -8,6 +8,7 @@ import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/screens/project.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget
 {
@@ -60,7 +61,7 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text("Cancelar")
+                    child: Text(AppLocalizations.of(context)!.exit)
                   ),
                 ],
               ),
@@ -100,7 +101,7 @@ class _NewProjectCustomAlertDialogState extends State<NewProjectCustomAlertDialo
                         }
                       }
                     },
-                    child: Text("Crear")
+                    child: Text(AppLocalizations.of(context)!.create)
                   ),
                 ],
               ),

@@ -12,6 +12,8 @@ import 'package:tree_timer_app/features/project_service.dart';
 import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
 import 'package:tree_timer_app/screens/project.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../constants/utils.dart';
 
 class OpenProjectCustomAlertDialog extends StatefulWidget
@@ -61,12 +63,12 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
         await file.writeAsBytes(res.bodyBytes);
         // Share file
         Share.shareXFiles([XFile('${file.path}')],
-            subject: 'Fichero excel - Projecto: ${project.name}', text: '¡Proyecto importado correctamente!');
+            subject: '${AppLocalizations.of(context)!.emailSubjectExport}: ${project.name}', text: AppLocalizations.of(context)!.successfulExport);
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error al importar el archivo: ${e.toString()}'),
+          content: Text('${AppLocalizations.of(context)!.errorExport}: ${e.toString()}'),
         ),
       );
     }
@@ -181,7 +183,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
           onPressed: (){
             Navigator.pop(context);
           },
-          child: Text("Salir")
+          child: Text(AppLocalizations.of(context)!.exit)
         )
       ],
     );

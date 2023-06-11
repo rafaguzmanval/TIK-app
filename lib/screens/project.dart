@@ -14,6 +14,7 @@ import 'package:tree_timer_app/models/project.dart';
 import 'package:tree_timer_app/models/tree_data_sheet.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
 import 'package:tree_timer_app/screens/tree_data_sheet.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectScreen extends StatefulWidget {
 
@@ -53,7 +54,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
 
   // Function which is executed when a project is going to be deleted
   void onDeleted() async {
-      bool? deleteProject = await showConfirmDialog(context, "¿Desea borrar el proyecto?", "Borrará todas las fichas de datos asociadas al proyecto");
+      bool? deleteProject = await showConfirmDialog(context, AppLocalizations.of(context)!.deleteProject, AppLocalizations.of(context)!.warningDeleteProject);
       if(deleteProject == true && widget.project != null){
         await projectService.deleteProject(context: context, id: widget.project.id);
         Navigator.pop(context);
@@ -66,7 +67,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   void onUpdated () async {
     if(isEditing == true){
       if(_editFormKey.currentState!.validate()) {
-        bool? updateProject = await showConfirmDialog(context, "¿Desea actualizar el proyecto?","");
+        bool? updateProject = await showConfirmDialog(context, AppLocalizations.of(context)!.updateProject,"");
         if(updateProject == true){
           ValidResponse? validRes = await projectService.editProject(context: context, project: Project(name: titleController.text, id: widget.project.id, description: descriptionController.text, user_id: widget.project.user_id));
           if(validRes?.isSuccess == true){
@@ -130,13 +131,13 @@ class _ProjectScreenState extends State<ProjectScreen> {
             controller: titleController,
             validator: mandatoryField,
             maxLines: 1,
-            decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(
+            decoration: InputDecoration(
+              enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(
                   width: 2.0,
                 ),
               ),
-              hintText: 'Nombre proyecto',
+              hintText: AppLocalizations.of(context)!.projectName,
             ),
           )) : Text(widget.project.name),
       ),
@@ -154,9 +155,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     padding: EdgeInsets.only(top: 30.0,),
                     child: Column(
                       children: [
-                        const Text(
-                          "Descripción",
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.description,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold
                           )
                         ),
@@ -169,7 +170,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
-                                hintText: 'Descripción',
+                                hintText: AppLocalizations.of(context)!.description,
                               )) : Align(
                                 alignment: Alignment.centerLeft,
                                 child: Text(widget.project.description.toString())
@@ -180,9 +181,9 @@ class _ProjectScreenState extends State<ProjectScreen> {
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 30.0),
-                    child: const Text(
-                      "Fichas disponibles",
-                      style: TextStyle(
+                    child: Text(
+                      AppLocalizations.of(context)!.availablesDataSheets,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold
                       )
                     ),
@@ -290,7 +291,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                 
                               });
                             },
-                            tooltip: 'Crear nueva ficha de datos',
+                            tooltip: AppLocalizations.of(context)!.createNewDataSheet,
                             child: const Icon(Icons.add),
                           ),
                         ],

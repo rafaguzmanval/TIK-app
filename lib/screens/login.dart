@@ -5,7 +5,7 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:rive/rive.dart';
 import 'package:tree_timer_app/providers/user_provider.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -88,7 +88,7 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 // Register form which returns response message
                 children: [
-                  const Text("¿Nuevo usuario?"),
+                  Text(AppLocalizations.of(context)!.newUser),
                   Container(
                     margin: EdgeInsets.all(10),
                     child: ElevatedButton(
@@ -113,7 +113,7 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.all(10),
                         backgroundColor: Colors.lightGreen
                       ),
-                      child: const Text("Cree una cuenta"),
+                      child: Text(AppLocalizations.of(context)!.createAccount),
                     )
                   ),
                 ],

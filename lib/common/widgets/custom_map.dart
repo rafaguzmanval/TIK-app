@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomMap extends StatefulWidget {
 
@@ -59,7 +60,7 @@ class CustomMapState extends State<CustomMap> {
               markers: {Marker(
                   markerId: MarkerId('CurrentPosition'),
                   position: LatLng(widget.currentPosition.latitude, widget.currentPosition.longitude),
-                  infoWindow: InfoWindow(title: 'Árbol'),
+                  infoWindow: InfoWindow(title: AppLocalizations.of(context)!.tree),
               )},
               // Satelital type map
               mapType: widget.mapType,

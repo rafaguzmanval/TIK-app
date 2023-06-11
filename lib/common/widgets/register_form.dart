@@ -8,6 +8,7 @@ import 'package:tree_timer_app/constants/utils.dart';
 import 'package:tree_timer_app/features/auth_service.dart';
 import 'package:tree_timer_app/models/user.dart';
 import 'package:tree_timer_app/models/valid_response.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterForm extends StatefulWidget{
 
@@ -128,9 +129,9 @@ class _RegisterFormState extends State<RegisterForm>{
                   child: ListView(
                     padding: EdgeInsets.all(20),
                     children: [
-                      Center(child: Text(widget.editingProfile ? "Perfil" : "Registro", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+                      Center(child: Text(widget.editingProfile ? AppLocalizations.of(context)!.profile : AppLocalizations.of(context)!.register, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
                       SizedBox(height: 15),
-                      CustomTextField(controller: _nameController, labelText: "Nombre"),
+                      CustomTextField(controller: _nameController, labelText: AppLocalizations.of(context)!.name),
                       SizedBox(height: 15),
                       CustomTextField(controller: _emailController, labelText: "Email"),
                       SizedBox(height: 15),
@@ -145,13 +146,13 @@ class _RegisterFormState extends State<RegisterForm>{
                           ),
                         // ignore: prefer_const_constructors
                         child: CustomButton(
-                          text: widget.editingProfile ? "Actualizar perfil" : "Crear cuenta",
+                          text: widget.editingProfile ? AppLocalizations.of(context)!.updateProfile : AppLocalizations.of(context)!.createAccount,
                           textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           onTap: (){
                             if(_registrationFormKey.currentState!.validate()) {
                               if((_passwordController.text == '' && _confirmPasswordController.text != '') || (_passwordController.text != '' && _confirmPasswordController.text == ''))
                               {
-                                showFlutterToast(msg: 'Las contraseñas no coinciden', isSuccess: false);
+                                showFlutterToast(msg:  AppLocalizations.of(context)!.passwordDoesNotMatch, isSuccess: false);
                               }
                               else{
                                 setState(() {
