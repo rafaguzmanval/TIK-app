@@ -22,7 +22,10 @@ jobs:
         run: ./inno_installer.exe /verysilent /norestart /allusers /dir=installaters
         
       - name: Getting Flutter action
-        uses: subosito/flutter-action@v2.8.0
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.7'
+          channel: 'stable'
         
       - name: Checking if Flutter it is installed
         run: flutter --version
