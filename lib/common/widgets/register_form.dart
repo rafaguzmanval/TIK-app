@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:tree_timer_app/common/widgets/check_animation.dart';
-import 'package:tree_timer_app/common/widgets/custom_button.dart';
-import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
-import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/auth_service.dart';
-import 'package:tree_timer_app/models/user.dart';
-import 'package:tree_timer_app/models/valid_response.dart';
+import 'package:tree_inspection_kit_app/common/widgets/check_animation.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_button.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_passwordformfield.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_textformfield.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/auth_service.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
+import 'package:tree_inspection_kit_app/models/valid_response.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterForm extends StatefulWidget{

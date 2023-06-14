@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/tree_specie_service.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/tree_specie_service.dart';
 
 class TreeSpecies extends StatefulWidget{
   @override

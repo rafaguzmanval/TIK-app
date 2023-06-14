@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/common/widgets/login_form.dart';
-import 'package:tree_timer_app/common/widgets/register_form.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/auth_service.dart';
+import 'package:tree_inspection_kit_app/common/widgets/login_form.dart';
+import 'package:tree_inspection_kit_app/common/widgets/register_form.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/auth_service.dart';
 import 'package:rive/rive.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
+import 'package:tree_inspection_kit_app/providers/user_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Login extends StatefulWidget {

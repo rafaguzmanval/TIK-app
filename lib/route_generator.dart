@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/screens/home.dart';
-import 'package:tree_timer_app/screens/login.dart';
-import 'package:tree_timer_app/screens/register.dart';
+import 'package:tree_inspection_kit_app/screens/home.dart';
+import 'package:tree_inspection_kit_app/screens/login.dart';
+import 'package:tree_inspection_kit_app/screens/register.dart';
 
 // class RouteGenerator {
 //   static Route<dynamic> generateRoute(RouteSettings settings){

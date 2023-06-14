@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tree_timer_app/models/user.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
 
 // Class use to get and set user data
 class UserProvider extends ChangeNotifier {

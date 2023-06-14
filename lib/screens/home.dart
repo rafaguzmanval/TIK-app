@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:tree_timer_app/common/widgets/custom_alertdialogtreespecies.dart';
-import 'package:tree_timer_app/common/widgets/custom_elevated_button.dart';
-import 'package:tree_timer_app/common/widgets/register_form.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/models/user.dart';
-import 'package:tree_timer_app/providers/language_provider.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_alertdialogtreespecies.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_elevated_button.dart';
+import 'package:tree_inspection_kit_app/common/widgets/register_form.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
+import 'package:tree_inspection_kit_app/providers/language_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:printing/printing.dart';
 

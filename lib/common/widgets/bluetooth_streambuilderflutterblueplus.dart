@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:tree_timer_app/features/bluetooth_scanner_flutter_blue_plus.dart';
+import 'package:tree_inspection_kit_app/features/bluetooth_scanner_flutter_blue_plus.dart';
 import '../../features/bluetooth_scanner.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

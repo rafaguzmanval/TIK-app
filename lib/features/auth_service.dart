@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/models/user.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
 import 'package:http/http.dart';
-import 'package:tree_timer_app/constants/global_variables.dart';
-import 'package:tree_timer_app/models/valid_response.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/screens/login.dart';
+import 'package:tree_inspection_kit_app/constants/global_variables.dart';
+import 'package:tree_inspection_kit_app/models/valid_response.dart';
+import 'package:tree_inspection_kit_app/providers/user_provider.dart';
+import 'package:tree_inspection_kit_app/screens/login.dart';
 
 class AuthService{
 
