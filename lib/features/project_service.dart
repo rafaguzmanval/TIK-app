@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/models/project.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/models/project.dart';
 import 'package:http/http.dart' as http;
-import 'package:tree_timer_app/constants/global_variables.dart';
-import 'package:tree_timer_app/models/valid_response.dart';
+import 'package:tree_inspection_kit_app/constants/global_variables.dart';
+import 'package:tree_inspection_kit_app/models/valid_response.dart';
 
 class ProjectService{
 

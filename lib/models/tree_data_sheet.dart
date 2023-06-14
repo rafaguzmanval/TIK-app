@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tree_timer_app/models/measurement.dart';
+import 'package:tree_inspection_kit_app/models/measurement.dart';
 
 // Creating user model
 class TreeDataSheet{

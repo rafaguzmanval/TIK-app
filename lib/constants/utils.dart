@@ -5,7 +5,7 @@ import "dart:typed_data";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:http/http.dart";
-import "package:tree_timer_app/models/valid_response.dart";
+import "package:tree_inspection_kit_app/models/valid_response.dart";
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

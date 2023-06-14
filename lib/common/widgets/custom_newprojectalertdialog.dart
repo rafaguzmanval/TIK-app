@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/project_service.dart';
-import 'package:tree_timer_app/models/project.dart';
-import 'package:tree_timer_app/models/valid_response.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/screens/project.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/project_service.dart';
+import 'package:tree_inspection_kit_app/models/project.dart';
+import 'package:tree_inspection_kit_app/models/valid_response.dart';
+import 'package:tree_inspection_kit_app/providers/user_provider.dart';
+import 'package:tree_inspection_kit_app/screens/project.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewProjectCustomAlertDialog extends StatefulWidget

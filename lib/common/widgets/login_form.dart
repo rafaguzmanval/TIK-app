@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tree_timer_app/common/widgets/check_animation.dart';
-import 'package:tree_timer_app/common/widgets/confetti_animation.dart';
-import 'package:tree_timer_app/common/widgets/custom_button.dart';
-import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
-import 'package:tree_timer_app/common/widgets/custom_positioned_login_animations.dart';
-import 'package:tree_timer_app/common/widgets/custom_textformfield.dart';
-import 'package:tree_timer_app/features/auth_service.dart';
-import 'package:tree_timer_app/models/valid_response.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/screens/home.dart';
+import 'package:tree_inspection_kit_app/common/widgets/check_animation.dart';
+import 'package:tree_inspection_kit_app/common/widgets/confetti_animation.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_button.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_passwordformfield.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_positioned_login_animations.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_textformfield.dart';
+import 'package:tree_inspection_kit_app/features/auth_service.dart';
+import 'package:tree_inspection_kit_app/models/valid_response.dart';
+import 'package:tree_inspection_kit_app/providers/user_provider.dart';
+import 'package:tree_inspection_kit_app/screens/home.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 

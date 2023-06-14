@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
-import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/tree_specie_service.dart';
-import 'package:tree_timer_app/models/tree_specie.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_arrow_downward_list_scroll.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_arrow_upward_list_scroll.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/tree_specie_service.dart';
+import 'package:tree_inspection_kit_app/models/tree_specie.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomAlertDialogTreeSpecies extends StatefulWidget {

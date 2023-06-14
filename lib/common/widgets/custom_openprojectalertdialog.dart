@@ -6,12 +6,12 @@ import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:tree_timer_app/common/widgets/custom_arrow_downward_list_scroll.dart';
-import 'package:tree_timer_app/common/widgets/custom_arrow_upward_list_scroll.dart';
-import 'package:tree_timer_app/features/project_service.dart';
-import 'package:tree_timer_app/models/project.dart';
-import 'package:tree_timer_app/providers/user_provider.dart';
-import 'package:tree_timer_app/screens/project.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_arrow_downward_list_scroll.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_arrow_upward_list_scroll.dart';
+import 'package:tree_inspection_kit_app/features/project_service.dart';
+import 'package:tree_inspection_kit_app/models/project.dart';
+import 'package:tree_inspection_kit_app/providers/user_provider.dart';
+import 'package:tree_inspection_kit_app/screens/project.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../constants/utils.dart';

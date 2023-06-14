@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tree_timer_app/common/widgets/custom_floating_buttons_bottom.dart';
-import 'package:tree_timer_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_floating_buttons_bottom.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
 
 class CustomCamera extends StatefulWidget {
 

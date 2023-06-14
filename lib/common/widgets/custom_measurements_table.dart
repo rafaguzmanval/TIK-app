@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/models/measurement.dart';
+import 'package:tree_inspection_kit_app/models/measurement.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CustomMeasurementTable extends StatefulWidget{

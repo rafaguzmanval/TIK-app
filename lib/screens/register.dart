@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tree_timer_app/common/widgets/custom_passwordformfield.dart';
-import 'package:tree_timer_app/constants/utils.dart';
-import 'package:tree_timer_app/features/auth_service.dart';
+import 'package:tree_inspection_kit_app/common/widgets/custom_passwordformfield.dart';
+import 'package:tree_inspection_kit_app/constants/utils.dart';
+import 'package:tree_inspection_kit_app/features/auth_service.dart';
 import '../common/widgets/custom_button.dart';
 import '../common/widgets/custom_textformfield.dart';
 
