@@ -26,8 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
+    namespace "com.example.tree_inspection_kit_app"
     compileSdkVersion 33
-    // ndkVersion flutter.ndkVersion
     ndkVersion "25.1.8937393"
 
     compileOptions {
@@ -45,9 +45,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.tree_timer_app"
+        applicationId "com.example.tree_inspection_kit_app"
         // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -61,7 +61,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
 }
 
 flutter {
@@ -71,5 +70,3 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-
-
