@@ -1,6 +1,6 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=C:\flutter
-FLUTTER_APPLICATION_PATH=C:\Users\bobge\Documents\TFG\tree-timer-app
+FLUTTER_ROOT=C:\Users\bobge\Documents\DOCUMENTOS - FORMACION PROFESIONAL\Proyectos\TFG\flutter
+FLUTTER_APPLICATION_PATH=C:\Users\bobge\Desktop\tree_inspection_kit_app
 COCOAPODS_PARALLEL_CODE_SIGN=true
 FLUTTER_TARGET=lib\main.dart
 FLUTTER_BUILD_DIR=build
