@@ -68,6 +68,8 @@
   "search": "Search...",
   "tree": "Tree",
   "refresh": "Refresh",
-  "selectBluetoothDevice": "Select a Bluetooth device"
+  "selectBluetoothDevice": "Select a Bluetooth device",
+  "confirmPassword": "Confirm password",
+  "confirmNewPassword": "Confirm new password"
 
 }

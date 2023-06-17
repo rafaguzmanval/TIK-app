@@ -314,6 +314,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   SizedBox(height: 15,),
                   MouseRegion(
                     child: TextFormField(
+                      maxLines: 2,
                       readOnly: true,
                       controller: treeSpecieController,
                       decoration: InputDecoration(
@@ -344,7 +345,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                           widget.selectedSpecie = selectedSpecie;
                         }
                         // We set the value of tree specie text form field
-                        treeSpecieController.value = widget.selectedSpecie != null ? TextEditingValue(text: '${widget.selectedSpecie?.name} (${widget.selectedSpecie?.description})') : const TextEditingValue(text: '');
+                        treeSpecieController.value = widget.selectedSpecie != null ? TextEditingValue(text: '${widget.selectedSpecie?.name}\n(${AppLocalizations.of(context)!.propagationVelocity} ${widget.selectedSpecie?.description})') : const TextEditingValue(text: '');
                       },
                       child: Text(AppLocalizations.of(context)!.selectTreeSpecie)
                     ),

@@ -7,11 +7,12 @@ class CustomPasswordFormField extends StatefulWidget
   final TextEditingController controller;
   final ValueChanged<bool>? onVisibilityPressed;
   final bool editing;
+  final bool isConfirmPassword;
 
   CustomPasswordFormField({
     Key? key,
     required this.controller,
-    this.onVisibilityPressed, required this.editing,
+    this.onVisibilityPressed, required this.editing, this.isConfirmPassword = false
   }) : super(key:key);
 
 
@@ -29,7 +30,7 @@ class _CustomPasswordFormField extends State<CustomPasswordFormField>
       controller: widget.controller,
       obscureText: hideText,
       decoration: InputDecoration(
-        labelText: widget.editing ? AppLocalizations.of(context)!.newPassword : AppLocalizations.of(context)!.password,
+        labelText: widget.editing ? widget.isConfirmPassword ? AppLocalizations.of(context)!.confirmNewPassword : AppLocalizations.of(context)!.newPassword : widget.isConfirmPassword ? AppLocalizations.of(context)!.confirmPassword : AppLocalizations.of(context)!.password,
         suffixIcon: IconButton(
           icon: Icon(
             hideText ? Icons.visibility_off : Icons.visibility,
