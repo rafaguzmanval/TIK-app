@@ -65,6 +65,8 @@
     "search": "Buscar...",
     "tree": "Árbol",
     "refresh": "Refrescar",
-    "selectBluetoothDevice": "Seleccione un dispositivo bluetooth" 
+    "selectBluetoothDevice": "Seleccione un dispositivo bluetooth",
+    "confirmPassword": "Confirmar contraseña",
+    "confirmNewPassword": "Confirmar nueva contraseña"
 
 }

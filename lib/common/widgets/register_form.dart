@@ -137,7 +137,7 @@ class _RegisterFormState extends State<RegisterForm>{
                       SizedBox(height: 15),
                       CustomPasswordFormField(controller: _passwordController, editing: widget.editingProfile),
                       SizedBox(height: 15),
-                      CustomPasswordFormField(controller: _confirmPasswordController, editing:  widget.editingProfile),
+                      CustomPasswordFormField(controller: _confirmPasswordController, editing:  widget.editingProfile, isConfirmPassword: true,),
                       SizedBox(height: 35),
                       Container(
                           width: 200,
