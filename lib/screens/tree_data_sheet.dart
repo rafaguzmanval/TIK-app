@@ -299,7 +299,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                     readOnly: isEditing ? false : true,
                     initialValue: widget.treeDataSheet.specific_tree_id,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.treeId,
+                      labelText: '${AppLocalizations.of(context)!.treeId} *',
                     ),
                     onSaved: (value) {
                       widget.specificTreeIdValue = value!;
@@ -318,7 +318,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                       readOnly: true,
                       controller: treeSpecieController,
                       decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.treeSpecie,
+                        labelText: '${AppLocalizations.of(context)!.treeSpecie} *',
                       ),
                       validator: (value) {
                         if(value!.isEmpty){
