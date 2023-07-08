@@ -29,15 +29,17 @@ class AuthService{
   async{
      final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
+
+      String encryptedPassword = getPasswordHash(password);
+
       User user = User(
         id: '',
         name: name,
         email: email,
-        password: password,
-        confirmpassword: confirmpassword,
+        password: encryptedPassword,
+        confirmpassword: encryptedPassword,
         token: ''
       );
-
 
       Response res = await client.post(
         Uri.parse('$url/accounts/register'),
@@ -67,11 +69,14 @@ class AuthService{
   async{
     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
+
+      String encryptedPassword = getPasswordHash(password);
+
       User user = User(
         id: '',
         name: '',
         email: email,
-        password: password,
+        password: encryptedPassword,
         confirmpassword: '',
         token: ''
       );

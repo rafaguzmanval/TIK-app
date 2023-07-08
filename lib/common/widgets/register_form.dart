@@ -105,7 +105,7 @@ class _RegisterFormState extends State<RegisterForm>{
   }
 
   void EditUserProfile() async{
-    User userEdited = User(id: widget.userLogged!.id, name: _nameController.text, email: _emailController.text, password: _passwordController.text, confirmpassword: _confirmPasswordController.text, token: '');
+    User userEdited = User(id: widget.userLogged!.id, name: _nameController.text, email: _emailController.text, password: getPasswordHash(_passwordController.text), confirmpassword: getPasswordHash(_confirmPasswordController.text), token: '');
     Response? res = await widget.authService.editUserProfile(context: context, user: userEdited);
     handleRequest(res!);
     // Update user provider

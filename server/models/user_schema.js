@@ -32,24 +32,24 @@ const userSchema = mongoose.Schema(
     { timestamps: true }
 );
 
-userSchema.pre("save", function(next) {
-    let user = this;
-    // Only hash the password if it has been modified
-    if (!user.isModified('password')) return next();
+// userSchema.pre("save", function(next) {
+//     let user = this;
+//     // Only hash the password if it has been modified
+//     if (!user.isModified('password')) return next();
 
-    // Generate a salt
-    bcryptjs.genSalt(SALT_ROUNDS, function(err, salt) {
-        if (err) return next(err);
+//     // Generate a salt
+//     bcryptjs.genSalt(SALT_ROUNDS, function(err, salt) {
+//         if (err) return next(err);
 
-        // Hash the password
-        bcryptjs.hash(user.password, salt, function(err, hash) {
-            if (err) return next(err);
+//         // Hash the password
+//         bcryptjs.hash(user.password, salt, function(err, hash) {
+//             if (err) return next(err);
 
-            user.password = hash;
-            next();
-        });
-    });
-});
+//             user.password = hash;
+//             next();
+//         });
+//     });
+// });
 
 userSchema.methods.comparePassword = function (password, callback){
 

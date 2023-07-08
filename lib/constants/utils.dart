@@ -1,7 +1,7 @@
 import "dart:convert";
 import "dart:io";
 import "dart:typed_data";
-
+import 'package:crypto/crypto.dart';
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:http/http.dart";
@@ -147,4 +147,13 @@ String getPdfManualRoot(String languageCode)
 Future<Uint8List> loadPdfFromAsset({String languageCode = 'en'}) async {
   final pdfData = await rootBundle.load(getPdfManualRoot(languageCode));
   return pdfData.buffer.asUint8List();
+}
+
+String getPasswordHash(String password)
+{
+  final bytes = utf8.encode(password);
+  final hash = sha256.convert(bytes);
+  final encryptedPassword = hash.toString();
+
+  return encryptedPassword;
 }

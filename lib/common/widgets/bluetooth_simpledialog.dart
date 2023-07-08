@@ -39,7 +39,8 @@ class _BluetoothSimpleDialogState extends State<BluetoothSimpleDialog> {
 
       children: const [
         SingleChildScrollView(
-          child: BluetoothStreamBuilderFlutterBluePlus(),
+          // child: BluetoothStreamBuilderFlutterBluePlus(),
+          child: BluetoothStreamBuilder(),
         ),
       ],
     );

@@ -10,7 +10,7 @@ import { v2 as cloudinary } from 'cloudinary';
  * @returns {void}
  */  
 
-async function cloudinaryMiddleware(req, res, next) {
+async function createCoudinaryImage(req, res, next) {
     try {
         const {image, project_id} = req.body;
         // Check if img contains info
@@ -76,6 +76,6 @@ async function deleteCloudinaryImage(imageName){
 }
 
   
-export { cloudinaryMiddleware, deleteCloudinaryFolder, deleteCloudinaryImage, createCloudinaryFolder};
+export { createCoudinaryImage, deleteCloudinaryFolder, deleteCloudinaryImage, createCloudinaryFolder};
 
 

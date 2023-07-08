@@ -334,7 +334,7 @@ function setColumnsStyle(worksheet){
         headerCell.fill = {
           type: 'pattern',
           pattern: 'solid',
-          fgColor: { argb: 'FFC0C0C0' } // Elige el color de fondo que deseas en formato ARGB
+          fgColor: { argb: 'FFC0C0C0' } 
         };
 
         headerCell.font = {

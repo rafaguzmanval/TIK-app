@@ -1,7 +1,7 @@
 import { Router } from "express";
 import mongoose from "mongoose";
 import { treeDataSheetSchemaModel } from "../models/tree_data_sheets_schema.js";
-import {cloudinaryMiddleware} from "../middlewares/cloudinary.js";
+import {createCoudinaryImage} from "../middlewares/cloudinary.js";
 const treeDataSheetRouter = Router();
 
 treeDataSheetRouter.post("/new",
@@ -36,7 +36,7 @@ treeDataSheetRouter.post("/new",
         }
     },
     //Use cloudinary middleware
-    cloudinaryMiddleware,
+    createCoudinaryImage,
     async (req, res) => {
         // Add the returned cloudinary url to imageURL field and savedTreeDataSheet too
         const savedTreeDataSheet = await treeDataSheetSchemaModel.findByIdAndUpdate(req.savedTreeDataSheetId, { imageURL: req.cloudinaryUrl })
@@ -54,7 +54,7 @@ treeDataSheetRouter.post("/new",
  */
 treeDataSheetRouter.put("/update/:id",
     //Use cloudinary middleware
-    cloudinaryMiddleware,
+    createCoudinaryImage,
     async (req, res) => {
 
         const { id } = req.params;
