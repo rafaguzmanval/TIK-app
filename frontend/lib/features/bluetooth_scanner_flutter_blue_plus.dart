@@ -9,7 +9,7 @@ class BluetoothScannerFlutterBluePlus{
 
   final devicesList = <BluetoothDevice>[];
   // final List<Uuid> _uuids = [];
-  final _flutterBluePlus = FlutterBluePlus.instance;
+  //final _flutterBluePlus = FlutterBluePlus.instance;
 
   // StreamController y StreamSubscription
   StreamController<List<BluetoothDevice>> _devicesStreamController = StreamController<List<BluetoothDevice>>.broadcast();
@@ -37,14 +37,14 @@ class BluetoothScannerFlutterBluePlus{
   // list an start scanning again 
   void refreshDeviceList() async{
       // stopScan();
-      await  _flutterBluePlus.stopScan();
+      await  FlutterBluePlus.stopScan();
       devicesList.clear();
       startScan();
   }
 
   void stopScan() async{
     // Cancel stream subscription
-    await _flutterBluePlus.stopScan();
+    await FlutterBluePlus.stopScan();
     _devicesSubscription?.cancel();
   }
 
@@ -57,9 +57,9 @@ class BluetoothScannerFlutterBluePlus{
     // If a previous stream subscription exist we must cancel it
     _devicesSubscription?.cancel();
 
-    _flutterBluePlus.startScan();
+    FlutterBluePlus.startScan();
 
-    _devicesSubscription = _flutterBluePlus.scanResults.listen(
+    _devicesSubscription = FlutterBluePlus.scanResults.listen(
       (results) {
         for (ScanResult result in results) {
           // Add or update devices inside list
