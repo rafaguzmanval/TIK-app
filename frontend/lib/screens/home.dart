@@ -40,7 +40,7 @@ class _Home extends State<Home>{
   final TreeSpecieService treeSpecieService = TreeSpecieService();
 
   void setLoggedUser(){
-    loggedUser = Provider.of<UserProvider>(context, listen: false).user;
+    loggedUser = User(id: "1",name: "pepe",email: "email",password: "pass",confirmpassword: "pass",token: "");//Provider.of<UserProvider>(context, listen: false).user;
   }
 
   void openProjectDialog(bool isExport) async
@@ -59,7 +59,7 @@ class _Home extends State<Home>{
   void initState () {
     super.initState();
     // Get user data to show name and get his user_id to create projects and datasheets in future
-    authService.getUserData(context);
+    //authService.getUserData(context);
     // Set logged user variable
     setLoggedUser();
   }
@@ -86,24 +86,40 @@ class _Home extends State<Home>{
     return Scaffold(
       key:_scaffoldKey,
       resizeToAvoidBottomInset: false,
+      // App bar to show drawer icon and screen title
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+        ),
+        title: Text(title),
+      ),
       // Create a drawer to show user log out and other options
-      drawer: Drawer(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 125,
-              child: DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: Colors.green,
-                ),
-                child: Row(
-                  children: [
-                    Text('${AppLocalizations.of(context)!.welcome} ${loggedUser.name}!'),
-                    Expanded(child: SizedBox()),
-                    GestureDetector(
-                      onTap: () {
-                        Future.delayed(Duration(milliseconds: 100), (){
-                          showGeneralDialog(context: context,
+      drawer: HomeDrawer(),
+      body: HomeBody()
+    );
+  }
+
+
+
+  Widget HomeDrawer(){
+    return Drawer(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 125,
+            child: DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.green,
+              ),
+              child: Row(
+                children: [
+                  Text('${AppLocalizations.of(context)!.welcome} ${loggedUser.name}!'),
+                  Expanded(child: SizedBox()),
+                  GestureDetector(
+                    onTap: () {
+                      Future.delayed(Duration(milliseconds: 100), (){
+                        showGeneralDialog(context: context,
                             barrierDismissible: true,
                             barrierLabel: "",
                             pageBuilder: (context, _, __) => Center(
@@ -121,32 +137,32 @@ class _Home extends State<Home>{
                                 },
                               ),
                             )
-                          );
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
-                          SizedBox(width: 5),
-                          Text(AppLocalizations.of(context)!.editProfile),
-                        ],
-                      ),
+                        );
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
+                        SizedBox(width: 5),
+                        Text(AppLocalizations.of(context)!.editProfile),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: ElevatedButton(
+
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: ElevatedButton(
                 onPressed: (){
                   showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return CustomAlertDialogTreeSpecies();
-                    }
+                      context: context,
+                      builder: (BuildContext context) {
+                        return CustomAlertDialogTreeSpecies();
+                      }
                   );
                 },
                 child: Row(
@@ -162,11 +178,11 @@ class _Home extends State<Home>{
                     )
                   ],
                 )
-              ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: ElevatedButton(
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: ElevatedButton(
                 onPressed: (){
                   _showBluetoothDialog(context);
                 },
@@ -183,130 +199,131 @@ class _Home extends State<Home>{
                     )
                   ],
                 )
-              ),
             ),
-            const SizedBox(height: 60),
-            Center(
-              child: GestureDetector(
-                onTap: () => authService.logoutUser(context),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children:  [
-                    const Icon(Icons.logout_rounded, color: Colors.red,),
-                    const SizedBox(width: 5),
-                    Text(AppLocalizations.of(context)!.logout),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ListTile(
-                    leading: Localizations.localeOf(context).languageCode == 'es' ? Image.asset('assets/languages/spanish.png', width: 25, height: 25,) : Image.asset('assets/languages/english.png', width: 30, height: 30,),
-                    title: DropdownButton<String>(
-                      value: getLanguageStr(context, Localizations.localeOf(context).languageCode),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          String _value = getLanguageCode(context, newValue!) as String;
-                          Provider.of<LanguageProvider>(context, listen: false).changeLanguage(Locale(_value, ''));
-                        });
-                      },
-                      items: <String>[AppLocalizations.of(context)!.spanish, AppLocalizations.of(context)!.english]
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                    ),
-                  ),
+          ),
+          const SizedBox(height: 60),
+          Center(
+            child: GestureDetector(
+              onTap: () => authService.logoutUser(context),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children:  [
+                  const Icon(Icons.logout_rounded, color: Colors.red,),
+                  const SizedBox(width: 5),
+                  Text(AppLocalizations.of(context)!.logout),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ListTile(
+                  leading: Localizations.localeOf(context).languageCode == 'es' ? Image.asset('assets/languages/spanish.png', width: 25, height: 25,) : Image.asset('assets/languages/english.png', width: 30, height: 30,),
+                  title: DropdownButton<String>(
+                    value: getLanguageStr(context, Localizations.localeOf(context).languageCode),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        String _value = getLanguageCode(context, newValue!) as String;
+                        Provider.of<LanguageProvider>(context, listen: false).changeLanguage(Locale(_value, ''));
+                      });
+                    },
+                    items: <String>[AppLocalizations.of(context)!.spanish, AppLocalizations.of(context)!.english]
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      // App bar to show drawer icon and screen title
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-        ),
-        title: Text(title),
-      ),
-      
-      body: Container(
-        margin: const EdgeInsets.fromLTRB(70, 10, 70, 70),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
+    );
+  }
+
+  Widget HomeBody(){
+    return Container(
+      margin: const EdgeInsets.fromLTRB(70, 10, 70, 70),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
                 'assets/app_logo.svg',
                 semanticsLabel: 'Tree Inspection Kit logo'
+            ),
+
+            ///NEW PROJECT
+            SizedBox(
+              width: 300,
+              child: CustomElevatedButton(
+                title:AppLocalizations.of(context)!.newProject,
+                onPressed: () async {
+                  // Show dialog to create new Project
+                  await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return NewProjectCustomAlertDialog(title: AppLocalizations.of(context)!.createNewProject);
+                    },
+                  );
+                },
+                icon: const Icon(Icons.add),
               ),
-              SizedBox(
-                width: 300,
-                child: CustomElevatedButton(
-                  title:AppLocalizations.of(context)!.newProject,
-                  onPressed: () async {
-                    // Show dialog to create new Project
-                    await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return NewProjectCustomAlertDialog(title: AppLocalizations.of(context)!.createNewProject);
-                      },
-                    );
-                  },
-                  icon: const Icon(Icons.add),
-                ),
+            ),
+            const SizedBox(height: 15),
+
+            ///OPEN PROJECT
+            SizedBox(
+              width: 300,
+              child: CustomElevatedButton(
+                title: AppLocalizations.of(context)!.openProject,
+                onPressed: () async
+                {
+                  openProjectDialog(false);
+                },
+                icon: const Icon(Icons.folder),
               ),
-              const SizedBox(height: 15),
-              SizedBox(
-                width: 300,
-                child: CustomElevatedButton(
-                  title: AppLocalizations.of(context)!.openProject,
-                  onPressed: () async 
-                  {
-                    openProjectDialog(false);
-                  },
-                  icon: const Icon(Icons.folder),
-                ),
-              ),        
-              const SizedBox(height: 15),
-              SizedBox(
-                width: 300,
-                child: CustomElevatedButton(
-                  title: AppLocalizations.of(context)!.shareProject,
-                  onPressed: () async 
-                  {
-                    openProjectDialog(true);
-                  },
-                  icon: const Icon(Icons.share),
-                ),
+            ),
+            const SizedBox(height: 15),
+
+            ///SHARE PROJECT
+            SizedBox(
+              width: 300,
+              child: CustomElevatedButton(
+                title: AppLocalizations.of(context)!.shareProject,
+                onPressed: () async
+                {
+                  openProjectDialog(true);
+                },
+                icon: const Icon(Icons.share),
               ),
-              const SizedBox(height: 40),
-              SizedBox(
-                width: 300,
-                child: CustomElevatedButton(
-                  title: AppLocalizations.of(context)!.openManual,
-                  onPressed: () async 
-                  {
-                    // Load pdf bytes from asset (version depends on user selected language)
-                    final pdfData = await loadPdfFromAsset(languageCode: Localizations.localeOf(context).languageCode);
-                    // Using printing library, open pdf and visualize
-                    Printing.layoutPdf(
-                     onLayout: (format) => pdfData,
-                    );
-                  },
-                  icon: const Icon(Icons.book),
-                ),
+            ),
+            const SizedBox(height: 40),
+
+            ///OPEN MANUAL
+            SizedBox(
+              width: 300,
+              child: CustomElevatedButton(
+                title: AppLocalizations.of(context)!.openManual,
+                onPressed: () async
+                {
+                  // Load pdf bytes from asset (version depends on user selected language)
+                  final pdfData = await loadPdfFromAsset(languageCode: Localizations.localeOf(context).languageCode);
+                  // Using printing library, open pdf and visualize
+                  Printing.layoutPdf(
+                    onLayout: (format) => pdfData,
+                  );
+                },
+                icon: const Icon(Icons.book),
               ),
-              const SizedBox(height: 40),
-            ],
-          ),
+            ),
+            const SizedBox(height: 40),
+          ],
         ),
       ),
     );

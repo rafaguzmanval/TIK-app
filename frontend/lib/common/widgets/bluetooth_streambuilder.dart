@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../../features/bluetooth_scanner.dart';
 
 class BluetoothStreamBuilder extends StatefulWidget{
@@ -13,13 +13,16 @@ class BluetoothStreamBuilder extends StatefulWidget{
 
 class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
-  BluetoothScanner bluetoothScanner = new BluetoothScanner();
-  late DiscoveredDevice connectedDevice;
+  late BluetoothScanner bluetoothScanner;
+
+  List<String> devices = [];
+  //late DiscoveredDevice connectedDevice;
 
   @override
   void initState(){
     super.initState();
-    bluetoothScanner.startScan();
+    bluetoothScanner = BluetoothScanner();
+
   }
 
   @override
@@ -29,7 +32,7 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return /*StreamBuilder(
       stream: bluetoothScanner.devicesStream,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
 
@@ -39,53 +42,57 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
         }
         
         if(!snapshot.hasData){
-          return CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
 
-        // DEBUG
-        for(var device in bluetoothScanner.devicesList)
-        {
-          // print('${bluetoothScanner.devicesList.length} rssi ${device.rssi} mac ${bluetoothScanner.getMacIfLocalNameIsEmpty(device)}');
-        }
-        //
-        return Column(
-          children: [
-            Container(
-              // We must to set height and width in order to prevent errors
-              // with listView dimensions
-              width: 200,
-              height: 300,
-              child: ListView.builder(
-                itemCount: bluetoothScanner.devicesList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.bluetooth),
-                    title: Text(bluetoothScanner.getMacIfLocalNameIsEmpty(bluetoothScanner.devicesList[index])),
-                    subtitle: Text('RSSI: ${bluetoothScanner.devicesList[index].rssi.toString()}'),
-                    onTap: () {
-                      // Código para conectarse al dispositivo Bluetooth seleccionado
-                      connectedDevice = bluetoothScanner.devicesList[index];
-                      bluetoothScanner.connectToDevice(connectedDevice.id);
+
+
+        if (snapshot.data is BluetoothDiscoveryResult) {
+          BluetoothDiscoveryResult result = snapshot.data;
+
+          devices.add(result.device.address);
+
+          return Column(
+              children: [
+                Container(
+                  // We must to set height and width in order to prevent errors
+                  // with listView dimensions
+                  width: 200,
+                  height: 300,
+                  child: BluetoothTile(devices:devices, name: result.device.address),
+                ),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: Text("Refrescar")
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
-                  );
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: (){
-                bluetoothScanner.refreshDeviceList();
-              },
-              child: Text("Refrescar")
-            ),
-            ElevatedButton(
-              onPressed: (){
-                Navigator.pop(context);
-              },
-              child: Text("Salir")
-            )
-          ]
-        );
+                    child: Text("Salir")
+                )
+              ]
+          );
+        }
+
+        return Center(child: CircularProgressIndicator());
       }
+    );*/
+     Center(child: CircularProgressIndicator());
+  }
+
+  Widget BluetoothTile({required List devices, required String name}){
+    return ListView.builder(
+      itemCount: devices.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          leading: Icon(Icons.bluetooth),
+          title: Text(name),
+          onTap: () {
+
+          },
+        );
+      },
     );
   }
 }

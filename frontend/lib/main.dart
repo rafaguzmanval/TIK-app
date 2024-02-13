@@ -62,9 +62,10 @@ class _TreeTimerApp extends State<TreeTimerApp> {
             ],
             initialRoute: "/",
             // onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
-            home: (Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty)
-                ? const Home()
-                : const Login(),
+            home: //(Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty)
+                //? const Home()
+                //: const Login()
+             const Home(),
                
             theme: ThemeData(
               primarySwatch: Colors.green,

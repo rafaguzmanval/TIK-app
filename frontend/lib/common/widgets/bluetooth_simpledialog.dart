@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:tree_inspection_kit_app/common/widgets/bluetooth_streambuilder.dart';
-import 'package:tree_inspection_kit_app/common/widgets/bluetooth_streambuilderflutterblueplus.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tree_inspection_kit_app/features/bluetooth_scanner.dart';
 
 class BluetoothSimpleDialog extends StatefulWidget
 {
@@ -21,6 +20,15 @@ class BluetoothSimpleDialog extends StatefulWidget
 class _BluetoothSimpleDialogState extends State<BluetoothSimpleDialog> {
 
   late final String title;
+  late BluetoothScanner scanner;
+
+  @override
+  void initState() {
+    super.initState();
+
+    scanner = BluetoothScanner();
+
+  }
   
   // Init dialog title
   @override
@@ -37,12 +45,30 @@ class _BluetoothSimpleDialogState extends State<BluetoothSimpleDialog> {
       contentPadding: const EdgeInsets.all(10.0),
       titlePadding: const EdgeInsets.all(20.0),
 
-      children: const [
+      children: [
         SingleChildScrollView(
           // child: BluetoothStreamBuilderFlutterBluePlus(),
-          child: BluetoothStreamBuilder(),
+          child: Column(children: [
+            /*SwitchListTile(title: Text("Enciende el bluetooth"),
+                value: scanner.bluetoothState.isEnabled,
+                onChanged: (bool value) { _switchBluetooth(value);})*/BluetoothStreamBuilder()
+          ],),
         ),
       ],
     );
+  }
+
+
+  void _switchBluetooth(bool value) async{
+
+      if(value) {
+        await scanner.enable();
+      } else {
+        await scanner.disable();
+      }
+
+      setState(() {
+
+      });
   }
 }
