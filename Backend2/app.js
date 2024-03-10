@@ -26,6 +26,8 @@ const bootstrap = async () => {
 
     app.use("/auth",authRouter)
 
+
+
     
     app.get("*",(req,res) => {
         res.status(404).send("Error 404: Not Found");

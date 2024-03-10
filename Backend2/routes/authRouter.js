@@ -11,18 +11,19 @@ const encoder = new TextEncoder();
 
 
 
+
 //Obtain user details from email
 authUserRouter.get("/:email", async (req, res) => {
   const { email } = req.params;
 
   await prisma.client.create({
     data: {
-      name : "pepe",
+      name : "pepe"+email,
       mail : email,
       password : "pass"
     }
 
-    
+
   })
 
 
