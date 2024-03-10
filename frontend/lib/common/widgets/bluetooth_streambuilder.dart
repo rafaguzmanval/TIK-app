@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import '../../features/bluetooth_scanner.dart';
@@ -15,13 +17,14 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
   late BluetoothScanner bluetoothScanner;
 
-  List<String> devices = [];
+  List<BluetoothDevice> devices = [];
   //late DiscoveredDevice connectedDevice;
 
   @override
   void initState(){
-    super.initState();
     bluetoothScanner = BluetoothScanner();
+    super.initState();
+
 
   }
 
@@ -32,8 +35,8 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
   @override
   Widget build(BuildContext context) {
-    return /*StreamBuilder(
-      stream: bluetoothScanner.devicesStream,
+    return StreamBuilder(
+      stream: bluetoothScanner.devicesStream.stream,
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
 
         if (snapshot.hasError) {
@@ -47,10 +50,13 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
 
 
-        if (snapshot.data is BluetoothDiscoveryResult) {
-          BluetoothDiscoveryResult result = snapshot.data;
+        if (snapshot.data is BluetoothDevice) {
 
-          devices.add(result.device.address);
+          BluetoothDevice device = snapshot.data;
+
+          devices.add(device);
+
+          print(device.name);
 
           return Column(
               children: [
@@ -59,7 +65,7 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
                   // with listView dimensions
                   width: 200,
                   height: 300,
-                  child: BluetoothTile(devices:devices, name: result.device.address),
+                  child: BluetoothTile(devices:devices),
                 ),
                 ElevatedButton(
                     onPressed: () {},
@@ -77,18 +83,45 @@ class _BluetoothStreamBuilderState extends State<BluetoothStreamBuilder>{
 
         return Center(child: CircularProgressIndicator());
       }
-    );*/
-     Center(child: CircularProgressIndicator());
+    );
+     //Center(child: CircularProgressIndicator());
   }
 
-  Widget BluetoothTile({required List devices, required String name}){
+  Widget BluetoothTile({required List<BluetoothDevice> devices}){
+
+
     return ListView.builder(
       itemCount: devices.length,
       itemBuilder: (context, index) {
+
+        String? name = devices[index].name;
         return ListTile(
           leading: Icon(Icons.bluetooth),
-          title: Text(name),
-          onTap: () {
+          title: Text(name!),
+          onTap: () async {
+
+            print(devices[index].address);
+            BluetoothConnection conn = await BluetoothConnection.toAddress(devices[index].address);
+
+            //StreamController inputControl = StreamController();
+            //Stream<Uint8List>? blueStream = ;
+
+            conn.input?.listen((event) {
+
+              String s = String.fromCharCodes(event);
+
+              if(s == "hi")
+                {
+                  Navigator.pop(context);
+                }
+              else
+                {
+                  print(s);
+                }
+              //conn.output.add(utf8.encode("DISESELO"));
+
+
+            });
 
           },
         );

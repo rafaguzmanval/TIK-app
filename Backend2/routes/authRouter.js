@@ -1,7 +1,6 @@
-import { Router } from "express";
-import { userModel } from "../models/user_schema.js"
-import bcryptjs from 'bcryptjs';
-import {SignJWT, jwtVerify} from "jose";
+const { Router } = require("express");
+//import bcryptjs from 'bcryptjs';
+//import {SignJWT, jwtVerify} from "jose";
 
 const authUserRouter = Router();
 const encoder = new TextEncoder();
@@ -10,7 +9,7 @@ const encoder = new TextEncoder();
 authUserRouter.get("/:email", async (req, res) => {
   const { email } = req.params;
 
-  const user = await userModel.findOne({email: email}).exec();
+  //const user = await userModel.findOne({email: email}).exec();
   if (!user) return res.status(404).send("El usuario no existe");
 
   return res.send(user);
@@ -20,7 +19,7 @@ authUserRouter.get("/:email", async (req, res) => {
 authUserRouter.get("/:email/:password", async (req, res) => {
   const { email, password } = req.params;
 
-  const user = await userModel.findOne({email: email}).exec();
+  //const user = await userModel.findOne({email: email}).exec();
 
   if (!user) return res.status(404).send("El usuario no existe");
 
@@ -48,13 +47,13 @@ authUserRouter.post("/register", async (req, res) => {
     console.log(password);
     console.log(confirmpassword);
 
-    const user = await userModel.findOne({email: email}).exec();
+    //const user = await userModel.findOne({email: email}).exec();
 
     if (user) return res.status(409).json({ msg: "El usuario ya se encuentra registrado"});
 
-    const newUser = new userModel({name, email, password});
+    //const newUser = new userModel({name, email, password});
 
-    await newUser.save();
+    //await newUser.save();
 
     return res.json({ msg: "Usuario registrado correctamente"});
 
@@ -73,7 +72,7 @@ authUserRouter.post("/login", async (req, res) => {
     if (!email || !password) return res.status(400).json({ msg: "Error faltan campos por recibir"});
 
     // Se pone exec para convertirlo en promesa aunque si no lo pones Mongoose lo hace en su implementacion
-    const user = await userModel.findOne({email: email}).exec();
+    //const user = await userModel.findOne({email: email}).exec();
 
     // I prefer sending this msg instead of "Invalid email" to avoid giving clues to a fraudulent access attempt
     if (!user) return res.status(404).json({msg: "Email y/o contraseña incorrecta"});
@@ -99,7 +98,7 @@ authUserRouter.post("/checkToken", async(req, res) => {
 
       if(!jwtData) return res.json(false);
       // If token is valid, get user info
-      const user = userModel.findById(jwtData.payload._id)
+      //const user = userModel.findById(jwtData.payload._id)
       // Check if user is valid
       if(!user) return res.json(false);
 
@@ -146,7 +145,7 @@ authUserRouter.put('/editprofile', async (req, res) => {
     
       if (!id) return res.status(400).json({ msg: "Error falta por recibir el id del usuario"});
       if (password != '' && confirmpassword != '' && password != confirmpassword) return res.status(400).json({ msg: "Las contraseñas no coinciden"});
-      let user = await userModel.findById(id);
+      //let user = await userModel.findById(id);
       if (user != null) {
           user.name = name;
           user.email = email;
@@ -164,4 +163,5 @@ authUserRouter.put('/editprofile', async (req, res) => {
     }
 
 });
-export default authUserRouter;
+
+module.exports = authUserRouter

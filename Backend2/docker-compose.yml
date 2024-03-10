@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  node:
+    container_name: node-tik
+    image: node-tik
+    restart: always 
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "4000:4000"
+    links :
+      - mongo
+    
+    
+  
+  mongo:
+    container_name: mongotik
+    image: mongo
+    ports:
+    - 27017:27017
+    volumes:
+      - ./dataguardada:/data/db
+
+  mongo-express:
+      image: mongo-express:latest
+      container_name: mongo-express
+      ports:
+        - "8081:8081"
+      depends_on:
+        - mongo
+
+
+
+    

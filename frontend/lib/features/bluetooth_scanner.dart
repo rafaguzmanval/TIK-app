@@ -1,5 +1,6 @@
 import 'dart:async';
 //import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
@@ -12,12 +13,12 @@ class BluetoothScanner{
 
   BluetoothState get bluetoothState => _bluetoothState;
 
-  late Stream devicesStream ;
+  StreamController devicesStream = StreamController();
 
   BluetoothScanner(){
         _getBTState();
         _stateChangeListened();
-        discover();
+        getPairedDevices();
   }
 
   _getBTState() async {
@@ -42,11 +43,19 @@ class BluetoothScanner{
   }
 
   void discover() async{
+
+
+    devicesStream.addStream(FlutterBluetoothSerial.instance.startDiscovery());
+
+  }
+
+  void getPairedDevices() async{
+    print("Getting paired devices");
     List<BluetoothDevice> devices = await FlutterBluetoothSerial.instance.getBondedDevices();
+    devices.forEach((element) {
+      devicesStream.add(element);
 
-    devices.map((e) => e.name).toList().forEach(print);
-
-
+    });
   }
 
 }

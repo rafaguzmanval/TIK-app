@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+  name String @unique
+  mail String @unique
+  password String
+  projects Project[]
+
+}
+
+model Project {
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+  authorId String @db.ObjectId
+  plots Plot[]
+  name String
+  description String
+
+  client Client @relation(fields: [authorId], references: [id])
+}
+
+model Plot {
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+  plotId String @db.ObjectId
+  name String
+
+  project Project @relation(fields: [plotId], references: [id])
+
+} 
+
+model Log {
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+
+}
+
+model Tree {
+    id String @id  @default(auto()) @map("_id") @db.ObjectId
+
+}
+
+
+model Table {
+    id String @id  @default(auto()) @map("_id") @db.ObjectId
+
+}
+
+model TIK_Tree {
+  id String @id  @default(auto()) @map("_id") @db.ObjectId
+
+}
+
+model TIK_Timber {
+    id String @id  @default(auto()) @map("_id") @db.ObjectId
+}
+
+
+
+
+
+
