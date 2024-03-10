@@ -1,19 +1,44 @@
 const { Router } = require("express");
+
+const { PrismaClient } = require("@prisma/client");
 //import bcryptjs from 'bcryptjs';
 //import {SignJWT, jwtVerify} from "jose";
 
+let prisma = new PrismaClient()
+
 const authUserRouter = Router();
 const encoder = new TextEncoder();
+
+
 
 //Obtain user details from email
 authUserRouter.get("/:email", async (req, res) => {
   const { email } = req.params;
 
+  await prisma.client.create({
+    data: {
+      name : "pepe",
+      mail : email,
+      password : "pass"
+    }
+
+    
+  })
+
+
+  const user = await prisma.client.findFirst({
+    where: {
+      mail: email
+    }
+  })
+
   //const user = await userModel.findOne({email: email}).exec();
+
   if (!user) return res.status(404).send("El usuario no existe");
 
   return res.send(user);
 });
+
 
 //Obtain user details from email and password
 authUserRouter.get("/:email/:password", async (req, res) => {

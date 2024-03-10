@@ -1,10 +1,10 @@
 const http = require('http')
 const express = require('express')
-const { PrismaClient } = require("@prisma/client");
+
 
 const authRouter = require("./routes/authRouter.js")
 
-let prisma = new PrismaClient()
+
 
 
 const app = express()
@@ -17,6 +17,8 @@ const bootstrap = async () => {
         console.log("Servidor en marcha")
     })
     
+
+
     app.get("/",(req,res) => {
     
         res.status(200).send("hola mundito")
@@ -24,12 +26,13 @@ const bootstrap = async () => {
 
     app.use("/auth",authRouter)
 
+    
     app.get("*",(req,res) => {
         res.status(404).send("Error 404: Not Found");
     })
     
-
 }
+
 
 bootstrap();
 

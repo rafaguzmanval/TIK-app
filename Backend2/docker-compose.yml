@@ -1,36 +1,24 @@
 version: "3"
 
 services:
-  node:
-    container_name: node-tik
-    image: node-tik
-    restart: always 
-    build: .
-    volumes:
-      - .:/app
+    
+  db:
+    image: mysql:latest
+    restart: always
     ports:
-      - "4000:4000"
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      - PMA_ARBITRARY=1
     links :
-      - mongo
-    
-    
-  
-  mongo:
-    container_name: mongotik
-    image: mongo
-    ports:
-    - 27017:27017
-    volumes:
-      - ./dataguardada:/data/db
-
-  mongo-express:
-      image: mongo-express:latest
-      container_name: mongo-express
-      ports:
-        - "8081:8081"
-      depends_on:
-        - mongo
-
+      - "db"
 
 
     
