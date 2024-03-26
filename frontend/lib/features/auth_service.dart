@@ -20,45 +20,45 @@ class AuthService{
 
   // Register user
   Future registerUser({
-    required BuildContext context,
-    required String name,
-    required String email,
-    required String password,
-    required String confirmpassword
-  })
-  async{
-     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
-    try{
+                        required BuildContext context,
+                        required String name,
+                        required String email,
+                        required String password,
+                        required String confirmpassword
+                      })
+    async{
+       final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
+      try{
 
-      String encryptedPassword = getPasswordHash(password);
+        String encryptedPassword = getPasswordHash(password);
 
-      User user = User(
-        id: '',
-        name: name,
-        email: email,
-        password: encryptedPassword,
-        confirmpassword: encryptedPassword,
-        token: ''
-      );
+        User user = User(
+          id: '',
+          name: name,
+          email: email,
+          password: encryptedPassword,
+          confirmpassword: encryptedPassword,
+          token: ''
+        );
 
-      Response res = await client.post(
-        Uri.parse('$url/accounts/register'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: user.toJson(),
-      );
-      
-      return res;
+        Response res = await client.post(
+          Uri.parse('$url/auth/register'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: user.toJson(),
+        );
 
-    }on SocketException catch (_) {
-      showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
-    }catch(err){
-      showFlutterToast(msg: err.toString(), isSuccess: false);
-    }finally {
-      client.close();
+        return res;
+
+      }on SocketException catch (_) {
+        showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
+      }catch(err){
+        showFlutterToast(msg: err.toString(), isSuccess: false);
+      }finally {
+        client.close();
+      }
     }
-  }
 
   // Login user
   Future loginUser({
@@ -83,7 +83,7 @@ class AuthService{
 
 
       Response res = await client.post(
-        Uri.parse('$url/accounts/login'),
+        Uri.parse('$url/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -109,10 +109,9 @@ class AuthService{
       SharedPreferences preferences = await SharedPreferences.getInstance();
       await preferences.remove('auth-token');
 
-      Navigator.pushAndRemoveUntil(
+      Navigator.push(
         context, 
-        MaterialPageRoute(builder: (context) => const Login()),
-        (route) => false
+        MaterialPageRoute(builder: (context) => const Login())
       );
     }catch(err){
       showFlutterToast(msg: err.toString(), isSuccess: false);

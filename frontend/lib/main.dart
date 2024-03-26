@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tree_inspection_kit_app/models/project.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
 import 'package:tree_inspection_kit_app/providers/language_provider.dart';
 import 'package:tree_inspection_kit_app/providers/user_provider.dart';
 import 'package:tree_inspection_kit_app/screens/login.dart';
@@ -39,9 +40,10 @@ class _TreeTimerApp extends State<TreeTimerApp> {
   //   String? token = s.getString('auth-token');
   //   return token;
   // }
-
+  User user = User(id: "1", name: "p", email: "email", password: "p", confirmpassword: "p", token: "token");
   @override
   Widget build(BuildContext context) {
+
     // Establish language provider in order to allow change languages in the App
     return ChangeNotifierProvider<LanguageProvider>(
       create: (context) => LanguageProvider(),
@@ -61,11 +63,11 @@ class _TreeTimerApp extends State<TreeTimerApp> {
               Locale('en'), // English
             ],
             initialRoute: "/",
-            // onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
-            home: //(Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty)
-                //? const Home()
-                //: const Login()
-             const Home(),
+            //onGenerateRoute: (settings) => RouteGenerator.generateRoute(settings),
+            home: (Provider.of<UserProvider>(context, listen: false).user.token.isNotEmpty)
+                ? const Home()
+                : const Login(),
+             //const Home(),
                
             theme: ThemeData(
               primarySwatch: Colors.green,

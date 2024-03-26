@@ -40,7 +40,7 @@ class _Home extends State<Home>{
   final TreeSpecieService treeSpecieService = TreeSpecieService();
 
   void setLoggedUser(){
-    loggedUser = User(id: "1",name: "pepe",email: "email",password: "pass",confirmpassword: "pass",token: "");//Provider.of<UserProvider>(context, listen: false).user;
+    loggedUser = Provider.of<UserProvider>(context, listen: false).user;
   }
 
   void openProjectDialog(bool isExport) async

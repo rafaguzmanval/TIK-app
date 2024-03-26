@@ -11,6 +11,7 @@ import 'package:tree_inspection_kit_app/common/widgets/custom_passwordformfield.
 import 'package:tree_inspection_kit_app/common/widgets/custom_positioned_login_animations.dart';
 import 'package:tree_inspection_kit_app/common/widgets/custom_textformfield.dart';
 import 'package:tree_inspection_kit_app/features/auth_service.dart';
+import 'package:tree_inspection_kit_app/models/user.dart';
 import 'package:tree_inspection_kit_app/models/valid_response.dart';
 import 'package:tree_inspection_kit_app/providers/user_provider.dart';
 import 'package:tree_inspection_kit_app/screens/home.dart';
@@ -69,17 +70,23 @@ class _LoginFormState extends State<LoginForm>{
 
           // Call user provider
           Map<String, dynamic> infoRes = json.decode(result!.response.body);
-          String name = infoRes['name'];
+          print(result!.response.body);
+          //String name = infoRes['name'];
+          //print(infoRes);
           
-          SharedPreferences preferences = await SharedPreferences.getInstance();
-          await preferences.setString('auth-token', infoRes["token"]);
-          Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
+          //SharedPreferences preferences = await SharedPreferences.getInstance();
+          //await preferences.setString('auth-token', infoRes["token"]);
+          //Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
+
           // Navigate to home
-          Navigator.pushAndRemoveUntil(
+
+          User user = User(id: "1", name: "p", email: "email", password: "p", confirmpassword: "p", token: "token");
+
+          await Navigator.push(
                 context, 
-                MaterialPageRoute(builder: (context) => Home()),
-                (route) => false
+                MaterialPageRoute(builder: (context) => Home())
           );
+
         });
       });
     }else{ // Error animation

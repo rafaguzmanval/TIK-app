@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text(Login.title),
       ),
-      body: Center(
+      body: SafeArea(child: Center(
         child: Container(
           margin: EdgeInsets.fromLTRB(50, 20, 50, 20),
           child: Column(
@@ -122,6 +122,7 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
+      )
     );
   }
 }

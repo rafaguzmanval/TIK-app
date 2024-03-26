@@ -1,13 +1,14 @@
 const http = require('http')
 const express = require('express')
 
-
 const authRouter = require("./routes/authRouter.js")
 
 
 
 
 const app = express()
+
+app.use(express.json());
 
 
 const bootstrap = async () => {
@@ -17,8 +18,6 @@ const bootstrap = async () => {
         console.log("Servidor en marcha")
     })
     
-
-
     app.get("/",(req,res) => {
     
         res.status(200).send("hola mundito")
@@ -27,8 +26,6 @@ const bootstrap = async () => {
     app.use("/auth",authRouter)
 
 
-
-    
     app.get("*",(req,res) => {
         res.status(404).send("Error 404: Not Found");
     })

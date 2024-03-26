@@ -16,46 +16,33 @@ const encoder = new TextEncoder();
 authUserRouter.get("/:email", async (req, res) => {
   const { email } = req.params;
 
-  await prisma.client.create({
-    data: {
-      name : "pepe"+email,
-      mail : email,
-      password : "pass"
-    }
-
-
-  })
-
-
   const user = await prisma.client.findFirst({
     where: {
       mail: email
     }
   })
 
-  //const user = await userModel.findOne({email: email}).exec();
-
-  if (!user) return res.status(404).send("El usuario no existe");
+  if (!user) return res.status(404).send("User doesn't exists");
 
   return res.send(user);
 });
 
 
 //Obtain user details from email and password
-authUserRouter.get("/:email/:password", async (req, res) => {
+authUserRouter.post("/:email/:password", async (req, res) => {
   const { email, password } = req.params;
 
   //const user = await userModel.findOne({email: email}).exec();
 
-  if (!user) return res.status(404).send("El usuario no existe");
+  if (!user) return res.status(404).send("User doesn't exists");
 
   user.comparePassword(password, (error, isMatch) => {
 
     // If passwords do not match, show error
     if(!isMatch || error)
-      return res.status(401).send("Contraseña incorrecta");
+      return res.status(401).send("Incorrect password");
     else
-      return res.status(200).send("Usuario logueado correctamente");
+      return res.status(200).send("User logued correctly");
 
   });
 
@@ -63,25 +50,36 @@ authUserRouter.get("/:email/:password", async (req, res) => {
 
 // Register new account route
 authUserRouter.post("/register", async (req, res) => {
+  console.log(req.body)
   const { name, email, password, confirmpassword } = req.body;
-
   try{
     
-    if (!email || !password || !name) return res.status(400).json({ msg: "Error faltan campos por recibir"});
-    if (password != confirmpassword) return res.status(400).json({ msg: "Las contraseñas no coinciden"});
+
+    if (!email || !password || !name) return res.status(400).json({ msg: "Failure: some fields are missing"});
+    if (password != confirmpassword) return res.status(400).json({ msg: "Passwords not matching"});
 
     console.log(password);
     console.log(confirmpassword);
 
-    //const user = await userModel.findOne({email: email}).exec();
+    const user = await prisma.client.findFirst({
+      where: {
+        mail: email
+      }
+    })
 
-    if (user) return res.status(409).json({ msg: "El usuario ya se encuentra registrado"});
+    if (user) return res.status(409).json({ msg: "User is already registered"});
 
-    //const newUser = new userModel({name, email, password});
+    await prisma.client.create({
+      data: {
+        name : name,
+        mail : email,
+        password : password
+      }
+  
+  
+    })
 
-    //await newUser.save();
-
-    return res.json({ msg: "Usuario registrado correctamente"});
+    return res.json({ msg: "User registered correctly"});
 
   } catch(err){
     return res.status(500).json({error: err.message});
@@ -95,16 +93,24 @@ authUserRouter.post("/login", async (req, res) => {
 
   try{
 
-    if (!email || !password) return res.status(400).json({ msg: "Error faltan campos por recibir"});
+    if (!email || !password) return res.status(400).json({ msg: "Failure: Some fields are missing"});
 
     // Se pone exec para convertirlo en promesa aunque si no lo pones Mongoose lo hace en su implementacion
-    //const user = await userModel.findOne({email: email}).exec();
+    const user = await prisma.client.findFirst({
+      where: {
+        mail: email
+      },
+      select: {
+        mail: true,
+        name : true
+      }
+    })
 
     // I prefer sending this msg instead of "Invalid email" to avoid giving clues to a fraudulent access attempt
-    if (!user) return res.status(404).json({msg: "Email y/o contraseña incorrecta"});
+    if (!user) return res.status(404).json({msg: "Email or password are incorrect"});
 
-    let token = '';
-    res.json({token, ...user._doc});
+    let token = '23412';
+    res.json({token, user});
 
   } catch(err){
     return res.status(500).json({error: err.message});
