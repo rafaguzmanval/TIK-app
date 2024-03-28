@@ -15,7 +15,7 @@ class ProjectService{
   Future newProject({
     required BuildContext context,
     required String name,
-    required String user_id,
+    required int user_id,
   })
   async{
     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: 10));
@@ -47,7 +47,7 @@ class ProjectService{
     }
   }
 
-  Future<dynamic> getProjects(String user_id) async {
+  Future<dynamic> getProjects(int user_id) async {
     final response = await http.get(
         Uri.parse('$url/projects/getall/$user_id'),
       );
@@ -61,7 +61,7 @@ class ProjectService{
     }
   }
 
-  Future<dynamic> getUserProject(String user_id, String project_name) async {
+  Future<dynamic> getUserProject(int user_id, String project_name) async {
     try
     {
       final response = await http.get(

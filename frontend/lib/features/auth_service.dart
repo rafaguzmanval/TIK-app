@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/io_client.dart';
 import 'package:provider/provider.dart';
@@ -33,11 +34,9 @@ class AuthService{
         String encryptedPassword = getPasswordHash(password);
 
         User user = User(
-          id: '',
+          id: -1,
           name: name,
           email: email,
-          password: encryptedPassword,
-          confirmpassword: encryptedPassword,
           token: ''
         );
 
@@ -46,7 +45,12 @@ class AuthService{
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: user.toJson(),
+          body: jsonEncode({
+            "name": name,
+            "email": email,
+            "password": encryptedPassword
+
+          }),
         );
 
         return res;
@@ -72,22 +76,16 @@ class AuthService{
 
       String encryptedPassword = getPasswordHash(password);
 
-      User user = User(
-        id: '',
-        name: '',
-        email: email,
-        password: encryptedPassword,
-        confirmpassword: '',
-        token: ''
-      );
-
 
       Response res = await client.post(
         Uri.parse('$url/auth/login'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: user.toJson(),
+        body: json.encode({
+          "email": email,
+          "password" : encryptedPassword
+        }),
       );
 
       return ValidResponse(res);
@@ -121,47 +119,28 @@ class AuthService{
   }
 
 // Get user data, for init state
-  void getUserData(
-    BuildContext context,
-  )
-  async{
+  Future<bool> checkToken(String token) async
+  {
     final client = IOClient(HttpClient()..connectionTimeout = Duration(seconds: timeoutDurationSeconds));
     try{
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      String? token = preferences.getString('auth-token');
-      
-      if(token == null){
-        // That means the user initiate app for the first time in a while
-        preferences.setString('auth-token', '');
-      }
 
-      Response validTokenRes = await client.post(
-        Uri.parse('$url/accounts/checkToken'),
+      Response res = await client.post(
+        Uri.parse('$url/auth/checkToken'),
         headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'auth-token': token!,
+          'Content-Type': 'application/json;',
+          'auth-token': token,
         }
       );
 
-      bool valid = jsonDecode(validTokenRes.body);
-      if(valid == true){
-        // // Now get user data, using middleware in server
-        Response response = await get(
-          Uri.parse('$url/'),
-          headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'auth-token': token ,
-          }
-        );
 
-        // var userProvider = Provider.of<UserProvider>(context, listen: false);
-        // userProvider.setUser(jsonDecode(response.body));
-      }
+      return res.body == "true";
 
     }on SocketException catch (_) {
       showFlutterToast(msg: 'Se ha excedido el tiempo límite de la solicitud', isSuccess: false);
+      return false;
     } catch(err){
       showFlutterToast(msg: err.toString(), isSuccess: false);
+      return false;
     }finally {
       client.close();
     }

@@ -2,12 +2,13 @@ const { Router } = require("express");
 
 const { PrismaClient } = require("@prisma/client");
 //import bcryptjs from 'bcryptjs';
-//import {SignJWT, jwtVerify} from "jose";
+const {SignJWT, jwtVerify} = require("jose");
 
 let prisma = new PrismaClient()
 
 const authUserRouter = Router();
 const encoder = new TextEncoder();
+
 
 
 
@@ -18,7 +19,7 @@ authUserRouter.get("/:email", async (req, res) => {
 
   const user = await prisma.client.findFirst({
     where: {
-      mail: email
+      email: email
     }
   })
 
@@ -51,19 +52,17 @@ authUserRouter.post("/:email/:password", async (req, res) => {
 // Register new account route
 authUserRouter.post("/register", async (req, res) => {
   console.log(req.body)
-  const { name, email, password, confirmpassword } = req.body;
+  const { name, email, password } = req.body;
   try{
     
 
     if (!email || !password || !name) return res.status(400).json({ msg: "Failure: some fields are missing"});
-    if (password != confirmpassword) return res.status(400).json({ msg: "Passwords not matching"});
 
     console.log(password);
-    console.log(confirmpassword);
 
     const user = await prisma.client.findFirst({
       where: {
-        mail: email
+        email: email
       }
     })
 
@@ -72,7 +71,7 @@ authUserRouter.post("/register", async (req, res) => {
     await prisma.client.create({
       data: {
         name : name,
-        mail : email,
+        email : email,
         password : password
       }
   
@@ -98,10 +97,11 @@ authUserRouter.post("/login", async (req, res) => {
     // Se pone exec para convertirlo en promesa aunque si no lo pones Mongoose lo hace en su implementacion
     const user = await prisma.client.findFirst({
       where: {
-        mail: email
+        email: email
       },
       select: {
-        mail: true,
+        id: true,
+        email: true,
         name : true
       }
     })
@@ -109,12 +109,15 @@ authUserRouter.post("/login", async (req, res) => {
     // I prefer sending this msg instead of "Invalid email" to avoid giving clues to a fraudulent access attempt
     if (!user) return res.status(404).json({msg: "Email or password are incorrect"});
 
-    let token = '23412';
-    res.json({token, user});
+    let token = await new SignJWT({id: user.id})
+    .setProtectedHeader({ alg: 'HS256' }) 
+    .sign(encoder.encode(process.env.JWT_PRIVATE))
+    res.json({id: user.id, email: user.email, name: user.name,token});
 
   } catch(err){
     return res.status(500).json({error: err.message});
   }
+
 
 });
 
@@ -130,7 +133,14 @@ authUserRouter.post("/checkToken", async(req, res) => {
 
       if(!jwtData) return res.json(false);
       // If token is valid, get user info
-      //const user = userModel.findById(jwtData.payload._id)
+
+
+        const user = await prisma.client.findFirst({
+          where: {
+            id: jwtData.payload.id
+          }
+        })
+
       // Check if user is valid
       if(!user) return res.json(false);
 

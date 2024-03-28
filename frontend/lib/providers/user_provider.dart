@@ -5,7 +5,7 @@ import 'package:tree_inspection_kit_app/models/user.dart';
 // Class use to get and set user data
 class UserProvider extends ChangeNotifier {
   // Private user variable
-  User _user = new User(id: '', name: '', email: '', password: '', confirmpassword: '', token: '');
+  User _user = new User(id: 0, name: '', email: '', token: '');
 
   User get user => _user;
 
@@ -13,6 +13,5 @@ class UserProvider extends ChangeNotifier {
   // through response body
   void setUser(Map<String, dynamic> user){
     _user = User.fromJson(user);
-    notifyListeners();
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tree_inspection_kit_app/features/auth_service.dart';
 import 'package:tree_inspection_kit_app/models/project.dart';
 import 'package:tree_inspection_kit_app/models/user.dart';
 import 'package:tree_inspection_kit_app/providers/language_provider.dart';
@@ -13,7 +16,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // import 'features/auth_service.dart';
 
-void main() {
+String? userJSON = null;
+
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await asyncMethod();
   runApp(
     // Add user provider and language provider to App 
     MultiProvider(
@@ -26,6 +33,22 @@ void main() {
   );
 }
 
+Future<void> asyncMethod() async{
+  SharedPreferences s = await SharedPreferences.getInstance();
+   userJSON = s.getString("user")!;
+
+   if(userJSON != null)
+     {
+       String token = jsonDecode(userJSON!)["token"];
+       bool res = await AuthService().checkToken(token);
+
+       if(!res)
+         userJSON = null;
+     }
+
+
+}
+
 class TreeTimerApp extends StatefulWidget {
   const TreeTimerApp({super.key});
 
@@ -34,16 +57,23 @@ class TreeTimerApp extends StatefulWidget {
 }
 
 class _TreeTimerApp extends State<TreeTimerApp> {
-  
-  // _asyncMethod() async{
-  //   SharedPreferences s = await SharedPreferences.getInstance();
-  //   String? token = s.getString('auth-token');
-  //   return token;
-  // }
-  User user = User(id: "1", name: "p", email: "email", password: "p", confirmpassword: "p", token: "token");
+
+
+
+  @override
+  void initState() {
+    if(userJSON != null)
+      Provider.of<UserProvider>(context, listen: false).setUser(json.decode(userJSON!));
+    super.initState();
+  }
+
+   
   @override
   Widget build(BuildContext context) {
+    
 
+
+    print(Provider.of<UserProvider>(context, listen: false).user.name);
     // Establish language provider in order to allow change languages in the App
     return ChangeNotifierProvider<LanguageProvider>(
       create: (context) => LanguageProvider(),

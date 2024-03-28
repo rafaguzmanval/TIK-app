@@ -3,6 +3,8 @@ const express = require('express')
 
 const authRouter = require("./routes/authRouter.js")
 
+const projectRouter = require("./routes/project.js")
+
 
 
 
@@ -24,6 +26,8 @@ const bootstrap = async () => {
     })
 
     app.use("/auth",authRouter)
+    
+    app.use("/projects",projectRouter)
 
 
     app.get("*",(req,res) => {

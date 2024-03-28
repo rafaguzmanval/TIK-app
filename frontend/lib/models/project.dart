@@ -5,7 +5,7 @@ class Project{
   final String id;
   String name;
   String description;
-  final String user_id;
+  final int user_id;
 
   Project(
     {required this.name, required this.id, required this.description, required this.user_id}

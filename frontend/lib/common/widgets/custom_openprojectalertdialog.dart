@@ -132,7 +132,7 @@ class _OpenProjectCustomAlertDialog extends State<OpenProjectCustomAlertDialog> 
                                     title: Text(snapshot.data[index]["name"]),
                                     onTap: () async{
                                       Project project = Project(
-                                          id: snapshot.data[index]["_id"],
+                                          id: snapshot.data[index]["id"].toString(),
                                           name: snapshot.data[index]["name"],
                                           description: snapshot.data[index]["description"] ?? '',
                                           user_id:  Provider.of<UserProvider>(context, listen: false).user.id,

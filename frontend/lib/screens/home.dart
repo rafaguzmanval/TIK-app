@@ -116,39 +116,8 @@ class _Home extends State<Home>{
                 children: [
                   Text('${AppLocalizations.of(context)!.welcome} ${loggedUser.name}!'),
                   Expanded(child: SizedBox()),
-                  GestureDetector(
-                    onTap: () {
-                      Future.delayed(Duration(milliseconds: 100), (){
-                        showGeneralDialog(context: context,
-                            barrierDismissible: true,
-                            barrierLabel: "",
-                            pageBuilder: (context, _, __) => Center(
-                              child: RegisterForm(
-                                editingProfile: true,
-                                userLogged: loggedUser,
-                                onDispose: (validResponse){
-                                  // If edit profile is successful, then update users info
-                                  if(validResponse.isSuccess)
-                                  {
-                                    setState(() {
-                                      setLoggedUser();
-                                    });
-                                  }
-                                },
-                              ),
-                            )
-                        );
-                      });
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
-                        SizedBox(width: 5),
-                        Text(AppLocalizations.of(context)!.editProfile),
-                      ],
-                    ),
-                  ),
+                  //EditButton()
+
                 ],
               ),
             ),
@@ -246,6 +215,42 @@ class _Home extends State<Home>{
     );
   }
 
+  Widget EditButton(){
+    return GestureDetector(
+        onTap: () {
+          Future.delayed(Duration(milliseconds: 100), (){
+            showGeneralDialog(context: context,
+                barrierDismissible: true,
+                barrierLabel: "",
+                pageBuilder: (context, _, __) => Center(
+                  child: RegisterForm(
+                    editingProfile: true,
+                    userLogged: loggedUser,
+                    onDispose: (validResponse){
+                      // If edit profile is successful, then update users info
+                      if(validResponse.isSuccess)
+                      {
+                        setState(() {
+                          setLoggedUser();
+                        });
+                      }
+                    },
+                  ),
+                )
+            );
+          });
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.person, color: Color.fromARGB(255, 61, 57, 57),),
+            SizedBox(width: 5),
+            Text(AppLocalizations.of(context)!.editProfile),
+          ],
+        ),
+      );
+  }
+
   Widget HomeBody(){
     return Container(
       margin: const EdgeInsets.fromLTRB(70, 10, 70, 70),
@@ -289,7 +294,7 @@ class _Home extends State<Home>{
                 icon: const Icon(Icons.folder),
               ),
             ),
-            const SizedBox(height: 15),
+          /*  const SizedBox(height: 15),
 
             ///SHARE PROJECT
             SizedBox(
@@ -302,7 +307,7 @@ class _Home extends State<Home>{
                 },
                 icon: const Icon(Icons.share),
               ),
-            ),
+            ),*/
             const SizedBox(height: 40),
 
             ///OPEN MANUAL

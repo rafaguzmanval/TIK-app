@@ -70,17 +70,12 @@ class _LoginFormState extends State<LoginForm>{
 
           // Call user provider
           Map<String, dynamic> infoRes = json.decode(result!.response.body);
-          print(result!.response.body);
-          //String name = infoRes['name'];
-          //print(infoRes);
-          
-          //SharedPreferences preferences = await SharedPreferences.getInstance();
-          //await preferences.setString('auth-token', infoRes["token"]);
-          //Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
 
-          // Navigate to home
+          SharedPreferences preferences = await SharedPreferences.getInstance();
+          await preferences.setString('user', result!.response.body);
+          Provider.of<UserProvider>(context, listen: false).setUser(infoRes);
 
-          User user = User(id: "1", name: "p", email: "email", password: "p", confirmpassword: "p", token: "token");
+          // Navigate to home;
 
           await Navigator.push(
                 context, 
