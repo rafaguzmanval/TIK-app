@@ -89,7 +89,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                           // Filter tree species while introducing letters
                           onChanged: (value) {
                             // Using lowercase to find if contained word exists regardless if its cap o lower
-                            filteredSpecies = origSpeciesList.where((element) => element["name"].toString().toLowerCase().contains(value.toLowerCase())).toList();
+                            filteredSpecies = origSpeciesList.where((element) => element["spanishName"].toString().toLowerCase().contains(value.toLowerCase())).toList();
                             // Refresh list with setState()
                             this.setState(() {});
                           },
@@ -109,13 +109,13 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   leading: Icon(Icons.book, color: Colors.green,),
-                                  title: Text(filteredSpecies[index]["name"]),
-                                  subtitle: Text("${AppLocalizations.of(context)!.propagationVelocity}: " + filteredSpecies[index]["description"]),
+                                  title: Text(filteredSpecies[index]["spanishName"]),
+                                  //subtitle: Text("${AppLocalizations.of(context)!.propagationVelocity}: " + filteredSpecies[index]["description"]),
                                   onTap: (){
                                     TreeSpecie treeSpecie = TreeSpecie(
-                                      name: filteredSpecies[index]["name"],
-                                      id: filteredSpecies[index]["_id"],
-                                      description: filteredSpecies[index]["description"] ?? ''
+                                      name: filteredSpecies[index]["spanishName"],
+                                      id: filteredSpecies[index]["id"].toString(),
+                                      description: filteredSpecies[index]["scientificName"] ?? ''
                                     );
                                     
                                     Navigator.pop(context, treeSpecie);

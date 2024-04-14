@@ -234,7 +234,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                             onTap: () async {
                                               // Get temp directory to show data sheet image (if exists) on tree data sheet screen
                                               Directory tmpDir = await getTemporaryDirectory();
-                                              await Navigator.push(
+                                              /*await Navigator.push(
                                                 context,
                                                 MaterialPageRoute(              
                                                   builder: (context) => TreeDataSheetScreen(
@@ -243,7 +243,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                                     tmpDir: tmpDir,
                                                   ),
                                                 ),
-                                              );
+                                              );*/
                                               // Rebuild widget
                                               setState(() {
                                               });

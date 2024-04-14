@@ -308,7 +308,7 @@ class _Home extends State<Home>{
                 icon: const Icon(Icons.share),
               ),
             ),*/
-            const SizedBox(height: 40),
+            const SizedBox(height: 50),
 
             ///OPEN MANUAL
             SizedBox(

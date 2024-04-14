@@ -45,7 +45,7 @@ class _TreeSpecies extends State<TreeSpecies>{
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   leading: Icon(Icons.eco, color: Colors.green,),
-                                  title: Text(snapshot.data[index]["name"] + " (${snapshot.data[index]["description"]})"),
+                                  title: Text(snapshot.data[index]["spanishName"]),
                                   // subtitle: Text(snapshot.data[index]["description"]),
                                   onTap: () {
                                   },
