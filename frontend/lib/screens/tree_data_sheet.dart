@@ -66,9 +66,9 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
 
   Future<dynamic> initSpecieValue() async {
     // Get selected specie from value and init it
-    if(widget.treeDataSheet.tree_specie_id != '')
+    if(widget.treeDataSheet.specie_id != '')
     {
-      widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet.tree_specie_id));
+      widget.selectedSpecie = TreeSpecie.fromJson(await treeSpecieService.findSpecie(widget.treeDataSheet.specie_id));
       treeSpecieController.value = TextEditingValue(text: widget.selectedSpecie!.name);
     }
     
@@ -114,27 +114,17 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
         if(saveDataSheet == true){
           // Save onto treeDataSheet variable the form values
           widget.treeDataSheet = TreeDataSheet(
-            // if new data sheet then empty id
-            id: widget.treeDataSheet.id != null ? widget.treeDataSheet.id : '',
+            id: widget.specificTreeIdValue!,
             project_id: widget.project.id,
-            specific_tree_id: widget.specificTreeIdValue!,
-            tree_specie_id: widget.selectedSpecie!.id,
+            specie_id: widget.selectedSpecie!.id,
             description: widget.descriptionValue,
             latitude: _position.latitude,
             longitude: _position.longitude,
             // Get base64 content to pass to the request if it is not null
             imageURL: widget.image != null ? base64.encode(widget.image!.readAsBytesSync()) : "",
-            measurements: widget.treeDataSheet.measurements,
+            //measurements: widget.treeDataSheet.measurements,
           );
           // Update data sheet or save if does not exists
-          if(widget.treeDataSheet.id != '')
-          {
-            treeDataSheetService.updateTreeDataSheet(
-              context: context,
-              treeDataSheet: widget.treeDataSheet as TreeDataSheet,
-            );
-          }
-          else{
             Response? res = await treeDataSheetService.newTreeDataSheet(context: context, treeDataSheet: widget.treeDataSheet as TreeDataSheet);
             // And if res returns a savedDataTreeSheet then we must to update the widget.treedatasheet
             if(res != null)
@@ -148,7 +138,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                 });
               }
             }
-          }
+
           // Set isEditing to false
           setState(() {
             isEditing = false;
@@ -276,7 +266,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: widget.treeDataSheet.id.isNotEmpty ? Text(widget.project.name + ' - ' + widget.treeDataSheet.specific_tree_id) : Text(widget.project.name),
+        title: widget.treeDataSheet.id.isNotEmpty ? Text(widget.project.name + ' - ' + widget.treeDataSheet.id) : Text(widget.project.name),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
@@ -297,7 +287,7 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                 children: [
                   TextFormField(
                     readOnly: isEditing ? false : true,
-                    initialValue: widget.treeDataSheet.specific_tree_id,
+                    initialValue: widget.specificTreeIdValue,
                     decoration: InputDecoration(
                       labelText: '${AppLocalizations.of(context)!.treeId} *',
                     ),
@@ -345,13 +335,15 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                           widget.selectedSpecie = selectedSpecie;
                         }
                         // We set the value of tree specie text form field
-                        treeSpecieController.value = widget.selectedSpecie != null ? TextEditingValue(text: '${widget.selectedSpecie?.name}\n(${AppLocalizations.of(context)!.propagationVelocity} ${widget.selectedSpecie?.description})') : const TextEditingValue(text: '');
+                        treeSpecieController.value = widget.selectedSpecie != null ?
+                        TextEditingValue(text: '${widget.selectedSpecie?.name}\n(${AppLocalizations.of(context)!.propagationVelocity} ${widget.selectedSpecie?.description})')
+                            : const TextEditingValue(text: '');
                       },
                       child: Text(AppLocalizations.of(context)!.selectTreeSpecie)
                     ),
                   ) : const SizedBox(height: 80,),
                   const SizedBox(height: 70,),
-                  Center(child: Text(AppLocalizations.of(context)!.measurements, style:  TextStyle(fontWeight: FontWeight.bold),)),
+                  /*Center(child: Text(AppLocalizations.of(context)!.measurements, style:  TextStyle(fontWeight: FontWeight.bold),)),
                   const SizedBox(height: 25,),
                   isEditing ? Container(
                     width: double.infinity,
@@ -364,6 +356,8 @@ class _TreeDataSheetScreenState extends State<TreeDataSheetScreen>{
                   widget.treeDataSheet.measurements != null && widget.treeDataSheet.measurements!.isNotEmpty
                     ? Center(child: CustomMeasurementTable(list: widget.treeDataSheet.measurements!, onDelete: onDeletedMeasurement, isEditing: isEditing,))
                     : SizedBox(),
+                  */
+
                   Container(
                     padding: EdgeInsets.only(top: 25, bottom: 25),
                     child: TextFormField(

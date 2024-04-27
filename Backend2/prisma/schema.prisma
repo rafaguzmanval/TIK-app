@@ -32,6 +32,8 @@ model Project {
   name String
   description String
 
+  trees Tree[]
+
 
 
   @@unique([authorId, name], name: "Identifier")
@@ -53,6 +55,22 @@ model Log {
 
 model Tree {
   id Int @id @default(autoincrement())
+  project_id Int
+  specie_id Int
+  description String
+  latitude Float
+  longitude Float
+
+  project Project @relation(fields: [project_id], references: [id])
+
+}
+
+model Specie {
+  id Int @id @default(autoincrement())
+  scientificName String @unique
+  spanishName String
+  imageURL String
+
 
 }
 

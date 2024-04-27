@@ -38,6 +38,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
   // Booleans variables
   bool isEditing = false;
   bool arrowDownWard = true;
+  bool loading = true;
 
   // GlobalKey variable
   final _editFormKey = GlobalKey<FormState>();
@@ -213,64 +214,74 @@ class _ProjectScreenState extends State<ProjectScreen> {
                           FutureBuilder(
                             future: treeDataSheetService.getProjectTreeDataSheets(widget.project.id),
                             builder: (context, snapshot) {
+
+                                // Show circular progress while no info is received
+
                               // If we have data from tree data sheets
                               if(snapshot.hasData)
                               {
-                                return Column(
-                                  children: [
-                                    Container(
-                                      // We must to set height and width in order to prevent errors
-                                      // with listView dimensions
-                                      width: 400,
-                                      height: 300,
-                                      child: ListView.builder(
-                                        controller: scrollController,
-                                        itemCount: snapshot.data.length,
-                                        itemBuilder: (context, index) {
-                                          return ListTile(
-                                            contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
-                                            leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
-                                            title: Text(snapshot.data[index]["specific_tree_id"].toString()),
-                                            onTap: () async {
-                                              // Get temp directory to show data sheet image (if exists) on tree data sheet screen
-                                              Directory tmpDir = await getTemporaryDirectory();
-                                              /*await Navigator.push(
-                                                context,
-                                                MaterialPageRoute(              
-                                                  builder: (context) => TreeDataSheetScreen(
-                                                    treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
-                                                    project: widget.project,
-                                                    tmpDir: tmpDir,
+                                  loading = false;
+                                  return Column(
+                                    children: [
+                                      Container(
+                                        // We must to set height and width in order to prevent errors
+                                        // with listView dimensions
+                                        width: 400,
+                                        height: 300,
+                                        child: ListView.builder(
+                                          controller: scrollController,
+                                          itemCount: snapshot.data.length,
+                                          itemBuilder: (context, index) {
+                                            return ListTile(
+                                              contentPadding: EdgeInsets.fromLTRB(40, 0, 40, 5),
+                                              leading: Icon(Icons.energy_savings_leaf, color: Colors.green,),
+                                              title: Text(snapshot.data[index]["id"].toString()),
+                                              onTap: () async {
+                                                // Get temp directory to show data sheet image (if exists) on tree data sheet screen
+                                                Directory tmpDir = await getTemporaryDirectory();
+                                                /*await Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => TreeDataSheetScreen(
+                                                      treeDataSheet: TreeDataSheet.fromJson(snapshot.data[index]),
+                                                      project: widget.project,
+                                                      tmpDir: tmpDir,
+                                                    ),
                                                   ),
-                                                ),
-                                              );*/
-                                              // Rebuild widget
-                                              setState(() {
-                                              });
-                                            },
-                                          );
-                                        },
+                                                );*/
+                                                // Rebuild widget
+                                                setState(() {
+                                                });
+                                              },
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    // If there are more than 5 elements then show arrows to scroll up and down
-                                    snapshot.data.length > 5
-                                    ? ValueListenableBuilder<bool>(
-                                        valueListenable: arrowDownWardNotifier,
-                                        builder: (context, arrowDownWard, child) {
-                                          return arrowDownWard 
-                                            ? ArrowDownWardListScroll(scrollController: scrollController) 
-                                            : ArrowUpWardListScroll(scrollController: scrollController);
-                                        },
-                                      )
-                                    : SizedBox(),
-                                  ]
-                                );
-                              }
-                              else if(snapshot.hasError){
-                                showFlutterToast(msg: snapshot.error.toString(), isSuccess: false);
-                              }
-                              // Show circular progress while no info is received
-                              return CircularProgressIndicator();
+                                      // If there are more than 5 elements then show arrows to scroll up and down
+                                      snapshot.data.length > 5
+                                      ? ValueListenableBuilder<bool>(
+                                          valueListenable: arrowDownWardNotifier,
+                                          builder: (context, arrowDownWard, child) {
+                                            return arrowDownWard
+                                              ? ArrowDownWardListScroll(scrollController: scrollController)
+                                              : ArrowUpWardListScroll(scrollController: scrollController);
+                                          },
+                                        )
+                                      : SizedBox(),
+                                    ]
+                                  );
+                                }
+                                else if(snapshot.hasError){
+                                  print(snapshot.error.toString());
+                                  showFlutterToast(msg: snapshot.error.toString(), isSuccess: false);
+                                }
+                                else if(loading)
+                                {
+                                  return CircularProgressIndicator();
+                                }
+
+                              return Container();
+
                             }
                           ),
                           SizedBox(height: 15,),

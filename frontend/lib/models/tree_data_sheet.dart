@@ -6,8 +6,7 @@ import 'package:tree_inspection_kit_app/models/measurement.dart';
 class TreeDataSheet{
   final String id;
   final String project_id;
-  final String specific_tree_id;
-  final String tree_specie_id;
+  final String specie_id;
   final String? description;
   final double? latitude;
   final double? longitude;
@@ -16,21 +15,20 @@ class TreeDataSheet{
 
 
   TreeDataSheet(
-    {required this.id, required this.project_id, required this.specific_tree_id,
-     required this.tree_specie_id, this.description, this.latitude, this.longitude, this.imageURL, this.measurements}
+    {required this.id, required this.project_id,
+     required this.specie_id, this.description, this.latitude, this.longitude, this.imageURL, this.measurements}
   );
 
   // Create an empty TreeDataSheet constructor
-  TreeDataSheet.empty({required this.project_id, this.id = '', this.specific_tree_id = '', this.tree_specie_id = "", this.description = "", this.latitude = 0.0, this.longitude = 0.0, this.imageURL = "", this.measurements});
+  TreeDataSheet.empty({required this.project_id, this.id = '', this.specie_id = "", this.description = "", this.latitude = 0.0, this.longitude = 0.0, this.imageURL = "", this.measurements});
  
 
   // Create a object map
   Map<String, dynamic> toMap(){
     return {
-      "_id": id,
+      "id": id,
       "project_id": project_id,
-      "specific_tree_id": specific_tree_id,
-      "tree_specie_id": tree_specie_id,
+      "specie_id": specie_id,
       "description": description,
       "latitude": latitude?.toDouble(),
       "longitude": longitude?.toDouble(),
@@ -45,10 +43,9 @@ class TreeDataSheet{
     List<dynamic> measurementsJson = parsedJson["measurements"];
     List<Measurement> parsedMeasurements = measurementsJson.map((measurement) => Measurement.fromJson(measurement)).toList();
     return TreeDataSheet(
-      id: parsedJson["_id"] ?? '',
+      id: parsedJson["id"] ?? '',
       project_id: parsedJson["project_id"],
-      specific_tree_id: parsedJson["specific_tree_id"] ?? '',
-      tree_specie_id: parsedJson["tree_specie_id"] ?? '',
+      specie_id: parsedJson["specie_id"] ?? '',
       description: parsedJson["description"] ?? '',
       latitude: parsedJson["latitude"]?.toDouble() ?? 0,
       longitude: parsedJson["longitude"]?.toDouble()?? 0,

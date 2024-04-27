@@ -140,6 +140,7 @@ class _CustomAlertDialogTreeSpecies extends State<CustomAlertDialogTreeSpecies>
                     );
                   }
                   else if(snapshot.hasError){
+                    print(snapshot.error.toString());
                     showFlutterToast(msg: snapshot.error.toString(), isSuccess: false);
                   }
                   return CircularProgressIndicator();
