@@ -84,6 +84,17 @@ projectRouter.delete("/delete/:id",
 
         const { id } = req.params;
         try {
+            
+            // Se borran todos los arboles y elementos relacionados con el proyecto
+            await prisma.Tree.deleteMany({
+                where:{
+                    project_id: parseInt(id)
+                }
+
+                }
+            )
+
+            // Finalmente se borra el proyecto
             const project = await prisma.project.delete({
                 where:{
                     id: parseInt(id)

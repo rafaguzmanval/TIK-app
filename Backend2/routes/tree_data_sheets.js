@@ -163,12 +163,21 @@ treeDataSheetRouter.get("/:id",
  */
 treeDataSheetRouter.get("/project/:project_id",
     async (req, res) => {
-        /*const { project_id } = req.params;
+        const { project_id } = req.params;
         
-        const treeDataSheets = await treeDataSheetSchemaModel.find({project_id: project_id}, null, {sort: {createdAt: -1}}).exec();
-        if(!treeDataSheets) return res.status(404).send("El proyecto no tiene fichas de datos");
-        return res.send(treeDataSheets);*/
-        return res.status(200).send([])
+
+        const resultados = await prisma.Tree.findMany({
+
+            where:{
+                project_id: parseInt(project_id)
+            }
+
+
+        }
+    )
+        if(!resultados) return res.status(404).send([]);
+        return res.send(resultados);
+        //return res.status(200).send([])
     }
 );
 

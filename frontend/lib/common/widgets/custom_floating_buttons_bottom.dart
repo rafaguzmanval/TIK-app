@@ -26,14 +26,14 @@ class CustomFloatingButtonsBottom extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        /*FloatingActionButton(
+        FloatingActionButton(
           // To prevent same tag between floating action buttons
           heroTag: UniqueKey(),
           onPressed: () async {
             onDeleted();
           },
           child: icon1,
-        ),*/
+        ),
         SizedBox(width: 16.0),
         FloatingActionButton(
           // To prevent same tag between floating action buttons
